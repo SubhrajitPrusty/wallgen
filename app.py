@@ -51,8 +51,8 @@ for i in range(boxes+1):
 
 		# rotate
 
-		img = img.rotate(90*randint(1,4))
-		draw = ImageDraw.Draw(img)
+		# img = img.rotate(90*randint(1,4))
+		# draw = ImageDraw.Draw(img)
 	
 	# y+=2*inc
 	y+=inc
