@@ -1,63 +1,65 @@
 from PIL import Image, ImageDraw
 from random import *
 import seaborn as sns
+import time
 
 side = 2000
 bg = "#2c2c2c"
-bg = '#f9499e'
+# bg = '#f9499e'
 
 img = Image.new('RGB',(side,side), bg)
 
-draw = ImageDraw.Draw(img)
+def genWall(x,y, boxes, colors, img): 	
+	draw = ImageDraw.Draw(img)
+	inc = side//boxes
+	xback = x
+	for c in range(len(colors)):
+		colors[c] = [int(x*255) for x in colors[c]]
+	for i in range(boxes+1):    		
+		choiceOld = choice(colors)
+		for j in range(boxes+1):
+			squares = [(x,y),(x,y+inc),(x+inc,y+inc),(x+inc,y)] # squares
+			rhombus = [(x,y),(x-inc,y+inc),(x,y+2*inc),(x+inc,y+inc)] #rhombus
+			triangle = [(x,y),(x+inc,y),(x,y+inc)] # triangle
 
-boxes = 20
-inc = side//boxes
-
-x = -inc
-y = -inc
-
-colors = [0,0,0]
-colors = sns.color_palette("muted")
-# print(colors)
-
-for c in range(len(colors)):
-	colors[c] = [int(x*255) for x in colors[c]]
-
-# print(colors)
-
-for i in range(boxes+1):
-	
-	choiceOld = choice(colors)
-
-	for j in range(boxes+1):
-		squares = ((x,y),(x,y+inc),(x+inc,y+inc),(x+inc,y)) # squares
-		rhombus = ((x,y),(x-inc,y+inc),(x,y+2*inc),(x+inc,y+inc)) #rhombus
-		triangle = ((x,y),(x+inc,y),(x,y+inc)) # triangle
-
-		points = list(rhombus)
-		# print(points,end=" ")
-		# shuffle(points)
-		# print(points)
-		choiceNew = choice(colors)
-
-		while choiceOld == choiceNew:
+			points = list(rhombus)
 			choiceNew = choice(colors)
 
-		choiceOld = choiceNew
+			while choiceOld == choiceNew:
+				choiceNew = choice(colors)
+
+			choiceOld = choiceNew
+			
+			draw.polygon((points), fill=tuple(choiceNew))
+			x+=2*inc
+			# x+=inc
+
+			# img = img.rotate(90*randint(1,4))
+			# draw = ImageDraw.Draw(img)
 		
-		draw.polygon((points), fill=tuple(choiceNew))
-		# x+=2*inc
-		x+=inc
+		y+=2*inc
+		# y+=inc
+		x=xback
+		# inc = inc*1.1
 
-		# rotate
+colors = []
+# colors = sns.color_palette("muted")
+# colors = sns.color_palette("Blues_d")
+colors.extend(sns.color_palette("Purples_d"))
+# colors.extend(sns.color_palette("PuRd_d"))
+# colors.extend(sns.color_palette("BuPu_d"))
 
-		# img = img.rotate(90*randint(1,4))
-		# draw = ImageDraw.Draw(img)
-	
-	# y+=2*inc
-	y+=inc
-	x=0
-	# inc = inc*1.1
+a = b = 0
+boxs = 20
+
+genWall(a,b,boxs,colors,img)
+colors = sns.color_palette("Blues_d")
+
+a = b = side//boxs
+genWall(-a,-b,boxs,colors,img)
+
 
 # img = img.transpose(Image.ROTATE_90)
 img.show()
+
+img.save("wall-{}.png".format(int(time.time())))
