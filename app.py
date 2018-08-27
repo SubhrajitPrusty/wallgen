@@ -9,7 +9,7 @@ bg = "#2c2c2c"
 
 img = Image.new('RGB',(side,side), bg)
 
-def genWall(x,y, boxes, colors, img): 	
+def genWall(x,y, boxes, colors, img, rot=False): 	
 	draw = ImageDraw.Draw(img)
 	inc = side//boxes
 	xback = x
@@ -34,8 +34,9 @@ def genWall(x,y, boxes, colors, img):
 			x+=2*inc
 			# x+=inc
 
-			# img = img.rotate(90*randint(1,4))
-			# draw = ImageDraw.Draw(img)
+			if rot == True:
+				img = img.rotate(90*randint(1,4))
+				draw = ImageDraw.Draw(img)
 		
 		y+=2*inc
 		# y+=inc
