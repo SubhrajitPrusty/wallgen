@@ -1,5 +1,5 @@
 from PIL import Image, ImageDraw
-from random import *
+from random import randint,random,choice
 import seaborn as sns
 import time
 
