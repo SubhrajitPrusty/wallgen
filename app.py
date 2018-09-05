@@ -1,12 +1,9 @@
 from PIL import Image, ImageDraw
-from random import randrange,randint,random,choice
-import seaborn as sns
+from random import randrange,randint,choice
 import time
 from scipy.spatial import Delaunay
 
 side = 2000
-bg = "#2c2c2c"
-# bg = '#f9499e'
 
 def random_gradient(side):
 	img = Image.new("RGB", (side,side), "#FFFFFF")
@@ -23,12 +20,11 @@ def random_gradient(side):
 	return img
 
 img = random_gradient(side)
-# img.show()
 
 radius = 200
-rX = (-200,2200)
-rY = (-200,2200)
-qty = 150
+rX = (0,side)
+rY = (0,side)
+qty = 200
 
 deltas = set()
 for x in range(-radius,radius+1):
@@ -51,35 +47,26 @@ while i<=qty:
 	i+=1
 	excluded.update((x+dx,y+dx) for (dx,dy) in deltas)
 
-# print(randPoints)
-
 tri = Delaunay(randPoints)
 points = tri.points[tri.simplices]
 
-# for p in points:
-# 	print(tuple(map(tuple,p)))
+def calcCenter(ps):
+	mid1 = ((ps[0][0]+ps[1][0])/2, (ps[0][1]+ps[1][1])/2)
+	mid = ((mid1[0]+ps[2][0])/2, (mid1[1]+ps[2][1])/2)
+	return mid
 
 
-def genWall(points, colors, img, rot=False): 	
+def genWall(points, img, rot=False):
+	idata = img.load()
 	draw = ImageDraw.Draw(img)
-	for c in range(len(colors)):
-		colors[c] = [int(x*255) for x in colors[c]]
 	for p in points:
-		ch = choice(colors)
 		tp = tuple(map(tuple,p))
-		# print(img[tp[0]])
+		c = idata[calcCenter(tp)]
 		# draw.polygon(tp, outline="#2c2c2c")
-		draw.polygon(tp, fill=tuple(ch))
+		draw.polygon(tp, fill=c)
 
-colors = []
-# colors = sns.color_palette("muted")
-# colors = sns.color_palette("Blues_d")
-colors.extend(sns.color_palette("Purples_d"))
-# colors.extend(sns.color_palette("PuRd_d"))
-# colors.extend(sns.color_palette("BuPu_d"))
-
-genWall(points, colors, img)
+genWall(points, img)
 
 img.show()
 
-# img.save("wall-{}.png".format(int(time.time())))
+img.save("images/wall-{}.png".format(int(time.time())))
