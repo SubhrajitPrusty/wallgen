@@ -1,47 +1,75 @@
 from PIL import Image, ImageDraw
-from random import randint,random,choice
+from random import randrange,randint,random,choice
 import seaborn as sns
 import time
+from scipy.spatial import Delaunay
 
 side = 2000
 bg = "#2c2c2c"
 # bg = '#f9499e'
 
-img = Image.new('RGB',(side,side), bg)
-
-def genWall(x,y, boxes, colors, img, rot=False): 	
+def random_gradient(side):
+	img = Image.new("RGB", (side,side), "#FFFFFF")
 	draw = ImageDraw.Draw(img)
-	inc = side//boxes
-	xback = x
+
+	r,g,b = randint(0,255), randint(0,255), randint(0,255)
+	dr = (randint(0,255) - r)/side
+	dg = (randint(0,255) - g)/side
+	db = (randint(0,255) - b)/side
+	for i in range(side):
+		r,g,b = r+dr, g+dg, b+db
+		draw.line((i,0,i,side), fill=(int(r),int(g),int(b)))
+
+	return img
+
+img = random_gradient(side)
+# img.show()
+
+radius = 200
+rX = (-200,2200)
+rY = (-200,2200)
+qty = 150
+
+deltas = set()
+for x in range(-radius,radius+1):
+	for y in range(-radius, radius+1):
+		if x**2 + y**2 <= radius**2:
+			deltas.add((x,y))
+
+randPoints = []
+excluded = set()
+
+i = 0
+
+while i<=qty:
+	x = randrange(*rX)
+	y = randrange(*rY)
+
+	if (x,y) in excluded:
+		continue
+	randPoints.append((x,y))
+	i+=1
+	excluded.update((x+dx,y+dx) for (dx,dy) in deltas)
+
+# print(randPoints)
+
+tri = Delaunay(randPoints)
+points = tri.points[tri.simplices]
+
+# for p in points:
+# 	print(tuple(map(tuple,p)))
+
+
+def genWall(points, colors, img, rot=False): 	
+	draw = ImageDraw.Draw(img)
 	for c in range(len(colors)):
 		colors[c] = [int(x*255) for x in colors[c]]
-	for i in range(boxes+1):    		
-		choiceOld = choice(colors)
-		for j in range(boxes+1):
-			squares = [(x,y),(x,y+inc),(x+inc,y+inc),(x+inc,y)] # squares
-			rhombus = [(x,y),(x-inc,y+inc),(x,y+2*inc),(x+inc,y+inc)] #rhombus
-			triangle = [(x,y),(x+inc,y),(x,y+inc)] # triangle
-
-			points = list(rhombus)
-			choiceNew = choice(colors)
-
-			while choiceOld == choiceNew:
-				choiceNew = choice(colors)
-
-			choiceOld = choiceNew
-			
-			draw.polygon((points), fill=tuple(choiceNew))
-			x+=2*inc
-			# x+=inc
-
-			if rot == True:
-				img = img.rotate(90*randint(1,4))
-				draw = ImageDraw.Draw(img)
-		
-		y+=2*inc
-		# y+=inc
-		x=xback
-		# inc = inc*1.1
+	for p in points:
+		ch = choice(colors)
+		tp = tuple(map(tuple,p))
+		# print(img[tp[0]])
+		# draw.polygon(tp, outline="#2c2c2c")
+		draw.polygon(tp, fill=tuple(ch))
 
 colors = []
 # colors = sns.color_palette("muted")
@@ -50,17 +78,8 @@ colors.extend(sns.color_palette("Purples_d"))
 # colors.extend(sns.color_palette("PuRd_d"))
 # colors.extend(sns.color_palette("BuPu_d"))
 
-a = b = 0
-boxs = 20
+genWall(points, colors, img)
 
-genWall(a,b,boxs,colors,img)
-colors = sns.color_palette("Blues_d")
-
-a = b = side//boxs
-genWall(-a,-b,boxs,colors,img)
-
-
-# img = img.transpose(Image.ROTATE_90)
 img.show()
 
-img.save("wall-{}.png".format(int(time.time())))
+# img.save("wall-{}.png".format(int(time.time())))
