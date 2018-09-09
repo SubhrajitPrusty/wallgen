@@ -1,3 +1,4 @@
 *.pyc
 __pycache__
-images/wall*.png
+wall*.png
+*.egg-info

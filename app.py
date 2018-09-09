@@ -1,6 +1,7 @@
 from PIL import Image, ImageDraw
 from random import randrange,randint,choice
 import time
+import click
 from scipy.spatial import Delaunay
 
 def random_gradient(side):
@@ -17,9 +18,9 @@ def random_gradient(side):
 
 	return img
 
-def genPoints(radius, xor, yor, qty, side):
-	rX = (xor,side)
-	rY = (yor,side)
+def genPoints(radius, qty, side):
+	rX = (0,side)
+	rY = (0,side)
 
 	deltas = set()
 	for x in range(-radius,radius+1):
@@ -50,7 +51,7 @@ def calcCenter(ps):
 	mid = ((mid1[0]+ps[2][0])/2, (mid1[1]+ps[2][1])/2)
 	return mid
 
-def genWall(points, side):
+def genWall(points, side, shift):
 	img = random_gradient(side)
 	idata = img.load()
 	draw = ImageDraw.Draw(img)
@@ -59,14 +60,23 @@ def genWall(points, side):
 		c = idata[calcCenter(tp)]
 		# draw.polygon(tp, outline="#2c2c2c")
 		draw.polygon(tp, fill=c)
+	img = img.crop((shift,shift,side-shift,side-shift))
 	return img
 
-side = 2000
-points = genPoints(200, 0, 0, 100, side)
-img = genWall(points, side+200)
+@click.command()
+@click.argument("side", type=click.INT)
+@click.option("--np", default=100, help="number of points to use, default = 100")
+@click.option("--radius", default=200, help="radius, within which no other point is generated, default=200")
+@click.option("--show", is_flag=True, help="open the image")
+def cli(side,np,radius,show):
+	""" Generates a side X side low poly image of random gradient """
 
-img = img.crop((100,100,side-100,side-100))
+	shift = side//10
+	side += shift*2
+	points = genPoints(radius, np, side)
+	img = genWall(points, side, shift)
 
-img.show()
+	if show:
+		img.show()
 
-img.save("images/wall-{}.png".format(int(time.time())))
+	img.save("wall-{}.png".format(int(time.time())))
