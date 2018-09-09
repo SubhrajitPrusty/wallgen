@@ -2,4 +2,6 @@
 
 Generates HQ poly wallpapers
 
-![](./demo.png)
+![](./images/demo1.png)
+![](./images/demo2.png)
+![](./images/demo3.png)

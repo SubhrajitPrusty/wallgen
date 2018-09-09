@@ -63,7 +63,9 @@ def genWall(points, side):
 
 side = 2000
 points = genPoints(200, 0, 0, 100, side)
-img = genWall(points, side)
+img = genWall(points, side+200)
+
+img = img.crop((100,100,side-100,side-100))
 
 img.show()
 
