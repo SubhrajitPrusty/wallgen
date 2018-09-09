@@ -1,5 +1,5 @@
 from PIL import Image, ImageDraw
-from random import randrange,randint,choice
+from random import randrange,randint
 import time
 import click
 from scipy.spatial import Delaunay
@@ -69,7 +69,7 @@ def genWall(points, side, shift):
 @click.option("--radius", default=200, help="radius, within which no other point is generated, default=200")
 @click.option("--show", is_flag=True, help="open the image")
 def cli(side,np,radius,show):
-	""" Generates a side X side low poly image of random gradient """
+	""" Generates a side X side HQ low poly image of random gradient """
 
 	shift = side//10
 	side += shift*2
