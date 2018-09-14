@@ -1,4 +1,4 @@
-from flask import Flask, request, send_file, url_for, redirect, render_template
+from flask import Flask, request, send_file, render_template
 import os
 import wallgen
 from gevent.pywsgi import WSGIServer
@@ -12,6 +12,8 @@ def index():
         print(request.form['side'])
         if request.form['side']:
             side = int(request.form['side'])
+            if side > 5000:
+                return "WARNING: DONOT EXCEED 5000"
             shift = side//10
             side += shift*2
             points = wallgen.genPoints(100,100,side)
