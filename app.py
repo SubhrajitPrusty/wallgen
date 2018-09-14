@@ -1,4 +1,4 @@
-from flask import Flask, request, send_file, render_template
+from flask import Flask, request, send_file, render_template, redirect, url_for
 import os
 import wallgen
 from gevent.pywsgi import WSGIServer
@@ -8,7 +8,6 @@ app = Flask(__name__, static_url_path="/static")
 @app.route("/", methods=['GET','POST'])
 def index():
     if request.method == 'POST':
-        print(request.form['side'])
         if request.form['side']:
             side = int(request.form['side'])
             if side > 5000:
@@ -18,7 +17,7 @@ def index():
             points = wallgen.genPoints(100,100,side)
             img = wallgen.genWall(points, side, shift)
             img.save('static/images/wall.png')
-            return send_file('static/images/wall.png', mimetype="image/png")
+            return send_file('static/images/wall.png', mimetype="image/png", as_attachment=True)
     else:
         return render_template('index.html')
 
