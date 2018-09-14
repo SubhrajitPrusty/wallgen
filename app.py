@@ -17,7 +17,7 @@ def index():
             points = wallgen.genPoints(100,100,side)
             img = wallgen.genWall(points, side, shift)
             img.save('static/wall.png')
-            return redirect(url_for('static', filename='wall.png'))
+            return send_file('static/wall.png', mimetype="image/png")
     else:
         return render_template('index.html')
 
