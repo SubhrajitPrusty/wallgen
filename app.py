@@ -1,4 +1,4 @@
-from flask import Flask, request, send_file
+from flask import Flask, request, send_file, url_for, redirect
 import os
 import wallgen
 from gevent.pywsgi import WSGIServer
@@ -15,7 +15,7 @@ def index():
             points = wallgen.genPoints(100,100,side)
             img = wallgen.genWall(points, side, shift)
             img.save('static/wall.png')
-            return send_file(os.path.abspath('wall.png'), mimetype="image/png")
+            return redirect(url_for('static', filename='wall.png'))
         else:
             return "403"
 
