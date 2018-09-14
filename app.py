@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request, send_file
 import os
 import wallgen
+from gevent.pywsgi import WSGIServer
 
 app = Flask(__name__)
 
@@ -21,7 +22,6 @@ def index():
             return "403"
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
-
-
-
+    port = int(os.environ.get('PORT', 5000))
+    http_server = WSGIServer(('',port),app)
+    http_server.serve_forever()
