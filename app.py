@@ -17,9 +17,15 @@ def index():
             points = wallgen.genPoints(100,100,side)
             img = wallgen.genWall(points, side, shift)
             img.save('static/images/wall.png')
-            return send_file('static/images/wall.png', mimetype="image/png", as_attachment=True)
+            return redirect(url_for('static',filename='images/wall.png'))
+            # return redirect("/image")
     else:
         return render_template('index.html')
+
+
+@app.route("/image")
+def getImage():
+    return send_file('static/images/wall.png', mimetype="image/png", as_attachment=True)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
