@@ -3,7 +3,7 @@ import os
 import wallgen
 from gevent.pywsgi import WSGIServer
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path="/static")
 
 @app.route("/", methods=['GET'])
 def index():
@@ -14,7 +14,7 @@ def index():
             side += shift*2
             points = wallgen.genPoints(100,100,side)
             img = wallgen.genWall(points, side, shift)
-            img.save('wall.png')
+            img.save('static/wall.png')
             return send_file(os.path.abspath('wall.png'), mimetype="image/png")
         else:
             return "403"
