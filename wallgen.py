@@ -18,7 +18,8 @@ def random_gradient(side):
 
 	return img
 
-def genPoints(radius, qty, side):
+def genPoints(qty, side):
+	radius = side // 11
 	rX = (0,side)
 	rY = (0,side)
 
@@ -73,7 +74,7 @@ def cli(side,np,radius,show):
 
 	shift = side//10
 	side += shift*2
-	points = genPoints(radius, np, side)
+	points = genPoints(np, side)
 	img = genWall(points, side, shift)
 
 	if show:
