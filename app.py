@@ -15,8 +15,8 @@ def index():
             error = None
             if (side > 4000 and side >= 100) or side < 100:
                 error = "WARNING: Image too large OR Image too small"
-            if np < 10 or np > side*0.2:
-                error = "WARNING: Too less points OR points more than 20% of side"
+            if np < 10 or np > 300:
+                error = "WARNING: Too less points OR too many points"
 
             if error != None:
                 print(error)
