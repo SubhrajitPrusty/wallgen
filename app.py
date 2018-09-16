@@ -32,6 +32,9 @@ def index():
                 # return redirect(url_for('static',filename='images/wall.png'))
                 return render_template("download.html", context=imgurl)
             # return redirect("/image")
+        else:
+            error = "Invalid input, try again"
+            return render_template("error.html", context=error)
     else:
         return render_template('index.html')
 
