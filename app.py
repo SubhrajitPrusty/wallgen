@@ -22,12 +22,15 @@ def index():
                 print(error)
                 return render_template('error.html', context=error)
             else:
+                fname = "wall-{}-{}.png".format(side,np)
                 shift = side//10
                 side += shift*2
                 points = wallgen.genPoints(np, side)
                 img = wallgen.genWall(points, side, shift)
-                img.save('static/images/wall.png')
-                return redirect(url_for('static',filename='images/wall.png'))
+                img.save('static/images/'+fname)
+                imgurl = url_for('static',filename='images/'+fname)
+                # return redirect(url_for('static',filename='images/wall.png'))
+                return render_template("download.html", context=imgurl)
             # return redirect("/image")
     else:
         return render_template('index.html')
