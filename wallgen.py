@@ -19,7 +19,7 @@ def random_gradient(side):
 	return img
 
 def genPoints(qty, side):
-	radius = side // 11
+	radius = side // 20
 	rX = (0,side)
 	rY = (0,side)
 
