@@ -23,7 +23,8 @@ def index():
                 rgb1 = tuple(bytes.fromhex(rgb1))
                 rgb2 = tuple(bytes.fromhex(rgb2))
             except Exception as e:
-                error = "ERROR: Invalid color hex"
+                if e:
+                    error = "ERROR: Invalid color hex"
             
             print(side, np, rgb1, rgb2)
             
@@ -31,9 +32,6 @@ def index():
                 error = "WARNING: Image too large OR Image too small"
             if np < 10 or np > 300:
                 error = "WARNING: Too less points OR too many points"
-
-            if len(rgb1) != 6 or len(rgb2) != 6:
-                error = "ERROR: Invalid color hex"
 
             if error != None:
                 print(error)
