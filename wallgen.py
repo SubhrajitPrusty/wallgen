@@ -18,6 +18,21 @@ def random_gradient(side):
 
 	return img
 
+def gradient(side, rgb1, rgb2):
+	img = Image.new("RGB", (side,side), "#FFFFFF")
+
+	draw = ImageDraw.Draw(img)
+
+	r,g,b = rgb1[0], rgb1[1], rgb1[2]
+	dr,dg,db = (rgb2[0]-r)/side, (rgb2[1]-g)/side, (rgb2[2]-b)/side 
+
+	for i in range(side):
+		r,g,b = r+dr, g+dg, b+db
+		draw.line((i,0,i,side), fill=(int(r),int(g),int(b)))
+
+	return img
+
+
 def genPoints(qty, side):
 	radius = side // 20
 	rX = (0,side)
@@ -52,8 +67,7 @@ def calcCenter(ps):
 	mid = ((mid1[0]+ps[2][0])/2, (mid1[1]+ps[2][1])/2)
 	return mid
 
-def genWall(points, side, shift):
-	img = random_gradient(side)
+def genWall(img, points, side, shift):
 	idata = img.load()
 	draw = ImageDraw.Draw(img)
 	for p in points:
@@ -66,16 +80,25 @@ def genWall(points, side, shift):
 
 @click.command()
 @click.argument("side", type=click.INT)
+@click.option("--colors", nargs=2, type=click.STRING, help="use color1 --> color2 gradient, e.g #ff0000 #0000ff")
 @click.option("--np", default=100, help="number of points to use, default = 100")
 @click.option("--radius", default=200, help="radius, within which no other point is generated, default=200")
 @click.option("--show", is_flag=True, help="open the image")
-def cli(side,np,radius,show):
+def cli(side,np,radius,show,colors):
 	""" Generates a side X side HQ low poly image of random gradient """
 
 	shift = side//10
 	side += shift*2
-	points = genPoints(np, side)
-	img = genWall(points, side, shift)
+	
+	if not colors:
+		img = random_gradient(side)
+	else:
+		rgb1 = tuple(bytes.fromhex(colors[0][1:]))
+		rgb2 = tuple(bytes.fromhex(colors[1][1:]))
+		img = gradient(side, rgb1, rgb2)
+
+	points = genPoints(radius, np, side)
+	img = genWall(img, points, side, shift)
 
 	if show:
 		img.show()
