@@ -97,7 +97,7 @@ def download():
 				print(fpath)
 				img.save(fpath)
 				imgurl = url_for('static',filename='images/'+fname)
-				return send_file(fpath, mimetype="image/png")
+				return "http://wallgen.herokuapp.com/"+fpath
 
 
 if __name__ == '__main__':
