@@ -35,7 +35,7 @@ def gradient(side, rgb1, rgb2):
 
 
 def genPoints(qty, side):
-	radius = side // 20
+	radius = side // 20 # radius is set to 5% - good config
 	rX = (0,side)
 	rY = (0,side)
 
@@ -64,32 +64,34 @@ def genPoints(qty, side):
 	return points
 
 def calcCenter(ps):
+	""" calculate incenter of a triangle given all vertices"""
 	mid1 = ((ps[0][0]+ps[1][0])/2, (ps[0][1]+ps[1][1])/2)
 	mid = ((mid1[0]+ps[2][0])/2, (mid1[1]+ps[2][1])/2)
 	return mid
 
 def genWall(img, points, side, shift):
-	idata = img.load()
+	idata = img.load() # load pixel data
 	draw = ImageDraw.Draw(img)
 	for p in points:
-		tp = tuple(map(tuple,p))
-		c = (255,255,255)
+		tp = tuple(map(tuple,p)) # convert each pair of points to tuples
+		c = (255,255,255) # default color incase of exception
 		try:
 			c = idata[calcCenter(tp)]
 		except Exception as e:
 			pass
 		# draw.polygon(tp, outline="#2c2c2c")
-		draw.polygon(tp, fill=c)
-	img = img.crop((shift,shift,side-shift,side-shift))
+		draw.polygon(tp, fill=c) # draw one triangle
+	img = img.crop((shift,shift,side-shift,side-shift)) # crop back to normal size
+
 	return img
 
 def genPattern(x, y, side, boxes, img, square=False):
-	idata = img.load()
-	draw = ImageDraw.Draw(img)
-	inc = side//boxes
-	xback = x
-	mult = 2
-	boxes = boxes//mult
+	idata = img.load() # load pixel data
+	draw = ImageDraw.Draw(img) 
+	inc = side//boxes #increment size
+	xback = x # backup of x
+	mult = 2 
+	boxes = boxes//mult # adjustment
 	for i in range(boxes):
 		for j in range(boxes):
 			if square:
@@ -97,21 +99,20 @@ def genPattern(x, y, side, boxes, img, square=False):
 			else:
 				points = [(x,y),(x-inc,y+inc),(x,y+2*inc),(x+inc,y+inc)] #rhombus
 
-			a,b = x+inc,y+inc
-			a = a if a>0 else 0
-			a = a if a<side else a-2*inc
-			b = b if b>0 else 0
-			b = b if b<side else b-2*inc
-			mx = (a,b)
-			c = idata[mx]
+			a,b = x+inc,y+inc # to get pixel data
+			a = a if a>0 else 0 # prevent underflow
+			a = a if a<side else a-2*inc # prevent overflow
+			b = b if b>0 else 0 # prevent underflow
+			b = b if b<side else b-2*inc # prevent overflow
+			c = idata[a,b] # color data
 
-			draw.polygon((points), fill=tuple(c))
-			x+=mult*inc
+			draw.polygon((points), fill=tuple(c)) # draw one polygon
+			x+=mult*inc # shift cursor horizontally
 	
-		y+=mult*inc
-		x=xback
+		y+=mult*inc # shift cursor vertically
+		x=xback # restore horizontal starting point
 
-	return img
+	return img # return final image
 
 
 @click.group()
@@ -122,7 +123,7 @@ def cli():
 @cli.command()
 @click.argument("side", type=click.INT)
 # @click.option("--pic",type=click.Path(exists=True,dir_okay=False),help="Use a pic instead of gradient background")
-@click.option("--colors", nargs=2, type=click.STRING, help="use color1 --> color2 gradient, e.g #ff0000 #0000ff")
+@click.option("--colors", nargs=2, type=click.STRING, help="use custom gradient, e.g --colors #ff0000 #0000ff")
 @click.option("--np", default=100, help="number of points to use, default = 100")
 @click.option("--show", is_flag=True, help="open the image")
 
@@ -142,7 +143,7 @@ def poly(side, np, show, colors):
 		sys.exit(1)
 
 	shift = side//10
-	side += shift*2
+	side += shift*2 # increase size to prevent underflow
 	
 	# if pic:
 	# 	img = img.load(pic)
@@ -164,7 +165,7 @@ def poly(side, np, show, colors):
 @cli.command()
 @click.argument("side", type=click.INT)
 @click.option("--sq", is_flag=True, help="use squares instead of rhombus")
-@click.option("--colors", nargs=2, type=click.STRING, help="use color1 --> color2 gradient, e.g #ff0000 #0000ff")
+@click.option("--colors", nargs=2, type=click.STRING, help="use custom gradient, e.g --colors #ff0000 #0000ff")
 @click.option("--show", is_flag=True, help="open the image")
 def pattern(side, colors, show, sq):
 	""" Generate a HQ image of a beautiful pattern """

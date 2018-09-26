@@ -29,7 +29,7 @@ Usage: wallgen poly [OPTIONS] SIDE
   Generates a HQ low poly image
 
 Options:
-  --colors TEXT...  use color1 --> color2 gradient, e.g #ff0000 #0000ff
+  --colors TEXT...  use custom gradient, e.g --colors #ff0000 #0000ff
   --np INTEGER      number of points to use, default = 100
   --show            open the image
   --help            Show this message and exit.
@@ -45,7 +45,7 @@ Usage: wallgen pattern [OPTIONS] SIDE
 
 Options:
   --sq              use squares instead of rhombus
-  --colors TEXT...  use color1 --> color2 gradient, e.g #ff0000 #0000ff
+  --colors TEXT...  use custom gradient, e.g --colors #ff0000 #0000ff
   --show            open the image
   --help            Show this message and exit.
 ```
