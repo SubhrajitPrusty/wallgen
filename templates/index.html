@@ -7,35 +7,26 @@
 	<link rel="stylesheet" href="static/css/style.css">
 </head>
 <body>
-	<div class="container mx-auto mt-5 col-md-8">
+	<div class="navbar fixed-top bg-dark">
+		<span class="navbar-brand mb-0 h1 text-light">Wallgen</span>
+	</div>
+	<div class="container mx-auto mt-4">
 		<div class="jumbotron bg-transparent">
-			<h1 class="display-4 text-center text-light font-weight-bold">Wallgen</h1>
-			<br>
-			<form action="/" method="POST">
-				<div class="form-group">
-					<label for="Height" class="display-4 text-light">Height</label>
-					<input class="form-control form-control-lg shadow-lg" type="number" placeholder="Enter height in pixels, e.g. 2000" name="side">
-					<small class="form-text text-light">Image size cannot exceed 4000</small>
-				</div>
-				<div class="form-group">
-					<label for="Points" class="display-4 text-light">Points</label>
-					<input class="form-control form-control-lg shadow-lg" type="number" placeholder="Enter number of points, e.g. 100" name="np">
-					<small class="form-text text-light">Points cannot exceed 300</small>
-				</div>
-				<div class="form-group">
-					<label for="Colors" class="display-4 text-light">Input colors</label>
-					<div class="row">
-						<div class="col">
-							<input class="form-control form-control-lg shadow-lg" type="text" placeholder="Enter color 1, e.g #ff0000" name="rgb1">
+			<div class="row card-group">
+					<a class="card col-sm-5 mx-auto bg-transparent text-center border-0 page-id" href="/poly" style="text-decoration: none">
+						<img class="card-img shadow-lg" src="static/images/poly.png" alt="poly">
+						<div class="card-img-overlay">
+							<h1 class="display-2"> POLY </h1>
 						</div>
-						<div class="col">
-							<input class="form-control form-control-lg shadow-lg" type="text" placeholder="Enter color 2, e.g #0000ff" name="rgb2">
+					</a>
+
+					<a class="card col-sm-5 mx-auto bg-transparent text-center border-0 page-id" href="/pattern" style="text-decoration: none">
+						<img class="card-img shadow-lg" src="static/images/pattern.png" alt="poly">
+						<div class="card-img-overlay">
+							<h1 class="display-2"> PATTERN </h1>
 						</div>
-					</div>
-				</div>
-				<br>
-				<button type="submit" class="btn btn-primary">Submit</button>
-			</form>
+					</a>
+			</div>
 		</div>
 	</div>
 </body>

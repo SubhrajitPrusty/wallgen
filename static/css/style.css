@@ -7,3 +7,14 @@ body
 {
 	background-image: url("../images/bg.png");
 }
+
+.page-id
+{
+	font-family: Impact;
+	color: #eee;	
+}
+
+.page-id:hover
+{
+	color: #555555;
+}
