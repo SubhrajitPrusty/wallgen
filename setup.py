@@ -43,6 +43,6 @@ setup(name = 'wallgen',
     install_requires=['pillow', 'click', 'scipy'],
     entry_points="""
     [console_scripts]
-        wallgen=app:cli
+        wallgen=wallgen:cli
         """,
 )
