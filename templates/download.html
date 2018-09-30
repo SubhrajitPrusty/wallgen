@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Wallgen</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+	<link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+	<div class="jumbotron bg-dark mx-auto mt-5 py-5 col-sm-8">
+		<div class="alert alert-warning" role="alert">
+			<a href="{{ context }}" download>
+				Click to Download
+				<img src="{{ context }}" alt="Image" class="img-fluid">
+			</a>
+		</div>
+		<form action="/">
+			<button type="submit" class="btn btn-primary">Go BACK</button>
+		</form>
+	</div>
+	
+</body>
+</html>
