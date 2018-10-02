@@ -1,5 +1,7 @@
 # WallGen
-[![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com)   [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com)   [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)  
+[![](https://img.shields.io/badge/Demo-yellow.svg?style=for-the-badge)](http://wallgen.herokuapp.com/)
+
 
 Generates HQ poly wallpapers
 
