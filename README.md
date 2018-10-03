@@ -59,7 +59,7 @@ Options:
 
 ![](./images/demo1.png)
 
-## `wallgen poly 2000`
+## `wallgen poly 2000 --colors #dc2221 ##35d7d6`
 
 ![](./images/demo2.png)
 
