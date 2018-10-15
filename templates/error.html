@@ -7,14 +7,25 @@
 	<link rel="stylesheet" href="static/css/style.css">
 </head>
 <body>
-	<div class="jumbotron bg-dark mx-auto mt-5 py-5 col-sm-8">
-		<div class="alert alert-warning" role="alert">
-			{{ context }}
-		</div>
-		<form action="/">
-			<button type="submit" class="btn btn-primary">Go BACK</button>
-		</form>
+	<div class="navbar fixed-top bg-dark">
+		<span class="navbar-brand mb-0 h1 text-light">Wallgen</span>
 	</div>
+	<div class="container mx-auto col-md-8">
+		<div class="jumbotron bg-dark mx-auto">
+			<div class="alert alert-warning" role="alert">
+				{{ context }}
+			</div>
+			<form action="/">
+				<button type="submit" class="btn btn-primary">Go BACK</button>
+			</form>
+			<div>
+				<h6>
+					&#169 Subhrajit Prusty 2018
+				</h6>
+			</div>
+		</div>
+	</div>
+	
 	
 </body>
 </html>

@@ -7,17 +7,26 @@
 	<link rel="stylesheet" href="static/css/style.css">
 </head>
 <body>
-	<div class="jumbotron bg-dark mx-auto mt-5 py-5 col-sm-8">
-		<div class="alert alert-warning" role="alert">
-			<a href="{{ context }}" download>
-				Click to Download
-				<img src="{{ context }}" alt="Image" class="img-fluid">
-			</a>
-		</div>
-		<form action="/">
-			<button type="submit" class="btn btn-primary">Go BACK</button>
-		</form>
+	<div class="navbar fixed-top bg-dark">
+		<span class="navbar-brand mb-0 h1 text-light">Wallgen</span>
 	</div>
-	
+	<div class="container mx-auto col-md-8">
+		<div class="jumbotron bg-dark">
+			<div class="alert alert-warning" role="alert">
+				<a href="{{ context }}" download>
+				
+					<img src="{{ context }}" alt="Image" class="img-fluid">
+				</a>
+			</div>
+			<form action="/">
+				<button type="submit" class="btn btn-primary">GO BACK</button>
+			</form>
+			<div>
+				<h6>
+					&#169 Subhrajit Prusty 2018
+				</h6>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
