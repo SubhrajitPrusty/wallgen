@@ -22,6 +22,7 @@ Options:
 Commands:
   pattern  Generate a HQ image of a beautiful pattern
   poly     Generates a HQ low poly image
+  slants   Generates slanting lines of various colors
 ```
 
 ### `wallgen poly --help`
@@ -32,10 +33,12 @@ Usage: wallgen poly [OPTIONS] SIDE
   Generates a HQ low poly image
 
 Options:
-  --colors TEXT...  use custom gradient, e.g --colors #ff0000 #0000ff
-  --np INTEGER      number of points to use, default = 100
-  --show            open the image
-  --help            Show this message and exit.
+  --colors TEXT...   use custom gradient, e.g --colors #ff0000 #0000ff
+  --colors2 TEXT...  use 2 color custom gradient, e.g --colors2 #ff0000
+                     #000000 #0000ff
+  --np INTEGER       number of points to use, default = 100
+  --show             open the image
+  --help             Show this message and exit.
 ```
 
 ### `wallgen pattern --help`
@@ -47,10 +50,24 @@ Usage: wallgen pattern [OPTIONS] SIDE
   Generate a HQ image of a beautiful pattern
 
 Options:
-  --sq              use squares instead of rhombus
-  --colors TEXT...  use custom gradient, e.g --colors #ff0000 #0000ff
-  --show            open the image
-  --help            Show this message and exit.
+  --sq               use squares instead of rhombus
+  --colors TEXT...   use custom gradient, e.g --colors #ff0000 #0000ff
+  --colors2 TEXT...  use 2 color custom gradient, e.g --colors2 #ff0000
+                     #000000 #0000ff
+  --show             open the image
+  --help             Show this message and exit.
+```
+
+### `wallgen slants --help`
+
+```
+Usage: wallgen slants [OPTIONS] SIDE
+
+  Generates slanting lines of various colors
+
+Options:
+  --show  open the image
+  --help  Show this message and exit.
 ```
 
 ## Examples
@@ -63,9 +80,17 @@ Options:
 
 ![](./images/demo2.png)
 
+## `wallgen poly 2000 --colors #ff0000 #0000ff --colors2 #ff0000 #000000 #0000ff`
+
+![](./images/demo5.png)
+
 ## `wallgen pattern 2000 --sq --colors #dd0000 #4455ff`
 
 ![](./images/demo3.png)
+
+## `wallgen slants 2000`
+
+![](./images/demo4.png)
 
 
 ## Screenshots
