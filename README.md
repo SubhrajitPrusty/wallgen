@@ -80,7 +80,7 @@ Options:
 
 ![](./images/demo2.png)
 
-## `wallgen poly 2000 --colors #ff0000 #0000ff --colors2 #ff0000 #000000 #0000ff`
+## `wallgen poly 2000 --colors2 #ff0000 #000000 #0000ff`
 
 ![](./images/demo5.png)
 
