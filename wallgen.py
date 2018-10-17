@@ -115,6 +115,11 @@ def genPattern(x, y, side, boxes, img, square=False):
 	return img # return final image
 
 
+def genWaves(img, side):
+	
+
+
+
 @click.group()
 
 def cli():
