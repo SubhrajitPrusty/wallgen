@@ -205,6 +205,11 @@ def pattern(side, colors, show, sq):
 
 	if not colors:
 		img = random_gradient(side)
+	if colors2:
+		rgb1 = tuple(bytes.fromhex(colors[0][1:]))
+		rgb2 = tuple(bytes.fromhex(colors[1][1:]))
+		rgb3 = tuple(bytes.fromhex(colors[1][1:]))
+		img = dualGradient(side, rgb1, rgb2, rgb3)
 	else:
 		rgb1 = tuple(bytes.fromhex(colors[0][1:]))
 		rgb2 = tuple(bytes.fromhex(colors[1][1:]))
