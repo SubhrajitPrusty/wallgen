@@ -33,6 +33,26 @@ def gradient(side, rgb1, rgb2):
 
 	return img
 
+def dualGradient(side, color1, color2, color3):
+    img = Image.new("RGB", (side,side), "#FFFFFF")
+    draw = ImageDraw.Draw(img)
+
+    div = side//2
+    [r,g,b] = color1
+    p=0
+    for i in range(2):
+        dc = [(y-x)/div for x,y in zip(color1, color2)]
+        for x in range(p, p+div):
+            draw.line([x,0,x,side], fill=tuple(map(int, [r,g,b])))
+            r+=dc[0]
+            g+=dc[1]
+            b+=dc[2]
+        p+=div
+        color1 = color2
+        color2 = color3
+
+    return img
+
 
 def genPoints(qty, side):
 	radius = side // 20 # radius is set to 5% - good config
@@ -115,13 +135,7 @@ def genPattern(x, y, side, boxes, img, square=False):
 	return img # return final image
 
 
-def genWaves(img, side):
-	
-
-
-
 @click.group()
-
 def cli():
 	pass
 
@@ -129,6 +143,7 @@ def cli():
 @click.argument("side", type=click.INT)
 # @click.option("--pic",type=click.Path(exists=True,dir_okay=False),help="Use a pic instead of gradient background")
 @click.option("--colors", nargs=2, type=click.STRING, help="use custom gradient, e.g --colors #ff0000 #0000ff")
+@click.option("--colors2", nargs=3, type=click.STRING, help="use 2 color custom gradient, e.g --colors2 #ff0000 #000000 #0000ff")
 @click.option("--np", default=100, help="number of points to use, default = 100")
 @click.option("--show", is_flag=True, help="open the image")
 
@@ -156,6 +171,11 @@ def poly(side, np, show, colors):
 		rgb1 = tuple(bytes.fromhex(colors[0][1:]))
 		rgb2 = tuple(bytes.fromhex(colors[1][1:]))
 		img = gradient(side, rgb1, rgb2)
+	if colors2:
+		rgb1 = tuple(bytes.fromhex(colors[0][1:]))
+		rgb2 = tuple(bytes.fromhex(colors[1][1:]))
+		rgb3 = tuple(bytes.fromhex(colors[1][1:]))
+		img = dualGradient(side, rgb1, rgb2, rgb3)
 	else:
 		img = random_gradient(side)
 
