@@ -53,6 +53,22 @@ def dualGradient(side, color1, color2, color3):
 	
 	return img
 
+def randcolor():
+	return (randint(0,255),randint(0,255),randint(0,255))
+
+def drawSlants(side):
+	img = Image.new("RGB", (side,side), "#FFFFFF")
+	draw = ImageDraw.Draw(img)
+	y = 0
+	ad = side//10
+	while y <= side+ad:
+		w = randint(5,20)
+		c = randcolor()
+		draw.line([0-ad, y,  y, 0-ad], width=w+1, fill=c)
+		draw.line([y, side,  side, y], width=w+1, fill=c)
+		y+=w
+
+	return img
 
 def genPoints(qty, side):
 	radius = side // 20 # radius is set to 5% - good config
@@ -159,7 +175,7 @@ def poly(side, np, show, colors, colors2):
 		error = "Too many points. Maximum points {}".format(side//2)
 
 	if error:
-		click.echo(error)
+		click.secho(error, fg='red', err=True)
 		sys.exit(1)
 
 	shift = side//10
@@ -201,7 +217,7 @@ def pattern(side, colors, show, sq, colors2):
 		error = "Image too small. Minimum size 50"
 
 	if error:
-		click.echo(error)
+		click.secho(error, fg='red', err=True)
 		sys.exit(1)
 	
 	if colors:
@@ -220,6 +236,19 @@ def pattern(side, colors, show, sq, colors2):
 	img = genPattern(0, 0, side, boxes, img, sq)
 	temp = side//boxes
 	img = genPattern(temp, temp, side, boxes, img, sq)
+
+	if show:
+		img.show()
+
+	img.save("wall-{}.png".format(int(time.time())))
+
+
+@cli.command()
+@click.argument("side", type=click.INT)
+@click.option("--show", is_flag=True, help="open the image")
+def slants(side, show):
+	""" Generates slanting lines of various colors """
+	img = drawSlants(side)
 
 	if show:
 		img.show()
