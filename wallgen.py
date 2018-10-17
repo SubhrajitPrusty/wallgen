@@ -147,7 +147,7 @@ def cli():
 @click.option("--np", default=100, help="number of points to use, default = 100")
 @click.option("--show", is_flag=True, help="open the image")
 
-def poly(side, np, show, colors):
+def poly(side, np, show, colors, colors2):
 	""" Generates a HQ low poly image """
 
 	error = ""
@@ -191,8 +191,9 @@ def poly(side, np, show, colors):
 @click.argument("side", type=click.INT)
 @click.option("--sq", is_flag=True, help="use squares instead of rhombus")
 @click.option("--colors", nargs=2, type=click.STRING, help="use custom gradient, e.g --colors #ff0000 #0000ff")
+@click.option("--colors2", nargs=3, type=click.STRING, help="use 2 color custom gradient, e.g --colors2 #ff0000 #000000 #0000ff")
 @click.option("--show", is_flag=True, help="open the image")
-def pattern(side, colors, show, sq):
+def pattern(side, colors, show, sq, colors2):
 	""" Generate a HQ image of a beautiful pattern """
 
 	error = ""
