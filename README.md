@@ -1,6 +1,6 @@
 # WallGen
 [![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com)   [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)  
-[![](https://img.shields.io/badge/Demo-yellow.svg?style=for-the-badge)](http://wallgen.herokuapp.com/)
+[![](https://img.shields.io/badge/Demo-yellow.svg?style=for-the-badge)](http://wallgen.subhrajitpy.me/)
 
 
 Generates HQ poly wallpapers
@@ -8,6 +8,19 @@ Generates HQ poly wallpapers
 ## Installation 
 
 `pip install --editable .`
+
+## Usage Docker
+
+Inside the folder
+
+`docker build -t wallgen-doc:latest .`
+
+`docker run -d -p 5000:5000 wallgen-doc`
+
+Run `docker ps` to check if container is running.
+
+Goto [localhost:5000](http://localhost:5000) to check out the website.
+
 
 ## Usage
 

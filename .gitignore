@@ -3,3 +3,5 @@ __pycache__
 wall*.png
 *.egg-info
 static/images/wall*.png
+venv
+env
