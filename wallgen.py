@@ -4,6 +4,7 @@ from random import randrange,randint
 import time
 import click
 from scipy.spatial import Delaunay
+import math
 
 def random_gradient(side):
 	img = Image.new("RGB", (side,side), "#FFFFFF")
@@ -150,6 +151,41 @@ def genPattern(x, y, side, boxes, img, square=False):
 
 	return img # return final image
 
+def genHexagon(side, radius, img):
+	idata = img.load() # load pixel data
+	draw = ImageDraw.Draw(img)
+
+	ang = 2 * math.pi / 6 # angle inside a hexagon
+	s = radius * math.cos(math.pi/6)
+	width = 2*s # horizontal width of a hexagon
+	boxes = side// int(width) + 1 # adjustment
+
+	x,y = 0,s # start here
+	xback = s # backup of x	
+
+	for i in range(boxes+1):
+		for j in range(boxes):			
+			points = [((x + radius * math.sin(i * ang)), (y + radius * math.cos(i * ang))) for i in range(6)]
+			
+			a,b = x,y
+			a = a if a < side else side-1
+			b = b if b < side else side-1
+			a = a if a > 0 else 1
+			b = b if b > 0 else 1
+
+			c = idata[a,b]
+			
+			draw.polygon((points), fill=c) # draw one hexagon
+			x += width
+
+		y += radius * 1.5 # shift cursor vertically
+		if i%2 == 0:
+			x=xback # restore horizontal starting point
+		else:
+			x=xback-s # restore horizontal starting point, but for honeycombing
+
+	return img # return final image
+
 
 @click.group()
 def cli():
@@ -206,10 +242,11 @@ def poly(side, np, show, colors, colors2):
 @cli.command()
 @click.argument("side", type=click.INT)
 @click.option("--sq", is_flag=True, help="use squares instead of rhombus")
+@click.option("--hex", is_flag=True, help="use Hexagons instead of rhombus (Experimental)")
 @click.option("--colors", nargs=2, type=click.STRING, help="use custom gradient, e.g --colors #ff0000 #0000ff")
 @click.option("--colors2", nargs=3, type=click.STRING, help="use 2 color custom gradient, e.g --colors2 #ff0000 #000000 #0000ff")
 @click.option("--show", is_flag=True, help="open the image")
-def pattern(side, colors, show, sq, colors2):
+def pattern(side, colors, show, sq, hex, colors2):
 	""" Generate a HQ image of a beautiful pattern """
 
 	error = ""
@@ -232,10 +269,13 @@ def pattern(side, colors, show, sq, colors2):
 	else:
 		img = random_gradient(side)
 
-	boxes = side // 100 + 2 # this config looks good
-	img = genPattern(0, 0, side, boxes, img, sq)
-	temp = side//boxes
-	img = genPattern(temp, temp, side, boxes, img, sq)
+	if hex:
+		img = genHexagon(side, side//20, img) # this looks good
+	else:
+		boxes = side // 100 + 2 # this config looks good
+		img = genPattern(0, 0, side, boxes, img, sq)
+		temp = side//boxes
+		img = genPattern(temp, temp, side, boxes, img, sq)
 
 	if show:
 		img.show()
