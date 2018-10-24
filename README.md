@@ -64,6 +64,7 @@ Usage: wallgen pattern [OPTIONS] SIDE
 
 Options:
   --sq               use squares instead of rhombus
+  --hex              use Hexagons instead of rhombus (Experimental)
   --colors TEXT...   use custom gradient, e.g --colors #ff0000 #0000ff
   --colors2 TEXT...  use 2 color custom gradient, e.g --colors2 #ff0000
                      #000000 #0000ff
@@ -100,6 +101,10 @@ Options:
 ## `wallgen pattern 2000 --sq --colors #dd0000 #4455ff`
 
 ![](./images/demo3.png)
+
+## `wallgen pattern 2000 --hex --colors #ff0000 #0000ff`
+
+![](./images/demo6.png)
 
 ## `wallgen slants 2000`
 
