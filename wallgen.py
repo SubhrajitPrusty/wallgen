@@ -20,20 +20,6 @@ def random_gradient(side):
 
 	return img
 
-def gradient(side, rgb1, rgb2):
-	img = Image.new("RGB", (side,side), "#FFFFFF")
-
-	draw = ImageDraw.Draw(img)
-
-	r,g,b = rgb1[0], rgb1[1], rgb1[2]
-	dr,dg,db = (rgb2[0]-r)/side, (rgb2[1]-g)/side, (rgb2[2]-b)/side 
-
-	for i in range(side):
-		r,g,b = r+dr, g+dg, b+db
-		draw.line((i,0,i,side), fill=(int(r),int(g),int(b)))
-
-	return img
-
 def nGradient(side, *colors):
 	img = Image.new("RGB", (side,side), "#FFFFFF")
 	draw = ImageDraw.Draw(img)
