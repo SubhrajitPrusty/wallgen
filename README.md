@@ -86,29 +86,35 @@ Options:
 
 ## Examples
 
-## `wallgen poly 2000 --colors #dd0000 #4455ff`
+## `wallgen poly 2000`
 
-![](./images/demo1.png)
+Use random Gradient
 
-## `wallgen poly 2000 --colors #dc2221 #35d7d6`
+<img src="./images/demo1.png" width="50%">
 
-![](./images/demo2.png)
+`wallgen poly 2000 --colors #dc2221 #35d7d6`
+
+<img src="./images/demo2.png" width="50%">
 
 ## `wallgen poly 2000 --colors2 #ff0000 #000000 #0000ff`
 
-![](./images/demo5.png)
+<img src="./images/demo5.png" width="50%">
 
 ## `wallgen pattern 2000 --sq --colors #dd0000 #4455ff`
 
-![](./images/demo3.png)
+<img src="./images/demo3.png" width="50%">
 
 ## `wallgen pattern 2000 --hex --colors #ff0000 #0000ff`
 
-![](./images/demo6.png)
+<img src="./images/demo6.png" width="50%">
 
 ## `wallgen slants 2000`
 
-![](./images/demo4.png)
+<img src="./images/demo4.png" width="50%">
+
+## `wallgen pattern 2000 -hx -c '#ff0000' -c '#000000' -c '#00ff00' -c '#00ffff' -c '#0000ff'`
+
+<img src="./images/demo7.png" width="50%">
 
 
 ## Screenshots
