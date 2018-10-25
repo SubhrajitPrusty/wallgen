@@ -47,7 +47,7 @@ Usage: wallgen poly [OPTIONS] SIDE
 
 Options:
   --colors TEXT...   use custom gradient(s), e.g --colors #ff0000 #0000ff #000000
-  --points INTEGER       number of points to use, default = 100
+  --points INTEGER   number of points to use, default = 100
   --show             open the image
   --help             Show this message and exit.
 ```
