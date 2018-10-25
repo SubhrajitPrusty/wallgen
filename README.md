@@ -5,7 +5,7 @@
 
 Generates HQ poly wallpapers
 
-## Installation 
+## Installation
 
 `pip install --editable .`
 
@@ -115,7 +115,7 @@ Options:
 
 ## `Homepage`
 
-![image1](https://user-images.githubusercontent.com/35899910/46815188-0a84d280-cd98-11e8-9d74-20ffd4239148.png)
+![homepage](./images/homepage.png)
 
 ## `Poly_Demo`
 
@@ -132,4 +132,3 @@ Options:
 ## `Wallgen2`
 
 ![image22](https://user-images.githubusercontent.com/35899910/46815900-76b40600-cd99-11e8-8123-966446e9c0b7.png)
-
