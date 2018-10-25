@@ -34,23 +34,22 @@ def gradient(side, rgb1, rgb2):
 
 	return img
 
-def dualGradient(side, color1, color2, color3):
+def nGradient(side, *colors):
 	img = Image.new("RGB", (side,side), "#FFFFFF")
 	draw = ImageDraw.Draw(img)
 
-	div = side//2
-	[r,g,b] = color1
+	nc = len(colors)
+	div = side//(nc-1)
+	[r,g,b] = colors[0]
 	p=0
-	for i in range(2):
-		dc = [(y-x)/div for x,y in zip(color1, color2)]
+	for i in range(1,nc):
+		dc = [(y-x)/div for x,y in zip(colors[i-1], colors[i])]
 		for x in range(p, p+div):
 			draw.line([x,0,x,side], fill=tuple(map(int, [r,g,b])))
 			r+=dc[0]
 			g+=dc[1]
 			b+=dc[2]
 		p+=div
-		color1 = color2
-		color2 = color3
 	
 	return img
 
@@ -194,20 +193,19 @@ def cli():
 @cli.command()
 @click.argument("side", type=click.INT)
 # @click.option("--pic",type=click.Path(exists=True,dir_okay=False),help="Use a pic instead of gradient background")
-@click.option("--colors", nargs=2, type=click.STRING, help="use custom gradient, e.g --colors #ff0000 #0000ff")
-@click.option("--colors2", nargs=3, type=click.STRING, help="use 2 color custom gradient, e.g --colors2 #ff0000 #000000 #0000ff")
-@click.option("--np", default=100, help="number of points to use, default = 100")
-@click.option("--show", is_flag=True, help="open the image")
+@click.option("--colors", "-c", multiple=True, type=click.STRING, help="use many colors custom gradient, e.g -c #ff0000 -c #000000 -c #0000ff")
+@click.option("--points", "-p", default=100, help="number of points to use, default = 100")
+@click.option("--show", "-s", is_flag=True, help="open the image")
 
-def poly(side, np, show, colors, colors2):
+def poly(side, points, show, colors):
 	""" Generates a HQ low poly image """
 
 	error = ""
 	if side < 50:
 		error = "Image too small. Minimum size 50"
-	elif np < 3:
+	elif points < 3:
 		error = "Too less points. Minimum points 3"
-	elif np > side//2:
+	elif points > side//2:
 		error = "Too many points. Maximum points {}".format(side//2)
 
 	if error:
@@ -217,22 +215,17 @@ def poly(side, np, show, colors, colors2):
 	shift = side//10
 	side += shift*2 # increase size to prevent underflow
 	
-	# if pic:
-	# 	img = img.load(pic)
 	if colors:
-		rgb1 = tuple(bytes.fromhex(colors[0][1:]))
-		rgb2 = tuple(bytes.fromhex(colors[1][1:]))
-		img = gradient(side, rgb1, rgb2)
-	if colors2:
-		rgb1 = tuple(bytes.fromhex(colors2[0][1:]))
-		rgb2 = tuple(bytes.fromhex(colors2[1][1:]))
-		rgb3 = tuple(bytes.fromhex(colors2[2][1:]))
-		img = dualGradient(side, rgb1, rgb2, rgb3)
+		if len(colors) < 2:
+			click.secho("One color gradient not possible.", fg="red", err=True)
+			sys.exit(1)
+		cs = [tuple(bytes.fromhex(c[1:])) for c in colors]
+		img = nGradient(side, *cs)
 	else:
 		img = random_gradient(side)
 
-	points = genPoints(np, side)
-	img = genWall(img, points, side, shift)
+	pts = genPoints(points, side)
+	img = genWall(img, pts, side, shift)
 
 	if show:
 		img.show()
@@ -241,12 +234,11 @@ def poly(side, np, show, colors, colors2):
 
 @cli.command()
 @click.argument("side", type=click.INT)
-@click.option("--sq", is_flag=True, help="use squares instead of rhombus")
-@click.option("--hex", is_flag=True, help="use Hexagons instead of rhombus (Experimental)")
-@click.option("--colors", nargs=2, type=click.STRING, help="use custom gradient, e.g --colors #ff0000 #0000ff")
-@click.option("--colors2", nargs=3, type=click.STRING, help="use 2 color custom gradient, e.g --colors2 #ff0000 #000000 #0000ff")
-@click.option("--show", is_flag=True, help="open the image")
-def pattern(side, colors, show, sq, hex, colors2):
+@click.option("--squares", "-sq", is_flag=True, default=False, help="use squares instead of rhombus")
+@click.option("--hexagons", "-hx", is_flag=True, default=False, help="use Hexagons instead of rhombus (Experimental)")
+@click.option("--colors", "-c", multiple=True, type=click.STRING, help="use many colors custom gradient, e.g -c #ff0000 -c #000000 -c #0000ff")
+@click.option("--show", "-s", is_flag=True, help="open the image")
+def pattern(side, squares, hexagons, colors, show):
 	""" Generate a HQ image of a beautiful pattern """
 
 	error = ""
@@ -258,24 +250,21 @@ def pattern(side, colors, show, sq, hex, colors2):
 		sys.exit(1)
 	
 	if colors:
-		rgb1 = tuple(bytes.fromhex(colors[0][1:]))
-		rgb2 = tuple(bytes.fromhex(colors[1][1:]))
-		img = gradient(side, rgb1, rgb2)
-	elif colors2:
-		rgb1 = tuple(bytes.fromhex(colors2[0][1:]))
-		rgb2 = tuple(bytes.fromhex(colors2[1][1:]))
-		rgb3 = tuple(bytes.fromhex(colors2[2][1:]))
-		img = dualGradient(side, rgb1, rgb2, rgb3)
+		if len(colors) < 2:
+			click.secho("One color gradient not possible.", fg="red", err=True)
+			sys.exit(1)
+		cs = [tuple(bytes.fromhex(c[1:])) for c in colors]
+		img = nGradient(side, *cs)
 	else:
 		img = random_gradient(side)
 
-	if hex:
+	if hexagons:
 		img = genHexagon(side, side//20, img) # this looks good
 	else:
 		boxes = side // 100 + 2 # this config looks good
-		img = genPattern(0, 0, side, boxes, img, sq)
+		img = genPattern(0, 0, side, boxes, img, squares)
 		temp = side//boxes
-		img = genPattern(temp, temp, side, boxes, img, sq)
+		img = genPattern(temp, temp, side, boxes, img, squares)
 
 	if show:
 		img.show()
@@ -285,7 +274,7 @@ def pattern(side, colors, show, sq, hex, colors2):
 
 @cli.command()
 @click.argument("side", type=click.INT)
-@click.option("--show", is_flag=True, help="open the image")
+@click.option("--show", "-s", is_flag=True, help="open the image")
 def slants(side, show):
 	""" Generates slanting lines of various colors """
 	img = drawSlants(side)
