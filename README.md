@@ -46,10 +46,8 @@ Usage: wallgen poly [OPTIONS] SIDE
   Generates a HQ low poly image
 
 Options:
-  --colors TEXT...   use custom gradient, e.g --colors #ff0000 #0000ff
-  --colors2 TEXT...  use 2 color custom gradient, e.g --colors2 #ff0000
-                     #000000 #0000ff
-  --np INTEGER       number of points to use, default = 100
+  --colors TEXT...   use custom gradient(s), e.g --colors #ff0000 #0000ff #000000
+  --points INTEGER       number of points to use, default = 100
   --show             open the image
   --help             Show this message and exit.
 ```
@@ -63,11 +61,9 @@ Usage: wallgen pattern [OPTIONS] SIDE
   Generate a HQ image of a beautiful pattern
 
 Options:
-  --sq               use squares instead of rhombus
-  --hex              use Hexagons instead of rhombus (Experimental)
-  --colors TEXT...   use custom gradient, e.g --colors #ff0000 #0000ff
-  --colors2 TEXT...  use 2 color custom gradient, e.g --colors2 #ff0000
-                     #000000 #0000ff
+  --squares          use squares instead of rhombus
+  --hexagons         use Hexagons instead of rhombus (Experimental)
+  --colors TEXT...   use custom gradient(s), e.g --colors #ff0000 #0000ff #000000
   --show             open the image
   --help             Show this message and exit.
 ```
