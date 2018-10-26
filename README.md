@@ -46,12 +46,11 @@ Usage: wallgen poly [OPTIONS] SIDE
   Generates a HQ low poly image
 
 Options:
-  --colors TEXT...   use custom gradient, e.g --colors #ff0000 #0000ff
-  --colors2 TEXT...  use 2 color custom gradient, e.g --colors2 #ff0000
-                     #000000 #0000ff
-  --np INTEGER       number of points to use, default = 100
-  --show             open the image
-  --help             Show this message and exit.
+  -c, --colors TEXT     use many colors custom gradient, e.g -c #ff0000 -c
+                        #000000 -c #0000ff
+  -p, --points INTEGER  number of points to use, default = 100
+  -s, --show            open the image
+  --help                Show this message and exit.
 ```
 
 ### `wallgen pattern --help`
@@ -63,12 +62,11 @@ Usage: wallgen pattern [OPTIONS] SIDE
   Generate a HQ image of a beautiful pattern
 
 Options:
-  --sq               use squares instead of rhombus
-  --hex              use Hexagons instead of rhombus (Experimental)
-  --colors TEXT...   use custom gradient, e.g --colors #ff0000 #0000ff
-  --colors2 TEXT...  use 2 color custom gradient, e.g --colors2 #ff0000
-                     #000000 #0000ff
-  --show             open the image
+  -sq, --squares     use squares instead of rhombus
+  -hx, --hexagons    use Hexagons instead of rhombus (Experimental)
+  -c, --colors TEXT  use many colors custom gradient, e.g -c #ff0000 -c
+                     #000000 -c #0000ff
+  -s, --show         open the image
   --help             Show this message and exit.
 ```
 
@@ -80,61 +78,87 @@ Usage: wallgen slants [OPTIONS] SIDE
   Generates slanting lines of various colors
 
 Options:
-  --show  open the image
-  --help  Show this message and exit.
+  -s, --show  open the image
+  --help      Show this message and exit.
+
 ```
 
 ## Examples
 
-## `wallgen poly 2000`
 
-Use random Gradient
+### `wallgen poly 2000`
+
+Random Gradient
 
 <img src="./images/demo1.png" width="50%">
 
-`wallgen poly 2000 --colors #dc2221 #35d7d6`
+### `wallgen poly 2000 --colors "#dc2221" --colors "#35d7d6"`
+
+Fixed color/gradient
 
 <img src="./images/demo2.png" width="50%">
 
-## `wallgen poly 2000 --colors2 #ff0000 #000000 #0000ff`
+### `wallgen poly 2000 -c "#dd0000" -c "#4455ff" --points 50`
 
-<img src="./images/demo5.png" width="50%">
+Fixed no. of points
 
-## `wallgen pattern 2000 --sq --colors #dd0000 #4455ff`
+<img src="./images/demo9.png" width="50%">
+
+### `wallgen poly 2000 -c "#dd0000" -c "#4455ff" -p 500`
+
+Fixed no. of points
+
+<img src="./images/demo8.png" width="50%">
+
+### `wallgen poly 2000 -c "#ff0000" -c "#000000" -c "#0000ff"`
+
+More than 2 colours
 
 <img src="./images/demo3.png" width="50%">
 
-## `wallgen pattern 2000 --hex --colors #ff0000 #0000ff`
+### `wallgen pattern 2000 --squares -c "#dd0000" -c "#4455ff"`
 
-<img src="./images/demo6.png" width="50%">
-
-## `wallgen slants 2000`
+Square pattern
 
 <img src="./images/demo4.png" width="50%">
 
-## `wallgen pattern 2000 -hx -c '#ff0000' -c '#000000' -c '#00ff00' -c '#00ffff' -c '#0000ff'`
+### `wallgen pattern 2000 --hexagons -c "#ff0000" -c "#0000ff"`
+
+Hexagon pattern
+
+<img src="./images/demo5.png" width="50%">
+
+### `wallgen pattern 2000 -hx -c "#ff0000" -c "#000000" -c "#00ff00" -c "#00ffff" -c "#0000ff"`
+
+Multicoloured gradient, hexagon pattern
 
 <img src="./images/demo7.png" width="50%">
+
+### `wallgen slants 2000`
+
+Slants pattern
+
+<img src="./images/demo6.png" width="50%">
 
 
 ## Screenshots
 
-## `Homepage`
+### `Homepage`
 
 ![homepage](./images/homepage.png)
 
-## `Poly_Demo`
+### `Poly_Demo`
 
 ![image11](https://user-images.githubusercontent.com/35899910/46815367-664f5b80-cd98-11e8-9247-1e96dac8b8e1.png)
 
-## `Wallgen1`
+### `Wallgen1`
 
 ![image12](https://user-images.githubusercontent.com/35899910/46815734-22108b00-cd99-11e8-9ec5-006118b87532.png)
 
-## `Square_Demo`
+### `Square_Demo`
 
 ![image21](https://user-images.githubusercontent.com/35899910/46815830-53895680-cd99-11e8-8795-fa8f6731e153.png)
 
-## `Wallgen2`
+### `Wallgen2`
 
 ![image22](https://user-images.githubusercontent.com/35899910/46815900-76b40600-cd99-11e8-8123-966446e9c0b7.png)
