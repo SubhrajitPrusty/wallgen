@@ -5,3 +5,4 @@ wall*.png
 static/images/wall*.png
 venv
 env
+.idea
