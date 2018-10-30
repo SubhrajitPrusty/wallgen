@@ -56,31 +56,31 @@ def drawSlants(side):
 
 	return img
 
-def genPoints(qty, side):
-	radius = side // 20 # radius is set to 5% - good config
-	rX = (0,side)
-	rY = (0,side)
 
-	deltas = set()
-	for x in range(-radius,radius+1):
-		for y in range(-radius, radius+1):
-			if x**2 + y**2 <= radius**2:
-				deltas.add((x,y)) # populate with all possible points within radius
+def distance(p1, p2):
+	(x1, y1) = p1
+	(x2, y2) = p2
 
-	excluded = set()
+	d = int((y2-y1)**2 + (x2-x1)**2)**0.5
+	return d
+
+def genPoints(n, side):
+	radius = side // 100
 	randPoints = []
-	i = 0
 
-	while i<=qty:
-		x = randrange(*rX)
-		y = randrange(*rY)
+	while len(randPoints)<n: 
+		x = randint(0,side)
+		y = randint(0,side)
 
-		if (x,y) in excluded:
-			continue
-		randPoints.append((x,y)) # add a point
-		i+=1
-		excluded.update((x+dx,y+dx) for (dx,dy) in deltas) # update all points inside circumference
-
+		if len(randPoints) == 0:
+			randPoints.append((x,y))
+		else:
+			for p in randPoints:
+				if distance(p, (x,y)) <= radius:
+					break
+			else:
+				randPoints.append((x,y))
+	
 	tri = Delaunay(randPoints) # calculate D triangulation of points
 	points = tri.points[tri.simplices] # find all groups of points
 	return points
@@ -191,8 +191,8 @@ def poly(side, points, show, colors):
 		error = "Image too small. Minimum size 50"
 	elif points < 3:
 		error = "Too less points. Minimum points 3"
-	elif points > side//2:
-		error = "Too many points. Maximum points {}".format(side//2)
+	elif points > side:
+		error = f"Too many points. Maximum points {side//2}"
 
 	if error:
 		click.secho(error, fg='red', err=True)
