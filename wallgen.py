@@ -64,22 +64,36 @@ def distance(p1, p2):
 	d = int((y2-y1)**2 + (x2-x1)**2)**0.5
 	return d
 
-def genPoints(n, side):
+def genPoints(qty, side):
 	radius = side // 100
 	randPoints = []
+	og = side
+	side = side // 2
 
-	while len(randPoints)<n: 
-		x = randint(0,side)
-		y = randint(0,side)
+	qty //= 4
 
-		if len(randPoints) == 0:
-			randPoints.append((x,y))
-		else:
-			for p in randPoints:
-				if distance(p, (x,y)) <= radius:
-					break
+	def populate(a, b, n, side):
+		radius = side // 100
+		points = []
+		while len(points) < n:
+			x = randint(a,a+side)
+			y = randint(b,b+side)
+
+			if len(points) == 0:
+				points.append((x,y))
 			else:
-				randPoints.append((x,y))
+				for p in points:
+					if distance(p, (x,y)) <= radius:
+						break
+				else:
+					points.append((x,y))
+
+		return points
+	
+	randPoints = populate(0,0, qty, side)
+	randPoints += populate(side, 0, qty, side)
+	randPoints += populate(0, side, qty, side)
+	randPoints += populate(side, side, qty, side)
 	
 	tri = Delaunay(randPoints) # calculate D triangulation of points
 	points = tri.points[tri.simplices] # find all groups of points
