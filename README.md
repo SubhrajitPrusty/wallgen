@@ -33,9 +33,10 @@ Options:
   --help  Show this message and exit.
 
 Commands:
-  pattern  Generate a HQ image of a beautiful pattern
-  poly     Generates a HQ low poly image
-  slants   Generates slanting lines of various colors
+  poly    Generates a HQ low poly image
+  shape   Generate a HQ image of a beautiful shapes
+  slants  Generates slanting lines of various colors
+
 ```
 
 ### `wallgen poly --help`
@@ -50,24 +51,28 @@ Options:
                         #000000 -c #0000ff
   -p, --points INTEGER  number of points to use, default = 100
   -s, --show            open the image
+  -o, --outline         outline the triangles
   --help                Show this message and exit.
-```
-
-### `wallgen pattern --help`
-
 
 ```
-Usage: wallgen pattern [OPTIONS] SIDE
 
-  Generate a HQ image of a beautiful pattern
+### `wallgen shape --help`
+
+
+```
+Usage: wallgen shape [OPTIONS] SIDE
+
+  Generate a HQ image of a beautiful shapes
 
 Options:
-  -sq, --squares     use squares instead of rhombus
-  -hx, --hexagons    use Hexagons instead of rhombus (Experimental)
-  -c, --colors TEXT  use many colors custom gradient, e.g -c #ff0000 -c
-                     #000000 -c #0000ff
-  -s, --show         open the image
-  --help             Show this message and exit.
+  -t, --type [square|hex|diamond] choose which shape to use
+                                  
+  -c, --colors TEXT               use many colors custom gradient, e.g -c
+                                  #ff0000 -c #000000 -c #0000ff
+  -s, --show                      open the image
+  -o, --outline                   outline the shapes
+  --help                          Show this message and exit.
+
 ```
 
 ### `wallgen slants --help`
@@ -92,11 +97,11 @@ Random Gradient
 
 <img src="./images/demo1.png" width="50%">
 
-### `wallgen poly 2000 --colors "#dc2221" --colors "#35d7d6"`
+### `wallgen poly 1000 --colors "#ff0000" --colors "#00ddff"`
 
 Fixed color/gradient
 
-<img src="./images/demo2.png" width="50%">
+<img src="./images/poly.png" width="50%">
 
 ### `wallgen poly 2000 -c "#dd0000" -c "#4455ff" --points 50`
 
@@ -116,23 +121,47 @@ More than 2 colours
 
 <img src="./images/demo3.png" width="50%">
 
-### `wallgen pattern 2000 --squares -c "#dd0000" -c "#4455ff"`
+### `wallgen poly 1000 -c "#ff0000" -c "#00ddff" -o`
+
+With outline
+
+<img src="./images/poly-outline.png" width="50%">
+
+### `wallgen shape -t square -c "#ff0099" -c "#00ddff"`
 
 Square pattern
 
-<img src="./images/demo4.png" width="50%">
+<img src="./images/square.png" width="50%">
 
-### `wallgen pattern 2000 --hexagons -c "#ff0000" -c "#0000ff"`
+### `wallgen shape -t square -c "#ff0099" -c "#00ddff" -o`
+
+Square pattern with Outline
+
+<img src="./images/square-outline.png" width="50%">
+
+### `wallgen shape -t hex -c "#ff0099" -c "#00ddff"`
 
 Hexagon pattern
 
-<img src="./images/demo5.png" width="50%">
+<img src="./images/hex.png" width="50%">
 
-### `wallgen pattern 2000 -hx -c "#ff0000" -c "#000000" -c "#00ff00" -c "#00ffff" -c "#0000ff"`
+### `wallgen shape -t hexagon -c "#ff0099" -c "#00ddff" -o`
 
-Multicoloured gradient, hexagon pattern
+Hexagon pattern with Outline
 
-<img src="./images/demo7.png" width="50%">
+<img src="./images/hex-outline.png" width="50%">
+
+### `wallgen shape -t diamond -c "#ff0099" -c "#00ddff"`
+
+Diamond pattern
+
+<img src="./images/diamond.png" width="50%">
+
+### `wallgen shape -t square -c "#ff0099" -c "#00ddff" -o`
+
+Diamond pattern with Outline
+
+<img src="./images/diamond-outline.png" width="50%">
 
 ### `wallgen slants 2000`
 
