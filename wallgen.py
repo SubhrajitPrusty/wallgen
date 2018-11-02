@@ -130,8 +130,10 @@ def genPattern(x, y, side, boxes, img, square=False):
 	draw = ImageDraw.Draw(img) 
 	inc = side//boxes #increment size
 	xback = x # backup of x
-	mult = 2 
+	mult = 1
 	boxes = boxes//mult # adjustment
+
+	print(boxes, inc)
 	for i in range(boxes):
 		for j in range(boxes):
 			if square:
@@ -146,13 +148,61 @@ def genPattern(x, y, side, boxes, img, square=False):
 			b = b if b<side else b-2*inc # prevent overflow
 			c = idata[a,b] # color data
 
-			draw.polygon((points), fill=tuple(c)) # draw one polygon
+			draw.polygon((points), fill=tuple(c), outline="#2c2c2c") # draw one polygon
 			x+=mult*inc # shift cursor horizontally
-	
+		
+		# break	
 		y+=mult*inc # shift cursor vertically
 		x=xback # restore horizontal starting point
 
 	return img # return final image
+
+
+###########
+# SQUARES #
+###########
+
+def genSquares(x, y, side, boxes, img, outl=False):
+	
+	img = img.resize((side*2,side*2))
+	img = img.rotate(45)
+	
+	s2 = side*2
+	img = img.crop((s2/4,s2/4, s2-(s2/4), s2-(s2/4)))
+	
+	idata = img.load() # load pixel data
+	draw = ImageDraw.Draw(img) 
+	inc = side//boxes #increment size
+	xback = x # backup of x
+	boxes += 1
+
+	for i in range(boxes):
+		for j in range(boxes):
+			points = [(x,y),(x,y+inc),(x+inc,y+inc),(x+inc,y)] # squares
+
+			a,b = x+inc,y+inc # to get pixel data
+			a = a if a>0 else 0 # prevent underflow
+			a = a if a<side else a-2*inc # prevent overflow
+			b = b if b>0 else 0 # prevent underflow
+			b = b if b<side else b-2*inc # prevent overflow
+			c = idata[a,b] # color data
+
+			# draw one square
+
+			if outl:
+				draw.polygon((points), fill=tuple(c), outline="#2c2c2c")
+			else:
+				draw.polygon((points), fill=tuple(c))
+			
+			x+=inc # shift cursor horizontally
+		
+		y+=inc # shift cursor vertically
+		x=xback # restore horizontal starting point
+
+	return img # return final image
+
+
+
 
 def genHexagon(side, radius, img):
 	idata = img.load() # load pixel data
@@ -288,3 +338,12 @@ def slants(side, show):
 		img.show()
 
 	img.save("wall-{}.png".format(int(time.time())))
+
+
+if __name__ == "__main__":
+	side = 500
+	squares = True
+	img = nGradient(side, (255,0,0),(0,100,255))
+	boxes = side // 50
+	img = genSquares(0, 0, side, boxes, img)
+	img.save("test.png")
