@@ -236,7 +236,7 @@ def genSquares(side, img, outl=False):
 # HEXAGON #
 ###########
 
-def genHexagon(side, radius, img):
+def genHexagon(side, radius, img, outl=False):
 	idata = img.load() # load pixel data
 	draw = ImageDraw.Draw(img)
 
@@ -259,8 +259,10 @@ def genHexagon(side, radius, img):
 			b = b if b > 0 else 1
 
 			c = idata[a,b]
-			
-			draw.polygon((points), fill=c) # draw one hexagon
+			if outl:
+				draw.polygon((points), fill=c, outline="#2c2c2c") # draw one hexagon
+			else:
+				draw.polygon((points), fill=c) # draw one hexagon
 			x += width
 
 		y += radius * 1.5 # shift cursor vertically
@@ -321,7 +323,7 @@ def poly(side, points, show, colors, outline):
 
 @cli.command()
 @click.argument("side", type=click.INT)
-@click.option("--type", "-t", "shape", type=click.Choice(['square', 'hex', 'diamond']))
+@click.option("--type", "-t", "shape", type=click.Choice(['square', 'hex', 'diamond']), help="choose which shape to use")
 @click.option("--colors", "-c", multiple=True, type=click.STRING, help="use many colors custom gradient, e.g -c #ff0000 -c #000000 -c #0000ff")
 @click.option("--show", "-s", is_flag=True, help="open the image")
 @click.option("--outline", "-o", is_flag=True, help="outline the shapes")
@@ -347,7 +349,7 @@ def shape(side, shape, colors, show, outline):
 		img = random_gradient(side)
 
 	if shape == 'hex':
-		img = genHexagon(side, side//20, img) # this looks good
+		img = genHexagon(side, side//20, img, outline)
 	elif shape == 'square':
 		img = genSquares(side, img, outline)
 	elif shape == 'diamond':
