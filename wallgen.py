@@ -326,8 +326,8 @@ def poly(side, points, show, colors, outline):
 @click.option("--show", "-s", is_flag=True, help="open the image")
 @click.option("--outline", "-o", is_flag=True, help="outline the shapes")
 
-def pattern(side, shape, colors, show, outline):
-	""" Generate a HQ image of a beautiful pattern """
+def shape(side, shape, colors, show, outline):
+	""" Generate a HQ image of a beautiful shapes """
 
 	error = ""
 	if side < 50:
