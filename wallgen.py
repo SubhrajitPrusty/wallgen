@@ -105,7 +105,12 @@ def calcCenter(ps):
 	mid = ((mid1[0]+ps[2][0])/2, (mid1[1]+ps[2][1])/2)
 	return mid
 
-def genWall(img, points, side, shift, outl=False):
+
+#############
+# TRIANGLES #
+#############
+
+def genPoly(img, points, side, shift, outl=False):
 	idata = img.load() # load pixel data
 	draw = ImageDraw.Draw(img)
 	for p in points:
@@ -125,35 +130,56 @@ def genWall(img, points, side, shift, outl=False):
 
 	return img
 
-def genPattern(x, y, side, boxes, img, square=False):
+
+###########
+# diamond #
+###########
+
+def genDiamond(side, img, outl=False):
+
+	x = y = 0
+	boxes = side//50 # good config
+
 	idata = img.load() # load pixel data
 	draw = ImageDraw.Draw(img) 
+
 	inc = side//boxes #increment size
+
 	xback = x # backup of x
-	mult = 1
-	boxes = boxes//mult # adjustment
+	boxes = boxes+2 # adjustment
 
-	print(boxes, inc)
-	for i in range(boxes):
-		for j in range(boxes):
-			if square:
-				points = [(x,y),(x,y+inc),(x+inc,y+inc),(x+inc,y)] # squares
+	for i in range(boxes-1): # one extra line
+		for j in range(boxes//2 - 1): # ¯\_(ツ)_/¯
+			
+			points = [(x,y),(x+inc,y+inc),(x+2*inc,y),(x+inc,y-inc)] # diamond
+
+			a,b = (x + x+2*inc)//2, y
+
+			try: # adjustment to not overflow
+				b = b-2 if b>=side else b
+				b = b+2 if b<=0 else b
+
+				a = a-2 if a>=side else a
+				a = a+2 if a<=0 else a
+
+				c = idata[a,b]
+
+			except Exception as e:
+				# print(a,b)
+				c = "#00ff00" # backup
+
+			if outl:
+				draw.polygon((points), fill=c, outline="#2c2c2c")
 			else:
-				points = [(x,y),(x-inc,y+inc),(x,y+2*inc),(x+inc,y+inc)] #rhombus
+				draw.polygon((points), fill=c)
+			x+=2*inc
 
-			a,b = x+inc,y+inc # to get pixel data
-			a = a if a>0 else 0 # prevent underflow
-			a = a if a<side else a-2*inc # prevent overflow
-			b = b if b>0 else 0 # prevent underflow
-			b = b if b<side else b-2*inc # prevent overflow
-			c = idata[a,b] # color data
+		y+=inc
 
-			draw.polygon((points), fill=tuple(c), outline="#2c2c2c") # draw one polygon
-			x+=mult*inc # shift cursor horizontally
-		
-		# break	
-		y+=mult*inc # shift cursor vertically
-		x=xback # restore horizontal starting point
+		if i%2==0:
+			x=-inc
+		else:
+			x=0
 
 	return img # return final image
 
@@ -162,47 +188,53 @@ def genPattern(x, y, side, boxes, img, square=False):
 # SQUARES #
 ###########
 
-def genSquares(x, y, side, boxes, img, outl=False):
-	
-	img = img.resize((side*2,side*2))
-	img = img.rotate(45)
-	
-	s2 = side*2
-	img = img.crop((s2/4,s2/4, s2-(s2/4), s2-(s2/4)))
+def genSquares(side, img, outl=False):
+
+	x = y = 0
+	boxes = int(0.01*side) # good config
 	
 	idata = img.load() # load pixel data
 	draw = ImageDraw.Draw(img) 
+	
 	inc = side//boxes #increment size
-	xback = x # backup of x
 	boxes += 1
 
 	for i in range(boxes):
 		for j in range(boxes):
 			points = [(x,y),(x,y+inc),(x+inc,y+inc),(x+inc,y)] # squares
 
-			a,b = x+inc,y+inc # to get pixel data
-			a = a if a>0 else 0 # prevent underflow
-			a = a if a<side else a-2*inc # prevent overflow
-			b = b if b>0 else 0 # prevent underflow
-			b = b if b<side else b-2*inc # prevent overflow
-			c = idata[a,b] # color data
+			a,b = (x+x+inc)//2,(y+y+inc)//2 # to get pixel data
+			try: # adjustment to not overflow
+				b = b-5 if b>=side else b
+				b = b+5 if b<=0 else b
+
+				a = a-5 if a>=side else a
+				a = a+5 if a<=0 else a
+
+				c = idata[a,b]
+
+			except Exception as e:
+				# print(a,b)
+				c = "#00ff00" # backup
 
 			# draw one square
 
 			if outl:
-				draw.polygon((points), fill=tuple(c), outline="#2c2c2c")
+				draw.polygon((points), fill=c, outline="#2c2c2c")
 			else:
-				draw.polygon((points), fill=tuple(c))
+				draw.polygon((points), fill=c)
 			
 			x+=inc # shift cursor horizontally
 		
 		y+=inc # shift cursor vertically
-		x=xback # restore horizontal starting point
+		x=0 # restore horizontal starting point
 
 	return img # return final image
 
 
-
+###########
+# HEXAGON #
+###########
 
 def genHexagon(side, radius, img):
 	idata = img.load() # load pixel data
@@ -280,7 +312,7 @@ def poly(side, points, show, colors, outline):
 		img = random_gradient(side)
 
 	pts = genPoints(points, side)
-	img = genWall(img, pts, side, shift, outl=outline)
+	img = genPoly(img, pts, side, shift, outl=outline)
 
 	if show:
 		img.show()
@@ -289,11 +321,12 @@ def poly(side, points, show, colors, outline):
 
 @cli.command()
 @click.argument("side", type=click.INT)
-@click.option("--squares", "-sq", is_flag=True, default=False, help="use squares instead of rhombus")
-@click.option("--hexagons", "-hx", is_flag=True, default=False, help="use Hexagons instead of rhombus (Experimental)")
+@click.option("--type", "-t", "shape", type=click.Choice(['square', 'hex', 'diamond']))
 @click.option("--colors", "-c", multiple=True, type=click.STRING, help="use many colors custom gradient, e.g -c #ff0000 -c #000000 -c #0000ff")
 @click.option("--show", "-s", is_flag=True, help="open the image")
-def pattern(side, squares, hexagons, colors, show):
+@click.option("--outline", "-o", is_flag=True, help="outline the triangles")
+
+def pattern(side, shape, colors, show, outline):
 	""" Generate a HQ image of a beautiful pattern """
 
 	error = ""
@@ -313,13 +346,16 @@ def pattern(side, squares, hexagons, colors, show):
 	else:
 		img = random_gradient(side)
 
-	if hexagons:
+	if shape == 'hex':
 		img = genHexagon(side, side//20, img) # this looks good
+	elif shape == 'square':
+		img = genSquares(side, img, outline)
+	elif shape == 'diamond':
+		img = genDiamond(side, img, outline)
 	else:
-		boxes = side // 100 + 2 # this config looks good
-		img = genPattern(0, 0, side, boxes, img, squares)
-		temp = side//boxes
-		img = genPattern(temp, temp, side, boxes, img, squares)
+		error = "No shape given. To see list of shapes \"wallgen pattern --help\""
+		click.secho(error, fg='red', err=True)
+		sys.exit(1)
 
 	if show:
 		img.show()
@@ -341,9 +377,4 @@ def slants(side, show):
 
 
 if __name__ == "__main__":
-	side = 500
-	squares = True
-	img = nGradient(side, (255,0,0),(0,100,255))
-	boxes = side // 50
-	img = genSquares(0, 0, side, boxes, img)
-	img.save("test.png")
+	cli()
