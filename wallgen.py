@@ -105,7 +105,7 @@ def calcCenter(ps):
 	mid = ((mid1[0]+ps[2][0])/2, (mid1[1]+ps[2][1])/2)
 	return mid
 
-def genWall(img, points, side, shift):
+def genWall(img, points, side, shift, outl=False):
 	idata = img.load() # load pixel data
 	draw = ImageDraw.Draw(img)
 	for p in points:
@@ -115,8 +115,12 @@ def genWall(img, points, side, shift):
 			c = idata[calcCenter(tp)]
 		except Exception as e:
 			pass
-		# draw.polygon(tp, outline="#2c2c2c")
-		draw.polygon(tp, fill=c) # draw one triangle
+	
+		if outl:
+			draw.polygon(tp, fill=c, outline="#2c2c2c")
+		else:
+			draw.polygon(tp, fill=c) # draw one triangle
+	
 	img = img.crop((shift,shift,side-shift,side-shift)) # crop back to normal size
 
 	return img
@@ -196,8 +200,9 @@ def cli():
 @click.option("--colors", "-c", multiple=True, type=click.STRING, help="use many colors custom gradient, e.g -c #ff0000 -c #000000 -c #0000ff")
 @click.option("--points", "-p", default=100, help="number of points to use, default = 100")
 @click.option("--show", "-s", is_flag=True, help="open the image")
+@click.option("--outline", "-o", is_flag=True, help="outline the triangles")
 
-def poly(side, points, show, colors):
+def poly(side, points, show, colors, outline):
 	""" Generates a HQ low poly image """
 
 	error = ""
@@ -206,7 +211,7 @@ def poly(side, points, show, colors):
 	elif points < 3:
 		error = "Too less points. Minimum points 3"
 	elif points > side:
-		error = f"Too many points. Maximum points {side//2}"
+		error = "Too many points. Maximum points {}".format(side//2)
 
 	if error:
 		click.secho(error, fg='red', err=True)
@@ -225,7 +230,7 @@ def poly(side, points, show, colors):
 		img = random_gradient(side)
 
 	pts = genPoints(points, side)
-	img = genWall(img, pts, side, shift)
+	img = genWall(img, pts, side, shift, outl=outline)
 
 	if show:
 		img.show()
