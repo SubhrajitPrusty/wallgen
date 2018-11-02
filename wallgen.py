@@ -324,7 +324,7 @@ def poly(side, points, show, colors, outline):
 @click.option("--type", "-t", "shape", type=click.Choice(['square', 'hex', 'diamond']))
 @click.option("--colors", "-c", multiple=True, type=click.STRING, help="use many colors custom gradient, e.g -c #ff0000 -c #000000 -c #0000ff")
 @click.option("--show", "-s", is_flag=True, help="open the image")
-@click.option("--outline", "-o", is_flag=True, help="outline the triangles")
+@click.option("--outline", "-o", is_flag=True, help="outline the shapes")
 
 def pattern(side, shape, colors, show, outline):
 	""" Generate a HQ image of a beautiful pattern """
