@@ -138,7 +138,7 @@ def genPoly(img, points, side, shift, outl=False):
 def genDiamond(side, img, outl=False):
 
 	x = y = 0
-	boxes = side//50 # good config
+	boxes = int(0.01*side) # good config
 
 	idata = img.load() # load pixel data
 	draw = ImageDraw.Draw(img) 
