@@ -4,16 +4,11 @@
 
 <div class="container mx-auto col-md-8">
 	<div class="jumbotron bg-transparent">
-		<form action="/poly" method="POST">
+		<form action="/shape" method="POST">
 			<div class="form-group">
 				<label for="Height" class="display-4 text-light">Height</label>
 				<input class="form-control form-control shadow" type="number" placeholder="Enter height in pixels, e.g. 2000" name="side" required>
-				<small class="form-text text-light">Image size cannot exceed 5000</small>
-			</div>
-			<div class="form-group">
-				<label for="Points" class="display-4 text-light">Points</label>
-				<input class="form-control form-control shadow" type="number" placeholder="Enter number of points, e.g. 100" name="np" required>
-				<small class="form-text text-light">Points cannot exceed 500</small>
+				<small class="form-text text-light">Image size cannot exceed 4000</small>
 			</div>
 			<div class="form-group">
 				<label for="Colors" class="display-4 text-light">Input colors</label>
@@ -26,7 +21,17 @@
 					</div>
 				</div>
 			</div>
+
+			<div class="form-group">
+				<label for="Shapes" class=""></label>
+				<select class="form-control form-control" name="shape">
+					<option value="squares">Squares</option>
+					<option value="hexagon">Hexagon</option>
+					<option value="diamond">Diamond</option>
+				</select>
+			</div>
 			
+
 			<div class="form-group">
 					<label class="display-4 text-light inline-block" for="Outline">Outline</label>
 					<label class="switch">
@@ -34,6 +39,7 @@
 						<span class="slider round"></span>
 					</label>
 			</div>
+
 			<button type="submit" class="btn btn-primary btn btn-block btn-dark">Submit</button>
 		</form>
 	</div>
