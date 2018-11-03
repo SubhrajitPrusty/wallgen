@@ -172,22 +172,14 @@ Slants pattern
 
 ## Screenshots
 
-### `Homepage`
+### Homepage
 
-![homepage](./images/homepage.png)
+![homepage](./images/web-home.png)
 
-### `Poly_Demo`
+### Poly Page
 
-![image11](https://user-images.githubusercontent.com/35899910/46815367-664f5b80-cd98-11e8-9247-1e96dac8b8e1.png)
+![Polygon](./images/web-poly.png)
 
-### `Wallgen1`
+### Shapes Page
 
-![image12](https://user-images.githubusercontent.com/35899910/46815734-22108b00-cd99-11e8-9ec5-006118b87532.png)
-
-### `Square_Demo`
-
-![image21](https://user-images.githubusercontent.com/35899910/46815830-53895680-cd99-11e8-8795-fa8f6731e153.png)
-
-### `Wallgen2`
-
-![image22](https://user-images.githubusercontent.com/35899910/46815900-76b40600-cd99-11e8-8123-966446e9c0b7.png)
+![Polygon](./images/web-shape.png)
