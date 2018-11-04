@@ -48,12 +48,14 @@ def poly():
 		else:
 			fname = "wall-{}.png".format(int(time.time()))
 			fpath = 'static/images/'+fname
+			
 			shift = side//10
-			side += shift*2
+			nside = side + shift*2 # increase size to prevent underflow
 
-			points = wallgen.genPoints(np, side)
 			img = wallgen.nGradient(side, *colors)
-			img = wallgen.genPoly(img, points, side, shift, outline)
+
+			pts = wallgen.genPoints(np, nside, nside)
+			img = wallgen.genPoly(side, side, img, pts, shift, shift, outl=outline)
 
 			# print(fpath)
 			img.save(fpath)
@@ -100,12 +102,12 @@ def shape():
 			fpath = 'static/images/'+fname
 			img = wallgen.nGradient(side, *colors)
 
-			if shape == "squares":
-				img = wallgen.genSquares(side, img, outline)
-			elif shape == "hexagon":
-				img = wallgen.genHexagon(side, side//20, img, outline)
-			elif shape == "diamond":
-				img = wallgen.genDiamond(side, img, outline)
+			if shape == 'hexagon':
+				img = wallgen.genHexagon(side, side, img, outline)
+			elif shape == 'squares':
+				img = wallgen.genSquares(side, side, img, outline)
+			elif shape == 'diamond':
+				img = wallgen.genDiamond(side, side, img, outline)
 
 			# print(fpath)
 			img.save(fpath)
