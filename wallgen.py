@@ -112,13 +112,17 @@ def calcCenter(ps):
 # TRIANGLES #
 #############
 
-def genPoly(width, height, img, points, wshift, hshift, outl=False):
+def genPoly(width, height, img, points, wshift, hshift, outl=False, pic=False):
 
 	baseImg = Image.new("RGB", (width+(wshift*2), height+(hshift*2)), "#000000")
 
 	baseImg.paste(img, box=(wshift, hshift))
 
-	idata = baseImg.load() # load pixel data
+	if pic:
+		idata = baseImg.load() # load pixel data
+	else:
+		idata = img.load() # load pixel data
+
 	draw = ImageDraw.Draw(baseImg)
 
 	for p in points:
@@ -352,9 +356,9 @@ def poly(side, points, show, colors, outline):
 			click.secho("One color gradient not possible.", fg="red", err=True)
 			sys.exit(1)
 		cs = [tuple(bytes.fromhex(c[1:])) for c in colors]
-		img = nGradient(side, *cs)
+		img = nGradient(nside, *cs)
 	else:
-		img = random_gradient(side)
+		img = random_gradient(nside)
 
 	pts = genPoints(points, nside, nside)
 	img = genPoly(side, side, img, pts, shift, shift, outl=outline)
@@ -456,7 +460,7 @@ def poly(image, points, show, outline):
 	height += hshift*2
 
 	pts = genPoints(points, width, height)
-	img = genPoly(img.width, img.height, img, pts, wshift, hshift, outline)
+	img = genPoly(img.width, img.height, img, pts, wshift, hshift, outline, pic=True)
 
 	if show:
 		img.show()
