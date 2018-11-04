@@ -11,14 +11,14 @@
 				<small class="form-text text-light">Image size cannot exceed 4000</small>
 			</div>
 			<div class="form-group">
-				<label for="Colors" class="display-4 text-light">Input colors</label>
 				<div class="row">
-					<div class="col">
-						<input class="form-control form-control shadow" type="color" placeholder="Enter color 1, e.g #ff0000" name="rgb1">
+					<div class="form-group container">
+						<label for="formControlRange" class="display-4 text-light">Number of colors</label>
+						<input type="range" class="form-control-range rounded" id="nColors" min="2" max="10" value="2" name="nColors" required>
 					</div>
-					<div class="col">
-						<input class="form-control form-control shadow" type="color" placeholder="Enter color 2, e.g #0000ff" name="rgb2">
-					</div>
+				</div>
+				<label for="Colors" class="display-4 text-light">Input colors</label>
+				<div class="row" id="colorInput">
 				</div>
 			</div>
 
@@ -44,5 +44,39 @@
 		</form>
 	</div>
 </div>
+<script>
 
+	function renderInputs() {
+		var co = $("input[name=nColors]");
+		var f = document.getElementById('colorInput');
+
+		console.log(co.val());
+
+		f.innerHTML = "";
+
+		for (i=1; i<=co.val(); i++ )
+		{
+
+			var c = '';
+			c += '<div class="col">';
+			c += '<input class="form-control form-control shadow" type="color" name="rgb'+i+'">';
+			c += '</div>';
+
+			f.innerHTML += c;
+		}
+	}
+
+	$(document).ready(function ()
+	{
+		renderInputs();
+
+	});
+
+	
+	$("input[name=nColors]").on("input change", function()
+	{
+		renderInputs();
+	});
+
+</script>
 {% endblock %}

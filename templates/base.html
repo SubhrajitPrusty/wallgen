@@ -7,6 +7,10 @@
 	<link rel="stylesheet" href="static/css/style.css">
 </head>
 <body>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script>
+		window.jQuery || document.write('<script src="{{ url_for('static', filename='js/jquery.min.js') }}">\x3C/script>')
+	</script>
 	<div class="navbar fixed-top bg-dark">
 		<a href="/">
 			<span class="navbar-brand mb-0 text-white">Wallgen</span>
@@ -24,5 +28,6 @@
 			&#169 Subhrajit Prusty 2018
 		</h6>
 	</div>
+	
 </body>
 </html>
