@@ -153,7 +153,6 @@ def genPoly(width, height, img, points, wshift, hshift, outl=False):
 
 def genDiamond(width, height, img, outl=False, pic=False):
 
-	print(width, height)
 	x = y = 0
 	if pic:
 		wboxes = int(0.2*width) # good config
@@ -166,10 +165,6 @@ def genDiamond(width, height, img, outl=False, pic=False):
 	draw = ImageDraw.Draw(img) 
 	
 	inc = width//wboxes # increment size
-
-	print(inc)
-	print(wboxes)
-	print(hboxes)
 
 	wboxes += 2
 	hboxes += 2
@@ -216,7 +211,6 @@ def genDiamond(width, height, img, outl=False, pic=False):
 
 def genSquares(width, height, img, outl=False, pic=False):
 
-	# print(width, height)
 	x = y = 0
 	if pic:
 		wboxes = int(0.2*width) # good config
@@ -229,10 +223,6 @@ def genSquares(width, height, img, outl=False, pic=False):
 	draw = ImageDraw.Draw(img) 
 	
 	inc = width//wboxes #increment size
-
-	# print(inc)
-	# print(wboxes)
-	# print(hboxes)
 
 	wboxes += 1
 	hboxes += 1
@@ -355,7 +345,7 @@ def poly(side, points, show, colors, outline):
 		sys.exit(1)
 
 	shift = side//10
-	side += shift*2 # increase size to prevent underflow
+	nside = side + shift*2 # increase size to prevent underflow
 	
 	if colors:
 		if len(colors) < 2:
@@ -366,8 +356,8 @@ def poly(side, points, show, colors, outline):
 	else:
 		img = random_gradient(side)
 
-	pts = genPoints(points, side)
-	img = genPoly(img, pts, side, shift, outl=outline)
+	pts = genPoints(points, nside, nside)
+	img = genPoly(side, side, img, pts, shift, shift, outl=outline)
 
 	if show:
 		img.show()
@@ -382,7 +372,7 @@ def poly(side, points, show, colors, outline):
 @click.option("--outline", "-o", is_flag=True, help="outline the shapes")
 
 def shape(side, shape, colors, show, outline):
-	""" Generate a HQ image of a beautiful shapes """
+	""" Generates a HQ image of a beautiful shapes """
 
 	error = ""
 	if side < 50:
@@ -402,13 +392,13 @@ def shape(side, shape, colors, show, outline):
 		img = random_gradient(side)
 
 	if shape == 'hex':
-		img = genHexagon(side, img, outline)
+		img = genHexagon(side, side, img, outline)
 	elif shape == 'square':
-		img = genSquares(side, img, outline)
+		img = genSquares(side, side, img, outline)
 	elif shape == 'diamond':
-		img = genDiamond(side, img, outline)
+		img = genDiamond(side, side, img, outline)
 	else:
-		error = "No shape given. To see list of shapes \"wallgen pattern --help\""
+		error = "No shape given. To see list of shapes \"wallgen shape --help\""
 		click.secho(error, fg='red', err=True)
 		sys.exit(1)
 
@@ -431,20 +421,78 @@ def slants(side, show):
 	img.save("wall-{}.png".format(int(time.time())))
 
 
-if __name__ == "__main__":
-	img = Image.open("/media/subhrajit/Windows/Users/Subhrajit/Pictures/New/kbjs8s29i5sy.jpg")
-	# img = Image.open("/media/subhrajit/Windows/Users/Subhrajit/Pictures/New/c4wohjoqi6sy.jpg")
-	# img = nGradient(2000, (0,0,0), (255,0,128))
+@cli.group()
+def pic():
+	""" Use a picture instead of a gradient """ 
+	pass
+
+@pic.command()
+@click.argument("image", type=click.Path(exists=True, dir_okay=False))
+@click.option("--points", "-p", default=1000, help="number of points to use, default = 1000")
+@click.option("--show", "-s", is_flag=True, help="open the image")
+@click.option("--outline", "-o", is_flag=True, help="outline the triangles")
+
+def poly(image, points, show, outline):
+	""" Generates a HQ low poly image """
+
+	if points < 3:
+		error = "Too less points. Minimum points 3"
+	elif points > 10000:
+		error = "Too many points. Maximum points {}".format(10000)
+
+
+	if error:
+		click.secho(error, fg='red', err=True)
+		sys.exit(1)
+
+	img = Image.open(image)
+	
+	width = img.width
+	height = img.height
+	wshift = img.width//10
+	hshift = img.height//10
+	width += wshift*2
+	height += hshift*2
+
+	pts = genPoints(points, width, height)
+	img = genPoly(img.width, img.height, img, pts, wshift, hshift, outline)
+
+	if show:
+		img.show()
+
+	img.save("wall-{}.png".format(int(time.time())))
+
+
+@pic.command()
+@click.argument("image", type=click.Path(exists=True, dir_okay=False))
+@click.option("--type", "-t", "shape", type=click.Choice(['square', 'hex', 'diamond']), help="choose which shape to use")
+@click.option("--show", "-s", is_flag=True, help="open the image")
+@click.option("--outline", "-o", is_flag=True, help="outline the shapes")
+
+def shape(image, shape, show, outline):
+	""" Generate a HQ image of a beautiful shapes """
+
+	img = Image.open(image)
 
 	width = img.width
 	height = img.height
 
-	wshift = width//10
-	hshift = height//10
-	width += wshift*2
-	height += hshift*2
-	pts = genPoints(100, width, height)
-	# print(pts)
-	sqimg = genPoly(width, height, img, pts, wshift, hshift, False)
+	if shape == 'hex':
+		img = genHexagon(width, height, img, outline, pic=True)
+	elif shape == 'square':
+		img = genSquares(width, height, img, outline, pic=True)
+	elif shape == 'diamond':
+		img = genDiamond(width, height, img, outline, pic=True)
+	else:
+		error = "No shape given. To see list of shapes \"wallgen pic shape --help\""
+		click.secho(error, fg='red', err=True)
+		sys.exit(1)
 
-	sqimg.save("test.png")
+	if show:
+		img.show()
+
+	img.save("wall-{}.png".format(int(time.time())))
+
+
+if __name__ == "__main__":
+	cli()
