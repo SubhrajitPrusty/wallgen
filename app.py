@@ -18,18 +18,23 @@ def poly():
 
 		side = int(request.form.get('side'))
 		np = int(request.form.get('np'))
-		
-		rgb1 = request.form.get('rgb1')[1:]
-		rgb2 = request.form.get('rgb2')[1:]
 
 		outline = request.form.get('outline')
+		
+		nColors = request.form.get('nColors')
+		# print(nColors)
+
+		colors = []
+
+		for i in range(int(nColors)):
+			colors.append(request.form.get('rgb'+str(i+1)))
 
 		error = None
 		
 		try:
-			rgb1 = tuple(bytes.fromhex(rgb1))
-			rgb2 = tuple(bytes.fromhex(rgb2))
+			colors = [tuple(bytes.fromhex(x[1:])) for x in colors]
 		except Exception as e:
+			print(e)
 			error = "ERROR: Invalid color hex"
 		
 		if side > 5000 or side < 100:
@@ -47,7 +52,7 @@ def poly():
 			side += shift*2
 
 			points = wallgen.genPoints(np, side)
-			img = wallgen.nGradient(side, rgb1, rgb2)
+			img = wallgen.nGradient(side, *colors)
 			img = wallgen.genPoly(img, points, side, shift, outline)
 
 			# print(fpath)
@@ -68,15 +73,20 @@ def shape():
 		
 		outline = request.form.get('outline')
 
-		rgb1 = request.form.get('rgb1')[1:]
-		rgb2 = request.form.get('rgb2')[1:]
+		nColors = request.form.get('nColors')
+		# print(nColors)
+
+		colors = []
+
+		for i in range(int(nColors)):
+			colors.append(request.form.get('rgb'+str(i+1)))
 
 		error = None
 		
 		try:
-			rgb1 = tuple(bytes.fromhex(rgb1))
-			rgb2 = tuple(bytes.fromhex(rgb2))
+			colors = [tuple(bytes.fromhex(x[1:])) for x in colors]
 		except Exception as e:
+			print(e)
 			error = "ERROR: Invalid color hex"
 		
 		if side > 5000 or side < 100:
@@ -88,8 +98,7 @@ def shape():
 		else:
 			fname = "wall-{}.png".format(int(time.time()))
 			fpath = 'static/images/'+fname
-			img = wallgen.nGradient(side, rgb1, rgb2)
-			boxes = side // 100 + 2 # this config looks good
+			img = wallgen.nGradient(side, *colors)
 
 			if shape == "squares":
 				img = wallgen.genSquares(side, img, outline)
