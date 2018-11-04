@@ -64,20 +64,22 @@ def distance(p1, p2):
 	d = int((y2-y1)**2 + (x2-x1)**2)**0.5
 	return d
 
-def genPoints(qty, side):
-	radius = side // 100
+def genPoints(qty, width, height):
+	side = (width+height)//2
 	randPoints = []
 	og = side
-	side = side // 2
+	width = width // 2
+	height = height // 2
 
 	qty //= 4
 
-	def populate(a, b, n, side):
+	def populate(a, b, n, width, height):
+		side = (width+height)//2
 		radius = side // 100
 		points = []
 		while len(points) < n:
-			x = randint(a,a+side)
-			y = randint(b,b+side)
+			x = randint(a,a+width)
+			y = randint(b,b+height)
 
 			if len(points) == 0:
 				points.append((x,y))
@@ -90,10 +92,10 @@ def genPoints(qty, side):
 
 		return points
 	
-	randPoints = populate(0,0, qty, side)
-	randPoints += populate(side, 0, qty, side)
-	randPoints += populate(0, side, qty, side)
-	randPoints += populate(side, side, qty, side)
+	randPoints  = populate(0,0, qty, width, height)
+	randPoints += populate(width, 0, qty, width, height)
+	randPoints += populate(0, height, qty, width, height)
+	randPoints += populate(width, height, qty, width, height)
 	
 	tri = Delaunay(randPoints) # calculate D triangulation of points
 	points = tri.points[tri.simplices] # find all groups of points
@@ -110,23 +112,37 @@ def calcCenter(ps):
 # TRIANGLES #
 #############
 
-def genPoly(img, points, side, shift, outl=False):
+def genPoly(width, height, img, points, wshift, hshift, outl=False):
+
+	baseImg = Image.new("RGB", (width+(wshift*2), height+(hshift*2)), "#000000")
+
+	baseImg.paste(img, box=(wshift, hshift))
+
 	idata = img.load() # load pixel data
-	draw = ImageDraw.Draw(img)
+	draw = ImageDraw.Draw(baseImg)
+
 	for p in points:
 		tp = tuple(map(tuple,p)) # convert each pair of points to tuples
-		c = (255,255,255) # default color incase of exception
+		
+		a,b = calcCenter(tp)
 		try:
-			c = idata[calcCenter(tp)]
+			b = height-5 if b>=height else b
+			b = height+5 if b<=0 else b
+
+			a = width-5 if a>=width else a
+			a = width+5 if a<=0 else a
+
+			c = idata[a,b]
 		except Exception as e:
-			pass
+			# print(a,b)
+			c = "#00ff00"
 	
 		if outl:
 			draw.polygon(tp, fill=c, outline="#2c2c2c")
 		else:
 			draw.polygon(tp, fill=c) # draw one triangle
 	
-	img = img.crop((shift,shift,side-shift,side-shift)) # crop back to normal size
+	img = baseImg.crop((wshift, hshift, baseImg.width - wshift, baseImg.height - hshift)) # crop back to normal size
 
 	return img
 
@@ -166,11 +182,11 @@ def genDiamond(width, height, img, outl=False, pic=False):
 			a,b = (x + x+2*inc)//2, y
 
 			try: # adjustment to not overflow
-				b = b-2 if b>=height else b
-				b = b+2 if b<=0 else b
+				b = height-2 if b>=height else b
+				b = 2 if b<=0 else b
 
-				a = a-2 if a>=width else a
-				a = a+2 if a<=0 else a
+				a = width-2 if a>=width else a
+				a = 2 if a<=0 else a
 
 				c = idata[a,b]
 
@@ -227,11 +243,11 @@ def genSquares(width, height, img, outl=False, pic=False):
 
 			a,b = (x+x+inc)//2,(y+y+inc)//2 # to get pixel data
 			try: # adjustment to not overflow
-				b = b-5 if b>=height else b
-				b = b+5 if b<=0 else b
+				b = height-5 if b>=height else b
+				b = 5 if b<=0 else b
 
-				a = a-5 if a>=width else a
-				a = a+5 if a<=0 else a
+				a = width-5 if a>=width else a
+				a = 5 if a<=0 else a
 
 				c = idata[a,b]
 
@@ -419,6 +435,16 @@ if __name__ == "__main__":
 	img = Image.open("/media/subhrajit/Windows/Users/Subhrajit/Pictures/New/kbjs8s29i5sy.jpg")
 	# img = Image.open("/media/subhrajit/Windows/Users/Subhrajit/Pictures/New/c4wohjoqi6sy.jpg")
 	# img = nGradient(2000, (0,0,0), (255,0,128))
-	sqimg = genHexagon(img.width, img.height, img, False, True)
+
+	width = img.width
+	height = img.height
+
+	wshift = width//10
+	hshift = height//10
+	width += wshift*2
+	height += hshift*2
+	pts = genPoints(100, width, height)
+	# print(pts)
+	sqimg = genPoly(width, height, img, pts, wshift, hshift, False)
 
 	sqimg.save("test.png")
