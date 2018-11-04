@@ -188,27 +188,39 @@ def genDiamond(side, img, outl=False):
 # SQUARES #
 ###########
 
-def genSquares(side, img, outl=False):
+def genSquares(width, height, img, outl=False, pic=False):
 
+	print(width, height)
 	x = y = 0
-	boxes = int(0.01*side) # good config
+	if pic:
+		wboxes = int(0.1*width) # good config
+		hboxes = int(0.1*height)
+	else:	
+		wboxes = int(0.01*width) # good config
+		hboxes = int(0.01*height)
 	
 	idata = img.load() # load pixel data
 	draw = ImageDraw.Draw(img) 
 	
-	inc = side//boxes #increment size
-	boxes += 1
+	inc = width//wboxes #increment size
 
-	for i in range(boxes):
-		for j in range(boxes):
+	print(inc)
+	print(wboxes)
+	print(hboxes)
+
+	wboxes += 1
+	hboxes += 1
+
+	for i in range(hboxes):
+		for j in range(wboxes):
 			points = [(x,y),(x,y+inc),(x+inc,y+inc),(x+inc,y)] # squares
 
 			a,b = (x+x+inc)//2,(y+y+inc)//2 # to get pixel data
 			try: # adjustment to not overflow
-				b = b-5 if b>=side else b
+				b = b-5 if b>=height else b
 				b = b+5 if b<=0 else b
 
-				a = a-5 if a>=side else a
+				a = a-5 if a>=width else a
 				a = a+5 if a<=0 else a
 
 				c = idata[a,b]
@@ -379,4 +391,8 @@ def slants(side, show):
 
 
 if __name__ == "__main__":
-	cli()
+	# img = Image.open("/media/subhrajit/Windows/Users/Subhrajit/Pictures/New/VAOdSb1.jpg")
+	img = Image.open("/media/subhrajit/Windows/Users/Subhrajit/Pictures/New/6qi9qto6fnuy.jpg")
+	sqimg = genSquares(img.width, img.height, img, False, True)
+
+	sqimg.save("test.png")
