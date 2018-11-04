@@ -118,7 +118,7 @@ def genPoly(width, height, img, points, wshift, hshift, outl=False):
 
 	baseImg.paste(img, box=(wshift, hshift))
 
-	idata = img.load() # load pixel data
+	idata = baseImg.load() # load pixel data
 	draw = ImageDraw.Draw(baseImg)
 
 	for p in points:
@@ -439,7 +439,8 @@ def poly(image, points, show, outline):
 		error = "Too less points. Minimum points 3"
 	elif points > 10000:
 		error = "Too many points. Maximum points {}".format(10000)
-
+	else:
+		error = None
 
 	if error:
 		click.secho(error, fg='red', err=True)
