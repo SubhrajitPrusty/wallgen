@@ -135,31 +135,41 @@ def genPoly(img, points, side, shift, outl=False):
 # diamond #
 ###########
 
-def genDiamond(side, img, outl=False):
+def genDiamond(width, height, img, outl=False, pic=False):
 
+	print(width, height)
 	x = y = 0
-	boxes = int(0.01*side) # good config
-
+	if pic:
+		wboxes = int(0.1*width) # good config
+		hboxes = int(0.1*height)
+	else:	
+		wboxes = int(0.01*width) # good config
+		hboxes = int(0.01*height)
+	
 	idata = img.load() # load pixel data
 	draw = ImageDraw.Draw(img) 
+	
+	inc = width//wboxes #increment size
 
-	inc = side//boxes #increment size
+	print(inc)
+	print(wboxes)
+	print(hboxes)
 
-	xback = x # backup of x
-	boxes = boxes+2 # adjustment
+	wboxes += 2
+	hboxes += 2
 
-	for i in range(boxes-1): # one extra line
-		for j in range(boxes//2 - 1): # ¯\_(ツ)_/¯
-			
+	for i in range(hboxes-1): # one extra line
+		for j in range(wboxes//2-1): # ¯\_(ツ)_/¯
+
 			points = [(x,y),(x+inc,y+inc),(x+2*inc,y),(x+inc,y-inc)] # diamond
 
 			a,b = (x + x+2*inc)//2, y
 
 			try: # adjustment to not overflow
-				b = b-2 if b>=side else b
+				b = b-2 if b>=height else b
 				b = b+2 if b<=0 else b
 
-				a = a-2 if a>=side else a
+				a = a-2 if a>=width else a
 				a = a+2 if a<=0 else a
 
 				c = idata[a,b]
@@ -190,7 +200,7 @@ def genDiamond(side, img, outl=False):
 
 def genSquares(width, height, img, outl=False, pic=False):
 
-	print(width, height)
+	# print(width, height)
 	x = y = 0
 	if pic:
 		wboxes = int(0.1*width) # good config
@@ -204,9 +214,9 @@ def genSquares(width, height, img, outl=False, pic=False):
 	
 	inc = width//wboxes #increment size
 
-	print(inc)
-	print(wboxes)
-	print(hboxes)
+	# print(inc)
+	# print(wboxes)
+	# print(hboxes)
 
 	wboxes += 1
 	hboxes += 1
@@ -391,8 +401,8 @@ def slants(side, show):
 
 
 if __name__ == "__main__":
-	# img = Image.open("/media/subhrajit/Windows/Users/Subhrajit/Pictures/New/VAOdSb1.jpg")
-	img = Image.open("/media/subhrajit/Windows/Users/Subhrajit/Pictures/New/6qi9qto6fnuy.jpg")
-	sqimg = genSquares(img.width, img.height, img, False, True)
+	img = Image.open("/media/subhrajit/Windows/Users/Subhrajit/Pictures/New/VAOdSb1.jpg")
+	# img = Image.open("/media/subhrajit/Windows/Users/Subhrajit/Pictures/New/c4wohjoqi6sy.jpg")
+	sqimg = genDiamond(img.width, img.height, img, False, True)
 
 	sqimg.save("test.png")
