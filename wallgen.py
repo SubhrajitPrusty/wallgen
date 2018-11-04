@@ -258,40 +258,55 @@ def genSquares(width, height, img, outl=False, pic=False):
 # HEXAGON #
 ###########
 
-def genHexagon(side, radius, img, outl=False):
+def genHexagon(width, height, img, outl=False, pic=False):
+
+	if pic:
+		radius = int(0.01 * min(height, width))
+	else:
+		radius = int(0.05 * min(height, width))
+
 	idata = img.load() # load pixel data
 	draw = ImageDraw.Draw(img)
 
 	ang = 2 * math.pi / 6 # angle inside a hexagon
-	s = radius * math.cos(math.pi/6)
-	width = 2*s # horizontal width of a hexagon
-	boxes = side// int(width) + 1 # adjustment
+	apothem = radius * math.cos(math.pi/6) # radius of inner circle
+	side = 2 * apothem * math.tan(math.pi/6) # length of each side
+	hexwidth = 2 * apothem # horizontal width of a hexagon
+	wboxes = width // int(hexwidth) # adjustment
+	hboxes = height // int((side + radius) * 0.75)  # adjustment
 
-	x,y = 0,s # start here
-	xback = s # backup of x	
+	x,y = 0, radius # start here
+	xback = 0 # backup of x	
 
-	for i in range(boxes+1):
-		for j in range(boxes):			
-			points = [((x + radius * math.sin(i * ang)), (y + radius * math.cos(i * ang))) for i in range(6)]
-			
+	for i in range(hboxes):
+		for j in range(wboxes+1):
+			points = [((x + radius * math.sin(k * ang)), (y + radius * math.cos(k * ang))) for k in range(6)]
+
 			a,b = x,y
-			a = a if a < side else side-1
-			b = b if b < side else side-1
-			a = a if a > 0 else 1
-			b = b if b > 0 else 1
+			try: # adjustment to not overflow
+				b = b - side//2 if b>=height else b
+				b = b + side//2 if b<=0 else b
 
-			c = idata[a,b]
+				a = a - radius if a>=width else a
+				a = a + radius if a<=0 else a
+
+				c = idata[a,b]
+
+			except Exception as e:
+				# print(a,b)
+				c = "#00ff00" # backup
+
 			if outl:
 				draw.polygon((points), fill=c, outline="#2c2c2c") # draw one hexagon
 			else:
 				draw.polygon((points), fill=c) # draw one hexagon
-			x += width
+			x += hexwidth
 
-		y += radius * 1.5 # shift cursor vertically
+		y += radius + (side/2) # shift cursor vertically
 		if i%2 == 0:
-			x=xback # restore horizontal starting point
+			x=xback+apothem # restore horizontal starting point
 		else:
-			x=xback-s # restore horizontal starting point, but for honeycombing
+			x=xback # restore horizontal starting point, but for honeycombing
 
 	return img # return final image
 
@@ -371,7 +386,7 @@ def shape(side, shape, colors, show, outline):
 		img = random_gradient(side)
 
 	if shape == 'hex':
-		img = genHexagon(side, side//20, img, outline)
+		img = genHexagon(side, img, outline)
 	elif shape == 'square':
 		img = genSquares(side, img, outline)
 	elif shape == 'diamond':
@@ -403,6 +418,7 @@ def slants(side, show):
 if __name__ == "__main__":
 	img = Image.open("/media/subhrajit/Windows/Users/Subhrajit/Pictures/New/kbjs8s29i5sy.jpg")
 	# img = Image.open("/media/subhrajit/Windows/Users/Subhrajit/Pictures/New/c4wohjoqi6sy.jpg")
-	sqimg = genDiamond(img.width, img.height, img, False, True)
+	# img = nGradient(2000, (0,0,0), (255,0,128))
+	sqimg = genHexagon(img.width, img.height, img, False, True)
 
 	sqimg.save("test.png")
