@@ -140,8 +140,8 @@ def genDiamond(width, height, img, outl=False, pic=False):
 	print(width, height)
 	x = y = 0
 	if pic:
-		wboxes = int(0.1*width) # good config
-		hboxes = int(0.1*height)
+		wboxes = int(0.2*width) # good config
+		hboxes = int(0.2*height)
 	else:	
 		wboxes = int(0.01*width) # good config
 		hboxes = int(0.01*height)
@@ -149,7 +149,7 @@ def genDiamond(width, height, img, outl=False, pic=False):
 	idata = img.load() # load pixel data
 	draw = ImageDraw.Draw(img) 
 	
-	inc = width//wboxes #increment size
+	inc = width//wboxes # increment size
 
 	print(inc)
 	print(wboxes)
@@ -203,8 +203,8 @@ def genSquares(width, height, img, outl=False, pic=False):
 	# print(width, height)
 	x = y = 0
 	if pic:
-		wboxes = int(0.1*width) # good config
-		hboxes = int(0.1*height)
+		wboxes = int(0.2*width) # good config
+		hboxes = int(0.2*height)
 	else:	
 		wboxes = int(0.01*width) # good config
 		hboxes = int(0.01*height)
@@ -401,7 +401,7 @@ def slants(side, show):
 
 
 if __name__ == "__main__":
-	img = Image.open("/media/subhrajit/Windows/Users/Subhrajit/Pictures/New/VAOdSb1.jpg")
+	img = Image.open("/media/subhrajit/Windows/Users/Subhrajit/Pictures/New/kbjs8s29i5sy.jpg")
 	# img = Image.open("/media/subhrajit/Windows/Users/Subhrajit/Pictures/New/c4wohjoqi6sy.jpg")
 	sqimg = genDiamond(img.width, img.height, img, False, True)
 
