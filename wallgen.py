@@ -348,6 +348,8 @@ def poly(side, points, show, colors, outline):
 		click.secho(error, fg='red', err=True)
 		sys.exit(1)
 
+	side = side * 2 # increase size to anti alias
+
 	shift = side//10
 	nside = side + shift*2 # increase size to prevent underflow
 	
@@ -362,6 +364,8 @@ def poly(side, points, show, colors, outline):
 
 	pts = genPoints(points, nside, nside)
 	img = genPoly(side, side, img, pts, shift, shift, outl=outline)
+
+	img = img.resize((side//2, side//2), resample=Image.BICUBIC)
 
 	if show:
 		img.show()
@@ -385,6 +389,8 @@ def shape(side, shape, colors, show, outline):
 	if error:
 		click.secho(error, fg='red', err=True)
 		sys.exit(1)
+
+	side = side * 2 # increase size to anti alias
 	
 	if colors:
 		if len(colors) < 2:
@@ -406,6 +412,8 @@ def shape(side, shape, colors, show, outline):
 		click.secho(error, fg='red', err=True)
 		sys.exit(1)
 
+	img = img.resize((side//2, side//2), resample=Image.BICUBIC)
+
 	if show:
 		img.show()
 
@@ -417,6 +425,9 @@ def shape(side, shape, colors, show, outline):
 @click.option("--show", "-s", is_flag=True, help="open the image")
 def slants(side, show):
 	""" Generates slanting lines of various colors """
+
+	side = side * 2 # increase size to anti alias
+
 	img = drawSlants(side)
 
 	if show:
