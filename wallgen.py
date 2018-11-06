@@ -6,6 +6,8 @@ import click
 from scipy.spatial import Delaunay
 import math
 
+Image.MAX_IMAGE_PIXELS = 200000000
+
 def random_gradient(side):
 	img = Image.new("RGB", (side,side), "#FFFFFF")
 	draw = ImageDraw.Draw(img)
@@ -342,7 +344,7 @@ def poly(side, points, show, colors, outline):
 	elif points < 3:
 		error = "Too less points. Minimum points 3"
 	elif points > side:
-		error = "Too many points. Maximum points {}".format(side//2)
+		error = "Too many points. Maximum points {}".format(side)
 
 	if error:
 		click.secho(error, fg='red', err=True)
