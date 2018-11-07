@@ -119,6 +119,8 @@ def genPoly(width, height, img, points, wshift, hshift, outl=False, pic=False):
 	baseImg = Image.new("RGB", (width+(wshift*2), height+(hshift*2)), "#000000")
 
 	baseImg.paste(img, box=(wshift, hshift))
+	bw = baseImg.width
+	bh = baseImg.height
 
 	if pic:
 		idata = baseImg.load() # load pixel data
@@ -132,11 +134,11 @@ def genPoly(width, height, img, points, wshift, hshift, outl=False, pic=False):
 		
 		a,b = calcCenter(tp)
 		try:
-			b = height-5 if b>=height else b
-			b = height+5 if b<=0 else b
+			b = bh-5 if b>=bh else b
+			b = bh+5 if b<=0 else b
 
-			a = width-5 if a>=width else a
-			a = width+5 if a<=0 else a
+			a = bw-5 if a>=bw else a
+			a = bw+5 if a<=0 else a
 
 			c = idata[a,b]
 		except Exception as e:
@@ -329,13 +331,13 @@ def cli():
 
 @cli.command()
 @click.argument("side", type=click.INT)
-# @click.option("--pic",type=click.Path(exists=True,dir_okay=False),help="Use a pic instead of gradient background")
 @click.option("--colors", "-c", multiple=True, type=click.STRING, help="use many colors custom gradient, e.g -c #ff0000 -c #000000 -c #0000ff")
 @click.option("--points", "-p", default=100, help="number of points to use, default = 100")
 @click.option("--show", "-s", is_flag=True, help="open the image")
 @click.option("--outline", "-o", is_flag=True, help="outline the triangles")
+@click.option("--name", "-n", help="rename the output")
 
-def poly(side, points, show, colors, outline):
+def poly(side, points, show, colors, outline, name):
 	""" Generates a HQ low poly image """
 
 	error = ""
@@ -372,7 +374,10 @@ def poly(side, points, show, colors, outline):
 	if show:
 		img.show()
 
-	img.save("wall-{}.png".format(int(time.time())))
+	if name:
+		img.save("{}.png".format(name))
+	else:	
+		img.save("wall-{}.png".format(int(time.time())))
 
 @cli.command()
 @click.argument("side", type=click.INT)
@@ -380,8 +385,9 @@ def poly(side, points, show, colors, outline):
 @click.option("--colors", "-c", multiple=True, type=click.STRING, help="use many colors custom gradient, e.g -c #ff0000 -c #000000 -c #0000ff")
 @click.option("--show", "-s", is_flag=True, help="open the image")
 @click.option("--outline", "-o", is_flag=True, help="outline the shapes")
+@click.option("--name", "-n", help="rename the output")
 
-def shape(side, shape, colors, show, outline):
+def shape(side, shape, colors, show, outline, name):
 	""" Generates a HQ image of a beautiful shapes """
 
 	error = ""
@@ -419,13 +425,18 @@ def shape(side, shape, colors, show, outline):
 	if show:
 		img.show()
 
-	img.save("wall-{}.png".format(int(time.time())))
+	if name:
+		img.save("{}.png".format(name))
+	else:	
+		img.save("wall-{}.png".format(int(time.time())))
 
 
 @cli.command()
 @click.argument("side", type=click.INT)
 @click.option("--show", "-s", is_flag=True, help="open the image")
-def slants(side, show):
+@click.option("--name", "-n", help="rename the output")
+
+def slants(side, show, name):
 	""" Generates slanting lines of various colors """
 
 	side = side * 2 # increase size to anti alias
@@ -435,8 +446,10 @@ def slants(side, show):
 	if show:
 		img.show()
 
-	img.save("wall-{}.png".format(int(time.time())))
-
+	if name:
+		img.save("{}.png".format(name))
+	else:	
+		img.save("wall-{}.png".format(int(time.time())))
 
 @cli.group()
 def pic():
@@ -448,8 +461,9 @@ def pic():
 @click.option("--points", "-p", default=1000, help="number of points to use, default = 1000")
 @click.option("--show", "-s", is_flag=True, help="open the image")
 @click.option("--outline", "-o", is_flag=True, help="outline the triangles")
+@click.option("--name", "-n", help="rename the output")
 
-def poly(image, points, show, outline):
+def poly(image, points, show, outline, name):
 	""" Generates a HQ low poly image """
 
 	if points < 3:
@@ -478,7 +492,10 @@ def poly(image, points, show, outline):
 	if show:
 		img.show()
 
-	img.save("wall-{}.png".format(int(time.time())))
+	if name:
+		img.save("{}.png".format(name))
+	else:	
+		img.save("wall-{}.png".format(int(time.time())))
 
 
 @pic.command()
@@ -486,8 +503,9 @@ def poly(image, points, show, outline):
 @click.option("--type", "-t", "shape", type=click.Choice(['square', 'hex', 'diamond']), help="choose which shape to use")
 @click.option("--show", "-s", is_flag=True, help="open the image")
 @click.option("--outline", "-o", is_flag=True, help="outline the shapes")
+@click.option("--name", "-n", help="rename the output")
 
-def shape(image, shape, show, outline):
+def shape(image, shape, show, outline, name):
 	""" Generate a HQ image of a beautiful shapes """
 
 	img = Image.open(image)
@@ -509,7 +527,10 @@ def shape(image, shape, show, outline):
 	if show:
 		img.show()
 
-	img.save("wall-{}.png".format(int(time.time())))
+	if name:
+		img.save("{}.png".format(name))
+	else:	
+		img.save("wall-{}.png".format(int(time.time())))
 
 
 if __name__ == "__main__":
