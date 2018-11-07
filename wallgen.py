@@ -345,8 +345,8 @@ def poly(side, points, show, colors, outline, name):
 		error = "Image too small. Minimum size 50"
 	elif points < 3:
 		error = "Too less points. Minimum points 3"
-	elif points > side:
-		error = "Too many points. Maximum points {}".format(side)
+	elif points > 10000:
+		error = "Too many points. Maximum points 10000"
 
 	if error:
 		click.secho(error, fg='red', err=True)
