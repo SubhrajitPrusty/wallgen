@@ -1,6 +1,7 @@
 # WallGen
-[![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com)   [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)  
-[![](https://img.shields.io/badge/Demo-yellow.svg?style=for-the-badge)](http://wallgen.subhrajitpy.me/)
+![](https://img.shields.io/badge/Python-3-blue.svg?style=for-the-badge&logo=python)
+---
+[![](https://img.shields.io/badge/Website-blue.svg?style=for-the-badge)](http://wallgen.subhrajitpy.me/)
 
 
 Generates HQ poly wallpapers
@@ -33,8 +34,9 @@ Options:
   --help  Show this message and exit.
 
 Commands:
+  pic     Use a picture instead of a gradient
   poly    Generates a HQ low poly image
-  shape   Generate a HQ image of a beautiful shapes
+  shape   Generates a HQ image of a beautiful shapes
   slants  Generates slanting lines of various colors
 
 ```
@@ -52,6 +54,7 @@ Options:
   -p, --points INTEGER  number of points to use, default = 100
   -s, --show            open the image
   -o, --outline         outline the triangles
+  -n, --name TEXT       rename the output
   --help                Show this message and exit.
 
 ```
@@ -62,15 +65,16 @@ Options:
 ```
 Usage: wallgen shape [OPTIONS] SIDE
 
-  Generate a HQ image of a beautiful shapes
+  Generates a HQ image of a beautiful shapes
 
 Options:
-  -t, --type [square|hex|diamond] choose which shape to use
-                                  
+  -t, --type [square|hex|diamond]
+                                  choose which shape to use
   -c, --colors TEXT               use many colors custom gradient, e.g -c
                                   #ff0000 -c #000000 -c #0000ff
   -s, --show                      open the image
   -o, --outline                   outline the shapes
+  -n, --name TEXT                 rename the output
   --help                          Show this message and exit.
 
 ```
@@ -83,13 +87,64 @@ Usage: wallgen slants [OPTIONS] SIDE
   Generates slanting lines of various colors
 
 Options:
-  -s, --show  open the image
-  --help      Show this message and exit.
+  -s, --show       open the image
+  -n, --name TEXT  rename the output
+  --help           Show this message and exit.
 
 ```
 
-## Examples
+### `wallgen pic --help`
 
+```
+Usage: wallgen pic [OPTIONS] COMMAND [ARGS]...
+
+  Use a picture instead of a gradient
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  poly   Generates a HQ low poly image
+  shape  Generate a HQ image of a beautiful shapes
+
+```
+
+### `wallgen pic poly --help`
+
+```
+Usage: wallgen pic poly [OPTIONS] IMAGE
+
+  Generates a HQ low poly image
+
+Options:
+  -p, --points INTEGER  number of points to use, default = 1000
+  -s, --show            open the image
+  -o, --outline         outline the triangles
+  -n, --name TEXT       rename the output
+  --help                Show this message and exit.
+  
+```
+
+### `wallgen pic shape --help`
+
+```
+Usage: wallgen pic shape [OPTIONS] IMAGE
+
+  Generate a HQ image of a beautiful shapes
+
+Options:
+  -t, --type [square|hex|diamond]
+                                  choose which shape to use
+  -s, --show                      open the image
+  -o, --outline                   outline the shapes
+  -n, --name TEXT                 rename the output
+  --help                          Show this message and exit.
+  
+```
+
+
+## Examples
+---
 
 ### `wallgen poly 2000`
 
