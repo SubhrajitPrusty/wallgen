@@ -70,10 +70,10 @@ def genPoints(qty, width, height):
 	side = (width+height)//2
 	randPoints = []
 	og = side
-	width = width // 2
+	width = width // 4
 	height = height // 2
 
-	qty //= 4
+	qty //= 8
 
 	def populate(a, b, n, width, height):
 		side = (width+height)//2
@@ -94,10 +94,14 @@ def genPoints(qty, width, height):
 
 		return points
 	
-	randPoints  = populate(0,0, qty, width, height)
-	randPoints += populate(width, 0, qty, width, height)
+	randPoints  = populate(0,0, qty, width, height) # first
+	randPoints += populate(width, 0, qty, width, height) # second
+	randPoints += populate(width*2,0, qty, width, height) # third
+	randPoints += populate(width*3, 0, qty, width, height) # fourth
 	randPoints += populate(0, height, qty, width, height)
 	randPoints += populate(width, height, qty, width, height)
+	randPoints += populate(width*2, height, qty, width, height)
+	randPoints += populate(width*3, height, qty, width, height)
 	
 	tri = Delaunay(randPoints) # calculate D triangulation of points
 	points = tri.points[tri.simplices] # find all groups of points
