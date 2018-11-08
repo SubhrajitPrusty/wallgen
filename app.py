@@ -50,8 +50,6 @@ def poly():
 			fname = "wall-{}.png".format(int(time.time()))
 			fpath = 'static/images/'+fname
 			
-			side = side * 2
-
 			shift = side//10
 			nside = side + shift*2 # increase size to prevent underflow
 
@@ -59,8 +57,6 @@ def poly():
 
 			pts = wallgen.genPoints(np, nside, nside)
 			img = wallgen.genPoly(side, side, img, pts, shift, shift, outl=outline)
-
-			img = img.resize((side//2, side//2), resample=Image.BICUBIC)
 
 			# print(fpath)
 			img.save(fpath)
@@ -103,8 +99,6 @@ def shape():
 			print(error)
 			return render_template('error.html', context=error)
 		else:
-			side = side * 2
-
 			fname = "wall-{}.png".format(int(time.time()))
 			fpath = 'static/images/'+fname
 			img = wallgen.nGradient(side, *colors)
@@ -115,8 +109,6 @@ def shape():
 				img = wallgen.genSquares(side, side, img, outline)
 			elif shape == 'diamond':
 				img = wallgen.genDiamond(side, side, img, outline)
-
-			img = img.resize((side//2, side//2), resample=Image.BICUBIC)
 			
 			# print(fpath)
 			img.save(fpath)

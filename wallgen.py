@@ -169,8 +169,8 @@ def genDiamond(width, height, img, outl=False, pic=False):
 		wboxes = int(0.2*width) # good config
 		hboxes = int(0.2*height)
 	else:	
-		wboxes = int(0.01*width)//2 # good config
-		hboxes = int(0.01*height)//2
+		wboxes = int(0.01*width) # good config
+		hboxes = int(0.01*height)
 	
 	idata = img.load() # load pixel data
 	draw = ImageDraw.Draw(img) 
@@ -227,8 +227,8 @@ def genSquares(width, height, img, outl=False, pic=False):
 		wboxes = int(0.2*width) # good config
 		hboxes = int(0.2*height)
 	else:	
-		wboxes = int(0.01*width)//2 # good config
-		hboxes = int(0.01*height)//2
+		wboxes = int(0.01*width) # good config
+		hboxes = int(0.01*height)
 	
 	idata = img.load() # load pixel data
 	draw = ImageDraw.Draw(img) 
