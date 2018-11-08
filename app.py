@@ -3,6 +3,7 @@ import os
 import time
 import wallgen
 from gevent.pywsgi import WSGIServer
+from PIL import Image
 
 app = Flask(__name__, static_url_path="/static")
 
@@ -49,13 +50,17 @@ def poly():
 			fname = "wall-{}.png".format(int(time.time()))
 			fpath = 'static/images/'+fname
 			
+			side = side * 2
+
 			shift = side//10
 			nside = side + shift*2 # increase size to prevent underflow
 
-			img = wallgen.nGradient(side, *colors)
+			img = wallgen.nGradient(nside, *colors)
 
 			pts = wallgen.genPoints(np, nside, nside)
 			img = wallgen.genPoly(side, side, img, pts, shift, shift, outl=outline)
+
+			img = img.resize((side//2, side//2), resample=Image.BICUBIC)
 
 			# print(fpath)
 			img.save(fpath)
@@ -98,6 +103,8 @@ def shape():
 			print(error)
 			return render_template('error.html', context=error)
 		else:
+			side = side * 2
+
 			fname = "wall-{}.png".format(int(time.time()))
 			fpath = 'static/images/'+fname
 			img = wallgen.nGradient(side, *colors)
@@ -109,6 +116,8 @@ def shape():
 			elif shape == 'diamond':
 				img = wallgen.genDiamond(side, side, img, outline)
 
+			img = img.resize((side//2, side//2), resample=Image.BICUBIC)
+			
 			# print(fpath)
 			img.save(fpath)
 			imgurl = url_for('static',filename='images/'+fname)
