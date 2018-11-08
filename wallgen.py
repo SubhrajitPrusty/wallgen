@@ -71,9 +71,9 @@ def genPoints(qty, width, height):
 	randPoints = []
 	og = side
 	width = width // 4
-	height = height // 2
+	height = height // 4
 
-	qty //= 8
+	qty //= 16
 
 	def populate(a, b, n, width, height):
 		side = (width+height)//2
@@ -94,17 +94,17 @@ def genPoints(qty, width, height):
 
 		return points
 	
-	randPoints  = populate(0,0, qty, width, height) # first
-	randPoints += populate(width, 0, qty, width, height) # second
-	randPoints += populate(width*2,0, qty, width, height) # third
-	randPoints += populate(width*3, 0, qty, width, height) # fourth
-	randPoints += populate(0, height, qty, width, height)
-	randPoints += populate(width, height, qty, width, height)
-	randPoints += populate(width*2, height, qty, width, height)
-	randPoints += populate(width*3, height, qty, width, height)
-	
+	w,h = 0,0
+	for i in range(4):
+		for j in range(4):
+			randPoints += populate(w,h, qty, width, height)
+			w+=width
+		w=0
+		h+=height
+
 	tri = Delaunay(randPoints) # calculate D triangulation of points
 	points = tri.points[tri.simplices] # find all groups of points
+
 	return points
 
 def calcCenter(ps):
@@ -135,7 +135,6 @@ def genPoly(width, height, img, points, wshift, hshift, outl=False, pic=False):
 
 	for p in points:
 		tp = tuple(map(tuple,p)) # convert each pair of points to tuples
-		
 		a,b = calcCenter(tp)
 		try:
 			b = bh-5 if b>=bh else b
