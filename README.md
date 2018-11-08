@@ -10,19 +10,6 @@ Generates HQ poly wallpapers
 
 `pip install --editable .`
 
-## Usage Docker
-
-Inside the folder
-
-`docker build -t wallgen-doc:latest .`
-
-`docker run -d -p 5000:5000 wallgen-doc`
-
-Run `docker ps` to check if container is running.
-
-Goto [localhost:5000](http://localhost:5000) to check out the website.
-
-
 ## Usage
 
 ### `wallgen`
@@ -141,7 +128,21 @@ Options:
   --help                          Show this message and exit.
   
 ```
+---
 
+## Usage Docker
+
+Inside the folder
+
+`docker build -t wallgen-doc:latest .`
+
+`docker run -d -p 5000:5000 wallgen-doc`
+
+Run `docker ps` to check if container is running.
+
+Goto [localhost:5000](http://localhost:5000) to check out the website.
+
+---
 
 ## Examples
 ---
