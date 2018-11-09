@@ -118,7 +118,7 @@ def calcCenter(ps):
 # TRIANGLES #
 #############
 
-def genPoly(width, height, img, points, wshift, hshift, outl=False, pic=False):
+def genPoly(width, height, img, points, wshift, hshift, outl=None, pic=False):
 
 	baseImg = Image.new("RGB", (width+(wshift*2), height+(hshift*2)), "#000000")
 
@@ -149,7 +149,7 @@ def genPoly(width, height, img, points, wshift, hshift, outl=False, pic=False):
 			c = "#00ff00"
 	
 		if outl:
-			draw.polygon(tp, fill=c, outline="#2c2c2c")
+			draw.polygon(tp, fill=c, outline=outl)
 		else:
 			draw.polygon(tp, fill=c) # draw one triangle
 	
@@ -162,7 +162,7 @@ def genPoly(width, height, img, points, wshift, hshift, outl=False, pic=False):
 # diamond #
 ###########
 
-def genDiamond(width, height, img, outl=False, pic=False, per=1):
+def genDiamond(width, height, img, outl=None, pic=False, per=1):
 
 	x = y = 0
 
@@ -198,7 +198,7 @@ def genDiamond(width, height, img, outl=False, pic=False, per=1):
 				c = "#00ff00" # backup
 
 			if outl:
-				draw.polygon((points), fill=c, outline="#2c2c2c")
+				draw.polygon((points), fill=c, outline=outl)
 			else:
 				draw.polygon((points), fill=c)
 			x+=2*inc
@@ -217,7 +217,7 @@ def genDiamond(width, height, img, outl=False, pic=False, per=1):
 # SQUARES #
 ###########
 
-def genSquares(width, height, img, outl=False, pic=False, per=1):
+def genSquares(width, height, img, outl=None, pic=False, per=1):
 
 	x = y = 0
 
@@ -253,7 +253,7 @@ def genSquares(width, height, img, outl=False, pic=False, per=1):
 			# draw one square
 
 			if outl:
-				draw.polygon((points), fill=c, outline="#2c2c2c")
+				draw.polygon((points), fill=c, outline=outl)
 			else:
 				draw.polygon((points), fill=c)
 			
@@ -269,7 +269,7 @@ def genSquares(width, height, img, outl=False, pic=False, per=1):
 # HEXAGON #
 ###########
 
-def genHexagon(width, height, img, outl=False, pic=False, per=1):
+def genHexagon(width, height, img, outl=None, pic=False, per=1):
 
 	x = y = 0
 	
@@ -307,7 +307,7 @@ def genHexagon(width, height, img, outl=False, pic=False, per=1):
 				c = "#00ff00" # backup
 
 			if outl:
-				draw.polygon((points), fill=c, outline="#2c2c2c") # draw one hexagon
+				draw.polygon((points), fill=c, outline=outl) # draw one hexagon
 			else:
 				draw.polygon((points), fill=c) # draw one hexagon
 			x += hexwidth
@@ -330,7 +330,7 @@ def cli():
 @click.option("--colors", "-c", multiple=True, type=click.STRING, help="use many colors custom gradient, e.g -c #ff0000 -c #000000 -c #0000ff")
 @click.option("--points", "-p", default=100, help="number of points to use, default = 100")
 @click.option("--show", "-s", is_flag=True, help="open the image")
-@click.option("--outline", "-o", is_flag=True, help="outline the triangles")
+@click.option("--outline", "-o", default=None, help="outline the triangles")
 @click.option("--name", "-n", help="rename the output")
 
 def poly(side, points, show, colors, outline, name):
@@ -362,6 +362,14 @@ def poly(side, points, show, colors, outline, name):
 	else:
 		img = random_gradient(nside)
 
+	if outline:
+		try:
+			outline = tuple(bytes.fromhex(outline[1:]))
+		except Exception as e:
+			click.secho("Invalid color hex", fg='red', err=True)
+			sys.exit(1)
+
+
 	pts = genPoints(points, nside, nside)
 	img = genPoly(side, side, img, pts, shift, shift, outl=outline)
 
@@ -381,7 +389,7 @@ def poly(side, points, show, colors, outline, name):
 @click.option("--colors", "-c", multiple=True, type=click.STRING, help="use many colors custom gradient, e.g -c #ff0000 -c #000000 -c #0000ff")
 @click.option("--percent", "-p", default=1, help="Use this percentage to determine number of polygons")
 @click.option("--show", "-s", is_flag=True, help="open the image")
-@click.option("--outline", "-o", is_flag=True, help="outline the shapes")
+@click.option("--outline", "-o", default=None, help="outline the shapes")
 @click.option("--name", "-n", help="rename the output")
 
 def shape(side, shape, colors, show, outline, name, percent):
@@ -407,6 +415,14 @@ def shape(side, shape, colors, show, outline, name, percent):
 		img = nGradient(side, *cs)
 	else:
 		img = random_gradient(side)
+
+	if outline:
+		try:
+			outline = tuple(bytes.fromhex(outline[1:]))
+		except Exception as e:
+			click.secho("Invalid color hex", fg='red', err=True)
+			sys.exit(1)
+
 
 	if shape == 'hex':
 		img = genHexagon(side, side, img, outline, per=percent)
@@ -459,7 +475,7 @@ def pic():
 @click.argument("image", type=click.Path(exists=True, dir_okay=False))
 @click.option("--points", "-p", default=1000, help="number of points to use, default = 1000")
 @click.option("--show", "-s", is_flag=True, help="open the image")
-@click.option("--outline", "-o", is_flag=True, help="outline the triangles")
+@click.option("--outline", "-o", default=None, help="outline the triangles")
 @click.option("--name", "-n", help="rename the output")
 
 def poly(image, points, show, outline, name):
@@ -485,6 +501,14 @@ def poly(image, points, show, outline, name):
 	width += wshift*2
 	height += hshift*2
 
+	if outline:
+		try:
+			outline = tuple(bytes.fromhex(outline[1:]))
+		except Exception as e:
+			click.secho("Invalid color hex", fg='red', err=True)
+			sys.exit(1)
+
+
 	pts = genPoints(points, width, height)
 	img = genPoly(img.width, img.height, img, pts, wshift, hshift, outline, pic=True)
 
@@ -502,7 +526,7 @@ def poly(image, points, show, outline, name):
 @click.option("--type", "-t", "shape", type=click.Choice(['square', 'hex', 'diamond']), help="choose which shape to use")
 @click.option("--percent", "-p", default=1, help="Use this percentage to determine number of polygons")
 @click.option("--show", "-s", is_flag=True, help="open the image")
-@click.option("--outline", "-o", is_flag=True, help="outline the shapes")
+@click.option("--outline", "-o", default=None, help="outline the shapes")
 @click.option("--name", "-n", help="rename the output")
 
 def shape(image, shape, show, outline, name, percent):
@@ -521,6 +545,13 @@ def shape(image, shape, show, outline, name, percent):
 
 	width = img.width
 	height = img.height
+
+	if outline:
+		try:
+			outline = tuple(bytes.fromhex(outline[1:]))
+		except Exception as e:
+			click.secho("Invalid color hex", fg='red', err=True)
+			sys.exit(1)
 
 	if shape == 'hex':
 		img = genHexagon(width, height, img, outline, pic=True, per=percent)
