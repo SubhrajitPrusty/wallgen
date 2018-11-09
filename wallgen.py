@@ -168,7 +168,7 @@ def genDiamond(width, height, img, outl=False, pic=False):
 	if pic:
 		wboxes = int(0.2*width) # good config
 		hboxes = int(0.2*height)
-	else:	
+	else:   
 		wboxes = int(0.01*width) # good config
 		hboxes = int(0.01*height)
 	
@@ -226,7 +226,7 @@ def genSquares(width, height, img, outl=False, pic=False):
 	if pic:
 		wboxes = int(0.2*width) # good config
 		hboxes = int(0.2*height)
-	else:	
+	else:   
 		wboxes = int(0.01*width) # good config
 		hboxes = int(0.01*height)
 	
@@ -293,7 +293,7 @@ def genHexagon(width, height, img, outl=False, pic=False):
 	hboxes = height // int((side + radius) * 0.75)  # adjustment
 
 	x,y = 0, radius # start here
-	xback = 0 # backup of x	
+	xback = 0 # backup of x 
 
 	for i in range(hboxes):
 		for j in range(wboxes+1):
@@ -348,8 +348,8 @@ def poly(side, points, show, colors, outline, name):
 		error = "Image too small. Minimum size 50"
 	elif points < 3:
 		error = "Too less points. Minimum points 3"
-	elif points > 10000:
-		error = "Too many points. Maximum points 10000"
+	elif points > 50000:
+		error = "Too many points. Maximum points 50000"
 
 	if error:
 		click.secho(error, fg='red', err=True)
@@ -379,7 +379,7 @@ def poly(side, points, show, colors, outline, name):
 
 	if name:
 		img.save("{}.png".format(name))
-	else:	
+	else:   
 		img.save("wall-{}.png".format(int(time.time())))
 
 @cli.command()
@@ -430,7 +430,7 @@ def shape(side, shape, colors, show, outline, name):
 
 	if name:
 		img.save("{}.png".format(name))
-	else:	
+	else:   
 		img.save("wall-{}.png".format(int(time.time())))
 
 
@@ -451,7 +451,7 @@ def slants(side, show, name):
 
 	if name:
 		img.save("{}.png".format(name))
-	else:	
+	else:   
 		img.save("wall-{}.png".format(int(time.time())))
 
 @cli.group()
@@ -471,8 +471,8 @@ def poly(image, points, show, outline, name):
 
 	if points < 3:
 		error = "Too less points. Minimum points 3"
-	elif points > 10000:
-		error = "Too many points. Maximum points {}".format(10000)
+	elif points > 50000:
+		error = "Too many points. Maximum points {}".format(50000)
 	else:
 		error = None
 
@@ -497,7 +497,7 @@ def poly(image, points, show, outline, name):
 
 	if name:
 		img.save("{}.png".format(name))
-	else:	
+	else:   
 		img.save("wall-{}.png".format(int(time.time())))
 
 
@@ -532,7 +532,7 @@ def shape(image, shape, show, outline, name):
 
 	if name:
 		img.save("{}.png".format(name))
-	else:	
+	else:   
 		img.save("wall-{}.png".format(int(time.time())))
 
 
