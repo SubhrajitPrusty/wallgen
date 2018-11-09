@@ -6,6 +6,13 @@
 
 Generates HQ poly wallpapers
 
+- Make poly wallpapers over a gradient with random colors, or using custom colors
+- Choose different shapes like hexagons, squares, and diamonds apart from triangles
+- Apply polygons over a picture
+- Make a [video](https://gist.github.com/SubhrajitPrusty/5f303202c615e42e12b1a640322f9fec) with polygonized style
+- Dont have `Python`? Use the [website](http://wallgen.subhrajitpy.me) (Limited capabilites)
+
+
 ## Installation
 
 `pip install --editable .`
@@ -145,7 +152,7 @@ Goto [localhost:5000](http://localhost:5000) to check out the website.
 ---
 
 ## Examples
----
+
 
 ### `wallgen poly 2000`
 
@@ -177,7 +184,7 @@ More than 2 colours
 
 <img src="./images/demo3.png" width="50%">
 
-### `wallgen poly 1000 -c "#ff0000" -c "#00ddff" -o`
+### `wallgen poly 1000 -c "#ff0000" -c "#00ddff" -o "#2c2c2c"`
 
 With outline
 
@@ -189,7 +196,7 @@ Square pattern
 
 <img src="./images/square.png" width="50%">
 
-### `wallgen shape -t square -c "#ff0099" -c "#00ddff" -o`
+### `wallgen shape -t square -c "#ff0099" -c "#00ddff" -o "#2c2c2c"`
 
 Square pattern with Outline
 
@@ -201,7 +208,7 @@ Hexagon pattern
 
 <img src="./images/hex.png" width="50%">
 
-### `wallgen shape -t hexagon -c "#ff0099" -c "#00ddff" -o`
+### `wallgen shape -t hexagon -c "#ff0099" -c "#00ddff" -o "#2c2c2c"`
 
 Hexagon pattern with Outline
 
@@ -213,7 +220,7 @@ Diamond pattern
 
 <img src="./images/diamond.png" width="50%">
 
-### `wallgen shape -t square -c "#ff0099" -c "#00ddff" -o`
+### `wallgen shape -t square -c "#ff0099" -c "#00ddff" -o "#2c2c2c"`
 
 Diamond pattern with Outline
 
