@@ -390,7 +390,7 @@ def poly(side, points, show, colors, outline, name):
 @click.argument("side", type=click.INT)
 @click.option("--type", "-t", "shape", type=click.Choice(['square', 'hex', 'diamond']), help="choose which shape to use")
 @click.option("--colors", "-c", multiple=True, type=click.STRING, help="use many colors custom gradient, e.g -c #ff0000 -c #000000 -c #0000ff")
-@click.option("--percent", "-p", default=1, help="Use this percentage to determine number of polygons")
+@click.option("--percent", "-p", type=click.INT, help="Use this percentage to determine number of polygons")
 @click.option("--show", "-s", is_flag=True, help="open the image")
 @click.option("--outline", "-o", default=None, help="outline the shapes")
 @click.option("--name", "-n", help="rename the output")
@@ -401,8 +401,9 @@ def shape(side, shape, colors, show, outline, name, percent):
 	error = ""
 	if side < 50:
 		error = "Image too small. Minimum size 50"
-	if percent < 1 or percent > 10:
-		error = "Percent range 1-10"
+	if percent:
+		if percent < 1 or percent > 10:
+			error = "Percent range 1-10"
 
 	if error:
 		click.secho(error, fg='red', err=True)
@@ -428,6 +429,7 @@ def shape(side, shape, colors, show, outline, name, percent):
 
 
 	if shape == 'hex':
+		percent = percent if percent else 5
 		img = genHexagon(side, side, img, outline, per=percent)
 	elif shape == 'square':
 		img = genSquares(side, side, img, outline, per=percent)
@@ -527,16 +529,17 @@ def poly(image, points, show, outline, name):
 @pic.command()
 @click.argument("image", type=click.Path(exists=True, dir_okay=False))
 @click.option("--type", "-t", "shape", type=click.Choice(['square', 'hex', 'diamond']), help="choose which shape to use")
-@click.option("--percent", "-p", default=1, help="Use this percentage to determine number of polygons")
+@click.option("--percent", "-p", type=click.INT, help="Use this percentage to determine number of polygons")
 @click.option("--show", "-s", is_flag=True, help="open the image")
 @click.option("--outline", "-o", default=None, help="outline the shapes")
 @click.option("--name", "-n", help="rename the output")
 
 def shape(image, shape, show, outline, name, percent):
 	""" Generate a HQ image of a beautiful shapes """
-
-	if percent < 1 or percent > 10:
-		error = "Percent range 1-10"
+	
+	if percent:
+		if percent < 1 or percent > 10:
+			error = "Percent range 1-10"
 	else:
 		error = None
 
@@ -557,6 +560,7 @@ def shape(image, shape, show, outline, name, percent):
 			sys.exit(1)
 
 	if shape == 'hex':
+		percent = percent if percent else 5
 		img = genHexagon(width, height, img, outline, pic=True, per=percent)
 	elif shape == 'square':
 		img = genSquares(width, height, img, outline, pic=True, per=percent)
