@@ -269,7 +269,7 @@ def genSquares(width, height, img, outl=None, pic=False, per=1):
 # HEXAGON #
 ###########
 
-def genHexagon(width, height, img, outl=None, pic=False, per=1):
+def genHexagon(width, height, img, outl=None, pic=False, per=5):
 
 	x = y = 0
 	
@@ -288,7 +288,10 @@ def genHexagon(width, height, img, outl=None, pic=False, per=1):
 	x,y = 0, radius # start here
 	xback = 0 # backup of x 
 
-	for i in range(hboxes+1):
+	if pic:
+		hboxes+=1
+
+	for i in range(hboxes):
 		for j in range(wboxes+1):
 			points = [((x + radius * math.sin(k * ang)), (y + radius * math.cos(k * ang))) for k in range(6)]
 
