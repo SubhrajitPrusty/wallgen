@@ -162,15 +162,12 @@ def genPoly(width, height, img, points, wshift, hshift, outl=False, pic=False):
 # diamond #
 ###########
 
-def genDiamond(width, height, img, outl=False, pic=False):
+def genDiamond(width, height, img, outl=False, pic=False, per=1):
 
 	x = y = 0
-	if pic:
-		wboxes = int(0.2*width) # good config
-		hboxes = int(0.2*height)
-	else:   
-		wboxes = int(0.01*width) # good config
-		hboxes = int(0.01*height)
+
+	wboxes = int(per/100.0*width)
+	hboxes = int(per/100.0*height)
 	
 	idata = img.load() # load pixel data
 	draw = ImageDraw.Draw(img) 
@@ -220,15 +217,12 @@ def genDiamond(width, height, img, outl=False, pic=False):
 # SQUARES #
 ###########
 
-def genSquares(width, height, img, outl=False, pic=False):
+def genSquares(width, height, img, outl=False, pic=False, per=1):
 
 	x = y = 0
-	if pic:
-		wboxes = int(0.2*width) # good config
-		hboxes = int(0.2*height)
-	else:   
-		wboxes = int(0.01*width) # good config
-		hboxes = int(0.01*height)
+
+	wboxes = int(per/100.0*width)
+	hboxes = int(per/100.0*height)
 	
 	idata = img.load() # load pixel data
 	draw = ImageDraw.Draw(img) 
@@ -275,12 +269,11 @@ def genSquares(width, height, img, outl=False, pic=False):
 # HEXAGON #
 ###########
 
-def genHexagon(width, height, img, outl=False, pic=False):
+def genHexagon(width, height, img, outl=False, pic=False, per=1):
 
-	if pic:
-		radius = int(0.01 * min(height, width))
-	else:
-		radius = int(0.05 * min(height, width))
+	x = y = 0
+	
+	radius = int(per/100.0 * min(height, width))
 
 	idata = img.load() # load pixel data
 	draw = ImageDraw.Draw(img)
@@ -295,7 +288,7 @@ def genHexagon(width, height, img, outl=False, pic=False):
 	x,y = 0, radius # start here
 	xback = 0 # backup of x 
 
-	for i in range(hboxes):
+	for i in range(hboxes+1):
 		for j in range(wboxes+1):
 			points = [((x + radius * math.sin(k * ang)), (y + radius * math.cos(k * ang))) for k in range(6)]
 
@@ -386,16 +379,19 @@ def poly(side, points, show, colors, outline, name):
 @click.argument("side", type=click.INT)
 @click.option("--type", "-t", "shape", type=click.Choice(['square', 'hex', 'diamond']), help="choose which shape to use")
 @click.option("--colors", "-c", multiple=True, type=click.STRING, help="use many colors custom gradient, e.g -c #ff0000 -c #000000 -c #0000ff")
+@click.option("--percent", "-p", default=1, help="Use this percentage to determine number of polygons")
 @click.option("--show", "-s", is_flag=True, help="open the image")
 @click.option("--outline", "-o", is_flag=True, help="outline the shapes")
 @click.option("--name", "-n", help="rename the output")
 
-def shape(side, shape, colors, show, outline, name):
+def shape(side, shape, colors, show, outline, name, percent):
 	""" Generates a HQ image of a beautiful shapes """
 
 	error = ""
 	if side < 50:
 		error = "Image too small. Minimum size 50"
+	if percent < 1 or percent > 10:
+		error = "Percent range 1-10"
 
 	if error:
 		click.secho(error, fg='red', err=True)
@@ -413,11 +409,11 @@ def shape(side, shape, colors, show, outline, name):
 		img = random_gradient(side)
 
 	if shape == 'hex':
-		img = genHexagon(side, side, img, outline)
+		img = genHexagon(side, side, img, outline, per=percent)
 	elif shape == 'square':
-		img = genSquares(side, side, img, outline)
+		img = genSquares(side, side, img, outline, per=percent)
 	elif shape == 'diamond':
-		img = genDiamond(side, side, img, outline)
+		img = genDiamond(side, side, img, outline, per=percent)
 	else:
 		error = "No shape given. To see list of shapes \"wallgen shape --help\""
 		click.secho(error, fg='red', err=True)
@@ -504,12 +500,22 @@ def poly(image, points, show, outline, name):
 @pic.command()
 @click.argument("image", type=click.Path(exists=True, dir_okay=False))
 @click.option("--type", "-t", "shape", type=click.Choice(['square', 'hex', 'diamond']), help="choose which shape to use")
+@click.option("--percent", "-p", default=1, help="Use this percentage to determine number of polygons")
 @click.option("--show", "-s", is_flag=True, help="open the image")
 @click.option("--outline", "-o", is_flag=True, help="outline the shapes")
 @click.option("--name", "-n", help="rename the output")
 
-def shape(image, shape, show, outline, name):
+def shape(image, shape, show, outline, name, percent):
 	""" Generate a HQ image of a beautiful shapes """
+
+	if percent < 1 or percent > 10:
+		error = "Percent range 1-10"
+	else:
+		error = None
+
+	if error:
+		click.secho(error, fg='red', err=True)
+		sys.exit(1)
 
 	img = Image.open(image)
 
@@ -517,11 +523,11 @@ def shape(image, shape, show, outline, name):
 	height = img.height
 
 	if shape == 'hex':
-		img = genHexagon(width, height, img, outline, pic=True)
+		img = genHexagon(width, height, img, outline, pic=True, per=percent)
 	elif shape == 'square':
-		img = genSquares(width, height, img, outline, pic=True)
+		img = genSquares(width, height, img, outline, pic=True, per=percent)
 	elif shape == 'diamond':
-		img = genDiamond(width, height, img, outline, pic=True)
+		img = genDiamond(width, height, img, outline, pic=True, per=percent)
 	else:
 		error = "No shape given. To see list of shapes \"wallgen pic shape --help\""
 		click.secho(error, fg='red', err=True)
