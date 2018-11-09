@@ -55,7 +55,10 @@ def poly():
 
 			img = wallgen.nGradient(nside, *colors)
 
-			outline = tuple(bytes.fromhex("#2c2c2c"[1:]))
+			if outline:
+				outline = tuple(bytes.fromhex("#2c2c2c"[1:]))
+			else:
+				outline = None
 
 			pts = wallgen.genPoints(np, nside, nside)
 			img = wallgen.genPoly(side, side, img, pts, shift, shift, outl=outline)
@@ -105,7 +108,10 @@ def shape():
 			fpath = 'static/images/'+fname
 			img = wallgen.nGradient(side, *colors)
 
-			outline = tuple(bytes.fromhex("#2c2c2c"[1:]))
+			if outline:
+				outline = tuple(bytes.fromhex("#2c2c2c"[1:]))
+			else:
+				outline = None
 
 			if shape == 'hexagon':
 				img = wallgen.genHexagon(side, side, img, outline)
