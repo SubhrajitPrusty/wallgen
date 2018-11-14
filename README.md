@@ -15,7 +15,15 @@ Generates HQ poly wallpapers
 
 ## Installation
 
-`pip install --editable .`
+Clone repository
+
+```
+git clone https://github.com/SubhrajitPrusty/wallgen.git
+
+cd wallgen
+
+pip install --editable .
+```
 
 ## Usage
 
@@ -137,7 +145,7 @@ Options:
 ```
 ---
 
-## Usage Docker
+## Usage Docker for website
 
 Inside the folder
 
