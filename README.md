@@ -10,6 +10,8 @@ Generates HQ poly wallpapers
 - Choose different shapes like hexagons, squares, and diamonds apart from triangles
 - Apply polygons over a picture
 - Make a [video](https://gist.github.com/SubhrajitPrusty/5f303202c615e42e12b1a640322f9fec) with polygonized style
+- Make a gradient creation [video](https://gist.github.com/SubhrajitPrusty/e994ce8f3b643382328c1c779893a721)
+- Make a cool polygonal [video](https://gist.github.com/SubhrajitPrusty/37cf527ca4d92ed4a19af91099984b51)
 - Dont have `Python`? Use the [website](http://wallgen.subhrajitpy.me) (Limited capabilites)
 
 
