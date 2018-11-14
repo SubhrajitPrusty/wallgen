@@ -232,6 +232,26 @@ Slants pattern
 
 <img src="./images/demo6.png" width="50%">
 
+### `wallgen pic poly lion.jpg -p 50000`
+
+Using a picture with 50000 points
+
+1
+
+<img src="./images/lion.jpg" width="50%">
+<img src="./images/lion-poly.png" width="50%">
+
+2
+
+<img src="./images/anime.png" width="50%">
+<img src="./images/anime-poly.png" width="50%">
+
+3
+
+<img src="./images/clouds.jpg" width="50%">
+<img src="./images/clouds-poly.png" width="50%">
+
+
 
 ## Screenshots
 
