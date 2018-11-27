@@ -91,3 +91,5 @@ dmypy.json
 wall*.png
 static/images/wall*.png
 test*.png
+static/upload/*
+!static/upload/.keep

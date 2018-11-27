@@ -1,11 +1,22 @@
 from flask import Flask, request, send_file, render_template, redirect, url_for
+from werkzeug.utils import secure_filename
 import os
 import time
 import wallgen
 from gevent.pywsgi import WSGIServer
 from PIL import Image
 
+UPLOAD_FOLDER = os.path.join("static","upload")
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+
 app = Flask(__name__, static_url_path="/static")
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 @app.route("/", methods=['GET'])
 def index():
@@ -126,6 +137,63 @@ def shape():
 			return render_template("download.html", context=imgurl, home="shape")
 	else:
 		return render_template('shape.html')
+
+
+@app.route("/pic", methods=['GET', 'POST'])
+def pic():
+	if request.method == 'POST':
+		# print(request.files)
+		# print(request.form)
+		if 'image' not in request.files:
+			error = "No file part"
+			return render_template("error.html", context=error)
+		else:
+			file = request.files['image']
+			# print(file.filename)
+			# print(len(file.filename))
+			if len(file.filename) < 1:
+				error = "No file selected"
+				return render_template("error.html", context=error)
+
+			if file and allowed_file(file.filename):
+				filename = secure_filename(file.filename)
+				ufpath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+				file.save(ufpath)
+				if request.form.get('np'):
+					np = request.form.get('np')
+					outline = request.form.get('outline')
+
+					img = Image.open(ufpath)
+					width = img.width
+					height = img.height
+					wshift = img.width//10
+					hshift = img.height//10
+					width += wshift*2
+					height += hshift*2
+
+					if outline:
+						outline = tuple(bytes.fromhex("#2c2c2c"[1:]))
+					else:
+						outline = None
+
+					pts = wallgen.genPoints(int(np), width, height)
+					img = wallgen.genPoly(img.width, img.height, img, pts, wshift, hshift, outline, pic=True)
+
+					fname = "wall-{}.png".format(int(time.time()))
+					fpath = 'static/images/'+fname
+
+					# print(fpath)
+					img.save(fpath)
+					imgurl = url_for('static',filename='images/'+fname)
+					return render_template("download.html", context=imgurl, home="pic")
+				else:
+					error = "Invalid input, try again"
+					return render_template("error.html", context=error)
+			else:
+				error = "filetype not allowed"
+				return render_template("error.html", context=error)
+	else:
+		return render_template("pic.html")
 
 
 if __name__ == '__main__':
