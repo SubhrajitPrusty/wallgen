@@ -54,7 +54,7 @@ Usage: wallgen poly [OPTIONS] SIDE
 
 Options:
   -c, --colors TEXT     use many colors custom gradient, e.g -c #ff0000 -c
-                        #000000 -c #0000ff
+						#000000 -c #0000ff
   -p, --points INTEGER  number of points to use, default = 100
   -s, --show            open the image
   -o, --outline         outline the triangles
@@ -72,12 +72,14 @@ Usage: wallgen shape [OPTIONS] SIDE
   Generates a HQ image of a beautiful shapes
 
 Options:
-  -t, --type [square|hex|diamond]
-                                  choose which shape to use
+  -t, --type [square|hex|diamond|triangle]
+								  choose which shape to use
   -c, --colors TEXT               use many colors custom gradient, e.g -c
-                                  #ff0000 -c #000000 -c #0000ff
+								  #ff0000 -c #000000 -c #0000ff
+  -p, --percent INTEGER           Use this percentage to determine number of
+								  polygons. [1-10]
   -s, --show                      open the image
-  -o, --outline                   outline the shapes
+  -o, --outline TEXT              outline the shapes
   -n, --name TEXT                 rename the output
   --help                          Show this message and exit.
 
@@ -137,13 +139,15 @@ Usage: wallgen pic shape [OPTIONS] IMAGE
   Generate a HQ image of a beautiful shapes
 
 Options:
-  -t, --type [square|hex|diamond]
-                                  choose which shape to use
+  -t, --type [square|hex|diamond|triangle]
+								  choose which shape to use
+  -p, --percent INTEGER           Use this percentage to determine number of
+								  polygons. [1-10]
   -s, --show                      open the image
-  -o, --outline                   outline the shapes
+  -o, --outline TEXT              outline the shapes
   -n, --name TEXT                 rename the output
   --help                          Show this message and exit.
-  
+
 ```
 ---
 
@@ -200,41 +204,53 @@ With outline
 
 <img src="./images/poly-outline.png" width="50%">
 
-### `wallgen shape -t square -c "#ff0099" -c "#00ddff"`
+### `wallgen shape 2000 -t square -c "#ff0099" -c "#00ddff"`
 
 Square pattern
 
 <img src="./images/square.png" width="50%">
 
-### `wallgen shape -t square -c "#ff0099" -c "#00ddff" -o "#2c2c2c"`
+### `wallgen shape 2000 -t square -c "#ff0099" -c "#00ddff" -o "#2c2c2c"`
 
 Square pattern with Outline
 
 <img src="./images/square-outline.png" width="50%">
 
-### `wallgen shape -t hex -c "#ff0099" -c "#00ddff"`
+### `wallgen shape 2000 -t hex -c "#ff0099" -c "#00ddff"`
 
 Hexagon pattern
 
 <img src="./images/hex.png" width="50%">
 
-### `wallgen shape -t hexagon -c "#ff0099" -c "#00ddff" -o "#2c2c2c"`
+### `wallgen shape 2000 -t hex -c "#ff0099" -c "#00ddff" -o "#2c2c2c"`
 
 Hexagon pattern with Outline
 
 <img src="./images/hex-outline.png" width="50%">
 
-### `wallgen shape -t diamond -c "#ff0099" -c "#00ddff"`
+### `wallgen shape 2000 -t diamond -c "#ff0099" -c "#00ddff"`
 
 Diamond pattern
 
 <img src="./images/diamond.png" width="50%">
 
-### `wallgen shape -t square -c "#ff0099" -c "#00ddff" -o "#2c2c2c"`
+### `wallgen shape 2000 -t diamond -c "#ff0099" -c "#00ddff" -o "#2c2c2c"`
 
 Diamond pattern with Outline
 
 <img src="./images/diamond-outline.png" width="50%">
+
+### `wallgen shape 2000 -t triangle -c "#ff0099" -c "#00ddff"`
+
+Triangle pattern
+
+<img src="./images/triangle.png" width="50%">
+
+### `wallgen shape 2000 -t triangle -c "#ff0099" -c "#00ddff" -o "#2c2c2c"`
+
+Triangle pattern with Outline
+
+<img src="./images/triangle-outline.png" width="50%">
 
 ### `wallgen slants 2000`
 
