@@ -324,6 +324,72 @@ def genHexagon(width, height, img, outl=None, pic=False, per=5):
 	return img # return final image
 
 
+############
+# TRIANGLE #
+############
+
+def genTriangle(width, height, img, outl=None, pic=False, per=1):
+
+	x = y = 0
+
+	wboxes = int(per/100.0*width)
+	hboxes = int(per/100.0*height)
+	
+	idata = img.load() # load pixel data
+	draw = ImageDraw.Draw(img) 
+	
+	inc = width//wboxes #increment size
+
+	wboxes += 1
+	hboxes += 1
+
+	pair = 0
+	for i in range(hboxes*2):
+		for j in range(wboxes):
+
+			if i%2==0:
+				points = [(x,y),(x+inc*2,y),(x+inc,y+inc)] # triangle pointing down
+			else:
+				points = [(x,y),(x+inc,y-inc),(x+inc*2,y)] # triangle pointing up
+
+			a,b = calcCenter(points)
+			
+			try: # adjustment to not overflow
+				b = height-5 if b>=height else b
+				b = 5 if b<=0 else b
+
+				a = width-5 if a>=width else a
+				a = 5 if a<=0 else a
+
+				c = idata[a,b]
+
+			except Exception as e:
+				# print(a,b)
+				c = "#00ff00" # backup
+
+			# draw one triangle
+
+			if outl:
+				draw.polygon((points), fill=c, outline=outl)
+			else:
+				draw.polygon((points), fill=c)
+			
+			x+=inc*2 # shift cursor horizontally
+
+		pair+=1
+		if pair != 2:
+			y+=inc # shift cursor vertically
+		else:
+			pair = 0
+		
+		if i%2==0:
+			x=-inc
+		else:
+			x=0
+
+	return img # return final image
+
+
 @click.group()
 def cli():
 	pass
