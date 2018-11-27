@@ -165,6 +165,7 @@ def genPoly(width, height, img, points, wshift, hshift, outl=None, pic=False):
 def genDiamond(width, height, img, outl=None, pic=False, per=1):
 
 	x = y = 0
+	per = per/5 # more percentage is too small
 
 	wboxes = int(per/100.0*width)
 	hboxes = int(per/100.0*height)
@@ -220,6 +221,7 @@ def genDiamond(width, height, img, outl=None, pic=False, per=1):
 def genSquares(width, height, img, outl=None, pic=False, per=1):
 
 	x = y = 0
+	per = per/5 # more percentage is too small
 
 	wboxes = int(per/100.0*width)
 	hboxes = int(per/100.0*height)
@@ -269,8 +271,9 @@ def genSquares(width, height, img, outl=None, pic=False, per=1):
 # HEXAGON #
 ###########
 
-def genHexagon(width, height, img, outl=None, pic=False, per=5):
+def genHexagon(width, height, img, outl=None, pic=False, per=1):
 
+	per = 11-per
 	x = y = 0
 	
 	radius = int(per/100.0 * min(height, width))
@@ -331,6 +334,7 @@ def genHexagon(width, height, img, outl=None, pic=False, per=5):
 def genTriangle(width, height, img, outl=None, pic=False, per=1):
 
 	x = y = 0
+	per = per/5 # more percentage is too small
 
 	wboxes = int(per/100.0*width)
 	hboxes = int(per/100.0*height)
@@ -454,9 +458,9 @@ def poly(side, points, show, colors, outline, name):
 
 @cli.command()
 @click.argument("side", type=click.INT)
-@click.option("--type", "-t", "shape", type=click.Choice(['square', 'hex', 'diamond']), help="choose which shape to use")
+@click.option("--type", "-t", "shape", type=click.Choice(['square', 'hex', 'diamond', 'triangle']), help="choose which shape to use")
 @click.option("--colors", "-c", multiple=True, type=click.STRING, help="use many colors custom gradient, e.g -c #ff0000 -c #000000 -c #0000ff")
-@click.option("--percent", "-p", type=click.INT, help="Use this percentage to determine number of polygons")
+@click.option("--percent", "-p", type=click.INT, help="Use this percentage to determine number of polygons. [1-10]")
 @click.option("--show", "-s", is_flag=True, help="open the image")
 @click.option("--outline", "-o", default=None, help="outline the shapes")
 @click.option("--name", "-n", help="rename the output")
@@ -467,7 +471,7 @@ def shape(side, shape, colors, show, outline, name, percent):
 	error = ""
 	if side < 50:
 		error = "Image too small. Minimum size 50"
-	if percent:
+	if percent != None:
 		if percent < 1 or percent > 10:
 			error = "Percent range 1-10"
 
@@ -493,14 +497,15 @@ def shape(side, shape, colors, show, outline, name, percent):
 			click.secho("Invalid color hex", fg='red', err=True)
 			sys.exit(1)
 
-
 	if shape == 'hex':
 		percent = percent if percent else 5
-		img = genHexagon(side, side, img, outline, per=percent)
+		img = genHexagon(side, side, img, outline, per=(percent or 1))
 	elif shape == 'square':
-		img = genSquares(side, side, img, outline, per=percent)
+		img = genSquares(side, side, img, outline, per=(percent or 1))
 	elif shape == 'diamond':
-		img = genDiamond(side, side, img, outline, per=percent)
+		img = genDiamond(side, side, img, outline, per=(percent or 1))
+	elif shape == 'triangle':
+		img = genTriangle(side, side, img, outline, per=(percent or 1))
 	else:
 		error = "No shape given. To see list of shapes \"wallgen shape --help\""
 		click.secho(error, fg='red', err=True)
@@ -594,8 +599,8 @@ def poly(image, points, show, outline, name):
 
 @pic.command()
 @click.argument("image", type=click.Path(exists=True, dir_okay=False))
-@click.option("--type", "-t", "shape", type=click.Choice(['square', 'hex', 'diamond']), help="choose which shape to use")
-@click.option("--percent", "-p", type=click.INT, help="Use this percentage to determine number of polygons")
+@click.option("--type", "-t", "shape", type=click.Choice(['square', 'hex', 'diamond', 'triangle']), help="choose which shape to use")
+@click.option("--percent", "-p", type=click.INT, help="Use this percentage to determine number of polygons. [1-10]")
 @click.option("--show", "-s", is_flag=True, help="open the image")
 @click.option("--outline", "-o", default=None, help="outline the shapes")
 @click.option("--name", "-n", help="rename the output")
@@ -632,6 +637,8 @@ def shape(image, shape, show, outline, name, percent):
 		img = genSquares(width, height, img, outline, pic=True, per=percent)
 	elif shape == 'diamond':
 		img = genDiamond(width, height, img, outline, pic=True, per=percent)
+	elif shape == 'triangle':
+		img = genTriangle(side, side, img, outline, per=percent)
 	else:
 		error = "No shape given. To see list of shapes \"wallgen pic shape --help\""
 		click.secho(error, fg='red', err=True)
