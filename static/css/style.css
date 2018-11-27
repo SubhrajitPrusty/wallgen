@@ -1,23 +1,14 @@
 html, body
 {
 	width: 100%;
+  height: 100%;
 	padding-top: 30px;
 }
 
 body
 {
 	background-image: url("../images/bg.png");
-}
-
-.page-id
-{
-	font-family: Impact;
-	color: #eee;	
-}
-
-.page-id:hover
-{
-	color: #fff;
+  background-repeat: repeat;
 }
 
 a{
@@ -29,11 +20,9 @@ h1{
 	word-break: keep-all;
 }
 
-h6{
-	padding-top: 50px;
-	text-align: right;
-	color: #fff;
-	font-size: 1em;
+#footer{
+  line-height: 40px;
+  color: #fff;
 }
 
 .card:hover .image{
