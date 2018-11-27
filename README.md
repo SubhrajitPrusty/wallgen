@@ -276,3 +276,7 @@ Using a picture with 50000 points
 ### Shapes Page
 
 ![Polygon](./images/web-shape.png)
+
+### Pic Page
+
+![Pic](./images/web-pic.png)
