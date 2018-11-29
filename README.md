@@ -2,9 +2,9 @@
 ![](https://img.shields.io/badge/Python-3-blue.svg?style=for-the-badge&logo=python)
 ---
 [![](https://img.shields.io/badge/Website-blue.svg?style=for-the-badge)](http://wallgen.subhrajitpy.me/)
+[![Gitter](https://img.shields.io/gitter/room/:user/:repo.svg?style=for-the-badge&colorB=00ddff)](https://gitter.im/wallgen/Lobby)
 
-
-Generates HQ poly wallpapers
+### Generates HQ poly wallpapers
 
 - Make poly wallpapers over a gradient with random colors, or using custom colors
 - Choose different shapes like hexagons, squares, and diamonds apart from triangles
