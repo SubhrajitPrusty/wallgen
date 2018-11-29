@@ -1,7 +1,7 @@
 # WallGen
 ![](https://img.shields.io/badge/Python-3-blue.svg?style=for-the-badge&logo=python)
 ---
-[![](https://img.shields.io/badge/Website-blue.svg?style=for-the-badge)](http://wallgen.subhrajitpy.me/)
+[![](https://img.shields.io/badge/Website-blue.svg?style=for-the-badge)](http://wallgen.subhrajitpy.me/) [![Join the chat at https://gitter.im/wallgen/Lobby](https://badges.gitter.im/wallgen/Lobby.svg)](https://gitter.im/wallgen/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
 Generates HQ poly wallpapers
