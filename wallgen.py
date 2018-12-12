@@ -137,11 +137,11 @@ def genPoly(width, height, img, points, wshift, hshift, outl=None, pic=False):
 		tp = tuple(map(tuple,p)) # convert each pair of points to tuples
 		a,b = calcCenter(tp)
 		try:
-			b = bh-5 if b>=bh else b
-			b = bh+5 if b<=0 else b
+			b = bh-hshift-5 if b>=bh-hshift else b
+			b = hshift+5 if b<=hshift else b
 
-			a = bw-5 if a>=bw else a
-			a = bw+5 if a<=0 else a
+			a = bw-wshift-5 if a>=bw-wshift else a
+			a = wshift+5 if a<=wshift else a
 
 			c = idata[a,b]
 		except Exception as e:
