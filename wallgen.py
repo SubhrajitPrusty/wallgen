@@ -66,6 +66,26 @@ def distance(p1, p2):
 	d = int((y2-y1)**2 + (x2-x1)**2)**0.5
 	return d
 
+def populate(a, b, n, width, height):
+	side = (width+height)//2
+	radius = side // 100
+	points = []
+	while len(points) < n:
+		x = randint(a,a+width)
+		y = randint(b,b+height)
+
+		if len(points) == 0:
+			points.append((x,y))
+		else:
+			for p in points:
+				if distance(p, (x,y)) <= radius:
+					break
+			else:
+				points.append((x,y))
+
+	return points
+
+
 def genPoints(qty, width, height):
 	side = (width+height)//2
 	randPoints = []
@@ -74,26 +94,6 @@ def genPoints(qty, width, height):
 	height = height // 4
 
 	qty //= 16
-
-	def populate(a, b, n, width, height):
-		side = (width+height)//2
-		radius = side // 100
-		points = []
-		while len(points) < n:
-			x = randint(a,a+width)
-			y = randint(b,b+height)
-
-			if len(points) == 0:
-				points.append((x,y))
-			else:
-				for p in points:
-					if distance(p, (x,y)) <= radius:
-						break
-				else:
-					points.append((x,y))
-
-		return points
-	
 	w,h = 0,0
 	for i in range(4):
 		for j in range(4):
