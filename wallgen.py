@@ -520,7 +520,7 @@ def poly(side, points, show, colors, outline, name):
 
 @cli.command()
 @click.argument("side", type=click.INT)
-@click.option("--type", "-t", "shape", type=click.Choice(['square', 'hex', 'diamond', 'triangle']), help="choose which shape to use")
+@click.option("--type", "-t", "shape", type=click.Choice(['square', 'hex', 'diamond', 'triangle', 'isometric']), help="choose which shape to use")
 @click.option("--colors", "-c", multiple=True, type=click.STRING, help="use many colors custom gradient, e.g -c #ff0000 -c #000000 -c #0000ff")
 @click.option("--percent", "-p", type=click.INT, help="Use this percentage to determine number of polygons. [1-10]")
 @click.option("--show", "-s", is_flag=True, help="open the image")
