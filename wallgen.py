@@ -355,11 +355,11 @@ def genIsometric(width, height, img, outl=None, pic=False, per=1):
 	for i in range(hboxes):
 		for j in range(wboxes+1):
 			points = [((x + radius * math.sin(k * ang)), (y + radius * math.cos(k * ang))) for k in range(6)]
-			triangle_points = []
-			c = []
+			triangle_points = []	#to store the vertices of the individual equilateral triangles that make up a hexagon
+			c = []	#to store the colors of centres of each individual equilateral triangle
 			for k in range(-5, 1):
-				triangle_points.append([(x, y), points[k], points[k+1]])
-				a,b = calcCenter([(x, y), points[k], points[k+1]])
+				triangle_points.append([(x, y), points[k], points[k+1]])	#storing vertices of individual triangles
+				a,b = calcCenter([(x, y), points[k], points[k+1]])	#calculating centre of individual triangles
 				try: # adjustment to not overflow
 					b = b - side//2 if b>=height else b
 					b = b + side//2 if b<=0 else b
@@ -367,7 +367,7 @@ def genIsometric(width, height, img, outl=None, pic=False, per=1):
 					a = a - radius if a>=width else a
 					a = a + radius if a<=0 else a
 	
-					c.append(idata[a,b])
+					c.append(idata[a,b])	#setting the color of the triangle
 
 				except Exception as e:
 					# print(a,b)
@@ -375,10 +375,10 @@ def genIsometric(width, height, img, outl=None, pic=False, per=1):
 
 			if outl:
 				for k in range(6):
-					draw.polygon((triangle_points[k]), fill=c[k], outline=outl) # draw one hexagon
+					draw.polygon((triangle_points[k]), fill=c[k], outline=outl) # draw 6 triangles that form a hexagon
 			else:
 				for k in range(6):
-					draw.polygon((triangle_points[k]), fill=c[k]) # draw one hexagon
+					draw.polygon((triangle_points[k]), fill=c[k]) # draw 6 triangles that form a hexagon
 			x += hexwidth
 
 		y += radius + (side/2) # shift cursor vertically
