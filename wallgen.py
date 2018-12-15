@@ -326,6 +326,68 @@ def genHexagon(width, height, img, outl=None, pic=False, per=1):
 
 	return img # return final image
 
+#############
+# ISOMETRIC #
+#############
+def genIsometric(width, height, img, outl=None, pic=False, per=1):
+
+	per = 11-per
+	x = y = 0
+	
+	radius = int(per/100.0 * min(height, width))
+
+	idata = img.load() # load pixel data
+	draw = ImageDraw.Draw(img)
+
+	ang = 2 * math.pi / 6 # angle inside a hexagon
+	apothem = radius * math.cos(math.pi/6) # radius of inner circle
+	side = 2 * apothem * math.tan(math.pi/6) # length of each side
+	hexwidth = 2 * apothem # horizontal width of a hexagon
+	wboxes = width // int(hexwidth) # adjustment
+	hboxes = height // int((side + radius) * 0.75)  # adjustment
+
+	x,y = 0, radius # start here
+	xback = 0 # backup of x 
+
+	if pic:
+		hboxes+=1
+
+	for i in range(hboxes):
+		for j in range(wboxes+1):
+			points = [((x + radius * math.sin(k * ang)), (y + radius * math.cos(k * ang))) for k in range(6)]
+			triangle_points = []
+			c = []
+			for k in range(-5, 1):
+				triangle_points.append([(x, y), points[k], points[k+1]])
+				a,b = calcCenter([(x, y), points[k], points[k+1]])
+				try: # adjustment to not overflow
+					b = b - side//2 if b>=height else b
+					b = b + side//2 if b<=0 else b
+	
+					a = a - radius if a>=width else a
+					a = a + radius if a<=0 else a
+	
+					c.append(idata[a,b])
+
+				except Exception as e:
+					# print(a,b)
+					c.append("#00ff00") # backup
+
+			if outl:
+				for k in range(6):
+					draw.polygon((triangle_points[k]), fill=c[k], outline=outl) # draw one hexagon
+			else:
+				for k in range(6):
+					draw.polygon((triangle_points[k]), fill=c[k]) # draw one hexagon
+			x += hexwidth
+
+		y += radius + (side/2) # shift cursor vertically
+		if i%2 == 0:
+			x=xback+apothem # restore horizontal starting point
+		else:
+			x=xback # restore horizontal starting point, but for honeycombing
+
+	return img # return final image
 
 ############
 # TRIANGLE #
@@ -506,6 +568,8 @@ def shape(side, shape, colors, show, outline, name, percent):
 		img = genDiamond(side, side, img, outline, per=(percent or 1))
 	elif shape == 'triangle':
 		img = genTriangle(side, side, img, outline, per=(percent or 1))
+	elif shape == 'isometric':
+		img = genIsometric(side, side, img, outline, per=(percent or 1))	
 	else:
 		error = "No shape given. To see list of shapes \"wallgen shape --help\""
 		click.secho(error, fg='red', err=True)
@@ -599,7 +663,7 @@ def poly(image, points, show, outline, name):
 
 @pic.command()
 @click.argument("image", type=click.Path(exists=True, dir_okay=False))
-@click.option("--type", "-t", "shape", type=click.Choice(['square', 'hex', 'diamond', 'triangle']), help="choose which shape to use")
+@click.option("--type", "-t", "shape", type=click.Choice(['square', 'hex', 'diamond', 'triangle', 'isometric']), help="choose which shape to use")
 @click.option("--percent", "-p", type=click.INT, help="Use this percentage to determine number of polygons. [1-10]")
 @click.option("--show", "-s", is_flag=True, help="open the image")
 @click.option("--outline", "-o", default=None, help="outline the shapes")
@@ -607,12 +671,10 @@ def poly(image, points, show, outline, name):
 
 def shape(image, shape, show, outline, name, percent):
 	""" Generate a HQ image of a beautiful shapes """
-	
+	error = None
 	if percent:
 		if percent < 1 or percent > 10:
 			error = "Percent range 1-10"
-	else:
-		error = None
 
 	if error:
 		click.secho(error, fg='red', err=True)
@@ -639,6 +701,8 @@ def shape(image, shape, show, outline, name, percent):
 		img = genDiamond(width, height, img, outline, pic=True, per=percent)
 	elif shape == 'triangle':
 		img = genTriangle(side, side, img, outline, per=percent)
+	elif shape == 'isometric':
+		img = genIsometric(width, height, img, outline, pic=True, per=percent)
 	else:
 		error = "No shape given. To see list of shapes \"wallgen pic shape --help\""
 		click.secho(error, fg='red', err=True)
