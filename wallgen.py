@@ -287,15 +287,16 @@ def genHexagon(width, height, img, outl=None, pic=False, per=1):
 	hexwidth = 2 * apothem # horizontal width of a hexagon
 	wboxes = width // int(hexwidth) # adjustment
 	hboxes = height // int((side + radius) * 0.75)  # adjustment
-
-	x,y = 0, radius # start here
+	
 	xback = 0 # backup of x 
+	x,y = xback+apothem, -(side/2) # start here
+
 
 	if pic:
 		hboxes+=1
 
-	for i in range(hboxes):
-		for j in range(wboxes+1):
+	for i in range(-1, hboxes+1):
+		for j in range(-1, wboxes+2):
 			points = [((x + radius * math.sin(k * ang)), (y + radius * math.cos(k * ang))) for k in range(6)]
 
 			a,b = x,y
@@ -346,14 +347,14 @@ def genIsometric(width, height, img, outl=None, pic=False, per=1):
 	wboxes = width // int(hexwidth) # adjustment
 	hboxes = height // int((side + radius) * 0.75)  # adjustment
 
-	x,y = 0, radius # start here
 	xback = 0 # backup of x 
+	x,y = xback+apothem, -(side/2) # start here
 
 	if pic:
 		hboxes+=1
 
-	for i in range(hboxes):
-		for j in range(wboxes+1):
+	for i in range(-1, hboxes+1):
+		for j in range(wboxes+2):
 			points = [((x + radius * math.sin(k * ang)), (y + radius * math.cos(k * ang))) for k in range(6)]
 			triangle_points = []	#to store the vertices of the individual equilateral triangles that make up a hexagon
 			c = []	#to store the colors of centres of each individual equilateral triangle
@@ -361,16 +362,16 @@ def genIsometric(width, height, img, outl=None, pic=False, per=1):
 				triangle_points.append([(x, y), points[k], points[k+1]])	#storing vertices of individual triangles
 				a,b = calcCenter([(x, y), points[k], points[k+1]])	#calculating centre of individual triangles
 				try: # adjustment to not overflow
-					b = b - side//2 if b>=height else b
-					b = b + side//2 if b<=0 else b
+					b = height-1 if b>=height else b
+					b = 1 if b<=0 else b
 	
-					a = a - radius if a>=width else a
-					a = a + radius if a<=0 else a
+					a = width-1 if a>=width else a
+					a = 1 if a<=0 else a
 	
 					c.append(idata[a,b])	#setting the color of the triangle
 
 				except Exception as e:
-					# print(a,b)
+					#print(a,b)
 					c.append("#00ff00") # backup
 
 			if outl:
