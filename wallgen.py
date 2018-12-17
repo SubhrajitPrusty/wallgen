@@ -5,6 +5,7 @@ import time
 import click
 from scipy.spatial import Delaunay
 import math
+import multiprocessing
 
 Image.MAX_IMAGE_PIXELS = 200000000
 
@@ -66,7 +67,7 @@ def distance(p1, p2):
 	d = int((y2-y1)**2 + (x2-x1)**2)**0.5
 	return d
 
-def populate(a, b, n, width, height):
+def populate(a, b, n, width, height, ret):
 	side = (width+height)//2
 	radius = side // 100
 	points = []
@@ -83,29 +84,54 @@ def populate(a, b, n, width, height):
 			else:
 				points.append((x,y))
 
-	return points
-
+	ret.extend(points)
 
 def genPoints(qty, width, height):
 	side = (width+height)//2
 	randPoints = []
 	og = side
-	width = width // 4
-	height = height // 4
 
-	qty //= 16
+	if qty < 1000:
+		div = 1
+	elif qty < 10000:
+		div = 2
+	elif qty < 20000:
+		div = 4
+	else:
+		div = 8
+
+	print("Using {} processes".format(div**2))
+
+	width = width // div
+	height = height // div
+
+	qty //= div**2
 	w,h = 0,0
-	for i in range(4):
-		for j in range(4):
-			randPoints += populate(w,h, qty, width, height)
-			w+=width
-		w=0
-		h+=height
+	with multiprocessing.Manager() as manager:
+		ret = manager.list()
+
+		procs = []
+
+		for i in range(div):
+			for j in range(div):
+				p = multiprocessing.Process(target=populate, args=(w,h,qty,width,height,ret))
+				procs.append(p)
+				p.start()
+				
+				w+=width
+			w=0
+			h+=height
+
+		for p in procs:
+			p.join()
+
+		randPoints += ret
 
 	tri = Delaunay(randPoints) # calculate D triangulation of points
 	points = tri.points[tri.simplices] # find all groups of points
 
 	return points
+
 
 def calcCenter(ps):
 	""" calculate incenter of a triangle given all vertices"""
