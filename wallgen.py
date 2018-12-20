@@ -140,9 +140,9 @@ def calcCenter(ps):
 	return mid
 
 
-#############
-# TRIANGLES #
-#############
+#################
+# TRIANGULATION #
+#################
 
 def genPoly(width, height, img, points, wshift, hshift, outl=None, pic=False):
 
@@ -416,9 +416,9 @@ def genIsometric(width, height, img, outl=None, pic=False, per=1):
 
 	return img # return final image
 
-############
-# TRIANGLE #
-############
+#############
+# TRIANGLES #
+#############
 
 def genTriangle(width, height, img, outl=None, pic=False, per=1):
 
@@ -596,7 +596,7 @@ def shape(side, shape, colors, show, outline, name, percent):
 	elif shape == 'triangle':
 		img = genTriangle(side, side, img, outline, per=(percent or 1))
 	elif shape == 'isometric':
-		img = genIsometric(side, side, img, outline, per=(percent or 1))	
+		img = genIsometric(side, side, img, outline, per=(percent or 1))
 	else:
 		error = "No shape given. To see list of shapes \"wallgen shape --help\""
 		click.secho(error, fg='red', err=True)
@@ -727,7 +727,7 @@ def shape(image, shape, show, outline, name, percent):
 	elif shape == 'diamond':
 		img = genDiamond(width, height, img, outline, pic=True, per=percent)
 	elif shape == 'triangle':
-		img = genTriangle(side, side, img, outline, per=percent)
+		img = genTriangle(width, height, img, outline, pic=True, per=percent)
 	elif shape == 'isometric':
 		img = genIsometric(width, height, img, outline, pic=True, per=percent)
 	else:
