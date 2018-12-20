@@ -727,7 +727,7 @@ def shape(image, shape, show, outline, name, percent):
 	elif shape == 'diamond':
 		img = genDiamond(width, height, img, outline, pic=True, per=percent)
 	elif shape == 'triangle':
-		img = genTriangle(side, side, img, outline, pic=True,per=percent)
+		img = genTriangle(side, side, img, outline, per=percent)
 	elif shape == 'isometric':
 		img = genIsometric(width, height, img, outline, pic=True, per=percent)
 	else:

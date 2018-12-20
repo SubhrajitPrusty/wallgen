@@ -1,9 +1,5 @@
 pillow
-
 click
-
 scipy
-
 flask
-
 gevent
