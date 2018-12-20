@@ -130,7 +130,10 @@ def shape():
 				img = wallgen.genSquares(side, side, img, outline)
 			elif shape == 'diamond':
 				img = wallgen.genDiamond(side, side, img, outline)
-			
+			elif shape == 'triangle':
+			    img = wallgen.genTriangle(side, side, img, outline)
+			elif shape == 'isometric':
+			    img = wallgen.genIsometric(side, side, img, outline)
 			# print(fpath)
 			img.save(fpath)
 			imgurl = url_for('static',filename='images/'+fname)
