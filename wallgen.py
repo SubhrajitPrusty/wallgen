@@ -3,6 +3,8 @@ from PIL import Image, ImageDraw
 from random import randrange,randint
 import time
 import click
+import numpy as np
+import cv2
 from scipy.spatial import Delaunay
 import math
 import multiprocessing
@@ -144,7 +146,10 @@ def calcCenter(ps):
 # TRIANGULATION #
 #################
 
-def genPoly(width, height, img, points, wshift, hshift, outl=None, pic=False):
+def genPoly(width, height, img, points, outl=None, pic=False):
+
+	wshift = width//100
+	hshift = height//100
 
 	baseImg = Image.new("RGB", (width+(wshift*2), height+(hshift*2)), "#000000")
 
@@ -482,6 +487,49 @@ def genTriangle(width, height, img, outl=None, pic=False, per=1):
 
 	return img # return final image
 
+def genSmartPoints(image):
+	width = image.shape[1]
+	height = image.shape[0]
+
+	edges = cv2.Canny(image, 100, 200)
+
+	pimg = Image.fromarray(edges)
+	idata = pimg.load()
+
+	edges_data = []
+	for x in range(pimg.width):
+		for y in range(pimg.height):
+			if idata[x,y] > 0:
+				edges_data.append((x,y))
+
+	points = []
+	radius = (width+height)//2//50
+
+	for (x,y) in edges_data:
+		if len(points) == 0:
+				points.append((x,y))
+		else:
+			for p in points:
+				if distance(p, (x,y)) <= radius:
+					break
+			else:
+				points.append((x,y))
+
+	ws = width//50
+	hs = height//50
+
+	for x in range(0, width+ws, ws):
+		points.append((x,0))
+		points.append((x,height))
+
+	for y in range(0, height+hs, hs):
+		points.append((0,y))
+		points.append((width,y))
+
+	tri = Delaunay(points) # calculate D triangulation of points
+	delaunay_points = tri.points[tri.simplices] # find all groups of points
+
+	return delaunay_points
 
 @click.group()
 def cli():
@@ -533,7 +581,7 @@ def poly(side, points, show, colors, outline, name):
 
 
 	pts = genPoints(points, nside, nside)
-	img = genPoly(side, side, img, pts, shift, shift, outl=outline)
+	img = genPoly(side, side, img, pts, outl=outline)
 
 	img = img.resize((side//2, side//2), resample=Image.BICUBIC)
 
@@ -644,8 +692,9 @@ def pic():
 @click.option("--show", "-s", is_flag=True, help="open the image")
 @click.option("--outline", "-o", default=None, help="outline the triangles")
 @click.option("--name", "-n", help="rename the output")
+@click.option("--smart","-sm", is_flag=True, help="Use smart points")
 
-def poly(image, points, show, outline, name):
+def poly(image, points, show, outline, name, smart):
 	""" Generates a HQ low poly image """
 
 	if points < 3:
@@ -659,14 +708,11 @@ def poly(image, points, show, outline, name):
 		click.secho(error, fg='red', err=True)
 		sys.exit(1)
 
-	img = Image.open(image)
-	
-	width = img.width
-	height = img.height
-	wshift = img.width//10
-	hshift = img.height//10
-	width += wshift*2
-	height += hshift*2
+
+	# wshift = img.width//10
+	# hshift = img.height//10
+	# width += wshift*1
+	# height += hshift*2
 
 	if outline:
 		try:
@@ -675,17 +721,25 @@ def poly(image, points, show, outline, name):
 			click.secho("Invalid color hex", fg='red', err=True)
 			sys.exit(1)
 
+	img = Image.open(image)
+	width = img.width
+	height = img.height
 
-	pts = genPoints(points, width, height)
-	img = genPoly(img.width, img.height, img, pts, wshift, hshift, outline, pic=True)
+	if smart:
+		cimg = cv2.imread(image, 0)
+		pts = genSmartPoints(cimg)
+	else:	
+		pts = genPoints(points, width, height)
+
+	final_img = genPoly(img.width, img.height, img, pts, outline, pic=True)
 
 	if show:
-		img.show()
+		final_img.show()
 
 	if name:
-		img.save("{}.png".format(name))
+		final_img.save("{}.png".format(name))
 	else:   
-		img.save("wall-{}.png".format(int(time.time())))
+		final_img.save("wall-{}.png".format(int(time.time())))
 
 
 @pic.command()
