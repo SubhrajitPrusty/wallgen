@@ -5,6 +5,8 @@ import time
 import wallgen
 from gevent.pywsgi import WSGIServer
 from PIL import Image
+import cv2
+
 
 UPLOAD_FOLDER = os.path.join("static","upload")
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
@@ -165,8 +167,17 @@ def pic():
 				if request.form.get('np'):
 					np = request.form.get('np')
 					outline = request.form.get('outline')
+					smart = request.form.get('smart')
 
-					img = Image.open(ufpath)
+					og_img = Image.open(ufpath)
+					width = og_img.width
+					height = og_img.height
+
+					if min(height, width) > 1080:
+						scale = min(height, width)//1080
+					else:
+						scale = 1
+					img = og_img.resize((width//scale, height//scale), resample=Image.BICUBIC)
 					width = img.width
 					height = img.height
 
@@ -175,7 +186,12 @@ def pic():
 					else:
 						outline = None
 
-					pts = wallgen.genPoints(int(np), width, height)
+					if smart:
+						cimg = cv2.imread(ufpath, 0)
+						pts = wallgen.genSmartPoints(cimg)
+					else:
+						pts = wallgen.genPoints(int(np), width, height)
+
 					img = wallgen.genPoly(img.width, img.height, img, pts, outline, pic=True)
 
 					fname = "wall-{}.png".format(int(time.time()))
