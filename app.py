@@ -72,7 +72,7 @@ def poly():
 				outline = None
 
 			pts = wallgen.genPoints(np, nside, nside)
-			img = wallgen.genPoly(side, side, img, pts, shift, shift, outl=outline)
+			img = wallgen.genPoly(side, side, img, pts, outl=outline)
 
 			# print(fpath)
 			img.save(fpath)
