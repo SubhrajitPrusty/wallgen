@@ -169,10 +169,6 @@ def pic():
 					img = Image.open(ufpath)
 					width = img.width
 					height = img.height
-					wshift = img.width//10
-					hshift = img.height//10
-					width += wshift*2
-					height += hshift*2
 
 					if outline:
 						outline = tuple(bytes.fromhex("#2c2c2c"[1:]))
@@ -180,7 +176,7 @@ def pic():
 						outline = None
 
 					pts = wallgen.genPoints(int(np), width, height)
-					img = wallgen.genPoly(img.width, img.height, img, pts, wshift, hshift, outline, pic=True)
+					img = wallgen.genPoly(img.width, img.height, img, pts, outline, pic=True)
 
 					fname = "wall-{}.png".format(int(time.time()))
 					fpath = 'static/images/'+fname
