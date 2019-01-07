@@ -3,3 +3,5 @@ click
 scipy
 flask
 gevent
+opencv-python
+numpy
