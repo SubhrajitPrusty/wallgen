@@ -487,11 +487,17 @@ def genTriangle(width, height, img, outl=None, pic=False, per=1):
 
 	return img # return final image
 
-def genSmartPoints(image, threshold=(10,250)):
+def genSmartPoints(image, threshold=(10,250), scale=None):
 	width = image.shape[1]
 	height = image.shape[0]
 
-	edges = cv2.Canny(image, *threshold)
+	if scale:
+		resize_dim = (width//scale, height//scale)
+		resized_image = cv2.resize(image, resize_dim)
+
+		edges = cv2.Canny(resized_image, *threshold)
+	else:
+		edges = cv2.Canny(image, *threshold)
 
 	pimg = Image.fromarray(edges)
 	idata = pimg.load()
@@ -501,6 +507,10 @@ def genSmartPoints(image, threshold=(10,250)):
 		for y in range(pimg.height):
 			if idata[x,y] > 0:
 				edges_data.append((x,y))
+
+	if scale:
+		scaled_points = [(int(x*scale), int(y*scale)) for (x,y) in edges_data]
+		edges_data = scaled_points
 
 	points = []
 	radius = (width+height)//2//50
