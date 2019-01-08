@@ -491,7 +491,7 @@ def genSmartPoints(image):
 	width = image.shape[1]
 	height = image.shape[0]
 
-	edges = cv2.Canny(image, 100, 200)
+	edges = cv2.Canny(image, 100, 250)
 
 	pimg = Image.fromarray(edges)
 	idata = pimg.load()
