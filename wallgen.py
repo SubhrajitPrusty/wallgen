@@ -487,11 +487,11 @@ def genTriangle(width, height, img, outl=None, pic=False, per=1):
 
 	return img # return final image
 
-def genSmartPoints(image):
+def genSmartPoints(image, threshold=(10,250)):
 	width = image.shape[1]
 	height = image.shape[0]
 
-	edges = cv2.Canny(image, 100, 250)
+	edges = cv2.Canny(image, *threshold)
 
 	pimg = Image.fromarray(edges)
 	idata = pimg.load()

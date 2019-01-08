@@ -188,7 +188,7 @@ def pic():
 
 					if smart:
 						cimg = cv2.imread(ufpath, 0)
-						pts = wallgen.genSmartPoints(cimg)
+						pts = wallgen.genSmartPoints(cimg, threshold=(100,200))
 					else:
 						pts = wallgen.genPoints(int(np), width, height)
 
