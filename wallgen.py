@@ -90,45 +90,9 @@ def populate(a, b, n, width, height, ret):
 
 def genPoints(qty, width, height):
 	side = (width+height)//2
-	randPoints = []
+	randPoints = np.random.choice(side, size=(qty, 2))
 	og = side
-
-	if qty < 1000:
-		div = 1
-	elif qty < 10000:
-		div = 2
-	elif qty < 20000:
-		div = 4
-	else:
-		div = 8
-
-	print("Using {} processes".format(div**2))
-
-	width = width // div
-	height = height // div
-
-	qty //= div**2
-	w,h = 0,0
-	with multiprocessing.Manager() as manager:
-		ret = manager.list()
-
-		procs = []
-
-		for i in range(div):
-			for j in range(div):
-				p = multiprocessing.Process(target=populate, args=(w,h,qty,width,height,ret))
-				procs.append(p)
-				p.start()
-				
-				w+=width
-			w=0
-			h+=height
-
-		for p in procs:
-			p.join()
-
-		randPoints += ret
-
+	
 	tri = Delaunay(randPoints) # calculate D triangulation of points
 	points = tri.points[tri.simplices] # find all groups of points
 
@@ -146,10 +110,7 @@ def calcCenter(ps):
 # TRIANGULATION #
 #################
 
-def genPoly(width, height, img, points, outl=None, pic=False):
-
-	wshift = width//100
-	hshift = height//100
+def genPoly(width, height, img, points, wshift, hshift, outl=None, pic=False):
 
 	baseImg = Image.new("RGB", (width+(wshift*2), height+(hshift*2)), "#000000")
 
@@ -561,8 +522,8 @@ def poly(side, points, show, colors, outline, name):
 		error = "Image too small. Minimum size 50"
 	elif points < 3:
 		error = "Too less points. Minimum points 3"
-	elif points > 50000:
-		error = "Too many points. Maximum points 50000"
+	elif points > 200000:
+		error = "Too many points. Maximum points 200000"
 
 	if error:
 		click.secho(error, fg='red', err=True)
@@ -591,7 +552,7 @@ def poly(side, points, show, colors, outline, name):
 
 
 	pts = genPoints(points, nside, nside)
-	img = genPoly(side, side, img, pts, outl=outline)
+	img = genPoly(side, side, img, pts, shift, shift, outl=outline)
 
 	img = img.resize((side//2, side//2), resample=Image.BICUBIC)
 
@@ -709,8 +670,8 @@ def poly(image, points, show, outline, name, smart):
 
 	if points < 3:
 		error = "Too less points. Minimum points 3"
-	elif points > 50000:
-		error = "Too many points. Maximum points {}".format(50000)
+	elif points > 200000:
+		error = "Too many points. Maximum points {}".format(200000)
 	else:
 		error = None
 
@@ -734,14 +695,19 @@ def poly(image, points, show, outline, name, smart):
 	img = Image.open(image)
 	width = img.width
 	height = img.height
+	wshift = width//100
+	hshift = height//100
+
+	n_width = width + 2*wshift
+	n_height = height + 2*hshift
 
 	if smart:
 		cimg = cv2.imread(image, 0)
 		pts = genSmartPoints(cimg)
 	else:	
-		pts = genPoints(points, width, height)
+		pts = genPoints(points, n_width, n_height)
 
-	final_img = genPoly(img.width, img.height, img, pts, outline, pic=True)
+	final_img = genPoly(img.width, img.height, img, pts, wshift, hshift, outline, pic=True)
 
 	if show:
 		final_img.show()
