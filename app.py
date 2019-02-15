@@ -5,8 +5,8 @@ import time
 import wallgen
 from gevent.pywsgi import WSGIServer
 from PIL import Image
-import cv2
-
+from skimage.filters import sobel
+from skimage import color, img_as_ubyte, io
 
 UPLOAD_FOLDER = os.path.join("static","upload")
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
@@ -192,8 +192,9 @@ def pic():
                                                 outline = None
 
                                         if smart:
-                                                cimg = cv2.imread(ufpath, 0)
-                                                pts = wallgen.genSmartPoints(cimg, threshold=(100,200), scale=2)
+                                                ski_img = io.imread(ufpath, True)
+                                                gray_img = color.rgb2gray(ski_img)
+                                                pts = wallgen.genSmartPoints(gray_img)
                                         else:
                                                 pts = wallgen.genPoints(int(np), n_width, n_height)
 

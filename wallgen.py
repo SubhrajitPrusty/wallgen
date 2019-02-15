@@ -489,7 +489,7 @@ def genSmartPoints(image):
 	# print(len(edges_data))
 
 	# get a n/5 number of points rather than all of the points
-	sample = np.random.choice(len(edges_data), len(edges_data)//5)
+	sample = np.random.choice(len(edges_data), len(edges_data)//5 if len(edges_data)/5 < 50000 else 50000)
 	edges_data = [edges_data[x] for x in sample]
 
 	# print(len(edges_data))
