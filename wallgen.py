@@ -1,13 +1,15 @@
 import sys
-from PIL import Image, ImageDraw
-from random import randrange,randint
 import time
 import click
-import numpy as np
 import cv2
-from scipy.spatial import Delaunay
 import math
-import multiprocessing
+import warnings
+import numpy as np
+from PIL import Image, ImageDraw
+from scipy.spatial import Delaunay
+from skimage.filters import sobel
+from random import randrange, randint
+from skimage import color, img_as_ubyte, io
 
 Image.MAX_IMAGE_PIXELS = 200000000
 
@@ -448,43 +450,73 @@ def genTriangle(width, height, img, outl=None, pic=False, per=1):
 
 	return img # return final image
 
-def genSmartPoints(image, threshold=(10,250), scale=None):
+# def genSmartPoints(image, threshold=(255//5,255), scale=None):
+def genSmartPoints(image):
 	width = image.shape[1]
 	height = image.shape[0]
 
-	if scale:
-		resize_dim = (width//scale, height//scale)
-		resized_image = cv2.resize(image, resize_dim)
+	# Not required
+	# if scale:
+	# 	resize_dim = (width//scale, height//scale)
+	# 	resized_image = cv2.resize(image, resize_dim)
 
-		edges = cv2.Canny(resized_image, *threshold)
-	else:
-		edges = cv2.Canny(image, *threshold)
+	# 	# edges = cv2.Canny(resized_image, *threshold)
+	# 	edges = sobel(resized_image)
+	# else:
+		# edges = cv2.Canny(image, *threshold)
+		# edges = sobel(image)
 
-	pimg = Image.fromarray(edges)
+	edges = sobel(image)
+
+	# convert to RGB cv2 image
+	rgb_img = color.gray2rgb(edges)
+	with warnings.catch_warnings():
+		warnings.simplefilter("ignore")
+		cv_img = img_as_ubyte(rgb_img[:, :, ::-1])
+	rgb_cimg = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
+
+	# convert to PIL image
+	pimg = Image.fromarray(rgb_cimg)
 	idata = pimg.load()
 
 	edges_data = []
+
 	for x in range(pimg.width):
 		for y in range(pimg.height):
-			if idata[x,y] > 0:
+			if sum(idata[x,y])/3 > 10:
 				edges_data.append((x,y))
 
-	if scale:
-		scaled_points = [(int(x*scale), int(y*scale)) for (x,y) in edges_data]
-		edges_data = scaled_points
+	# print(len(edges_data))
+
+	# get a n/5 number of points rather than all of the points
+	sample = np.random.choice(len(edges_data), len(edges_data)//5)
+	edges_data = [edges_data[x] for x in sample]
+
+	# print(len(edges_data))
+
+	# Not required
+	# if scale:
+	# 	scaled_points = [(int(x*scale), int(y*scale)) for (x,y) in edges_data]
+	# 	edges_data = scaled_points
 
 	points = []
-	radius = (width+height)//2//50
+	radius = int(0.1 * (width+height)/2)
 
-	for (x,y) in edges_data:
-		if len(points) == 0:
-				points.append((x,y))
-		else:
-			for p in points:
-				if distance(p, (x,y)) <= radius:
-					break
-			else:
-				points.append((x,y))
+	# print(radius)
+	
+	# Not required
+	# 
+	# for (x,y) in edges_data:
+	# 	if len(points) == 0:
+	# 			points.append((x,y))
+	# 	else:
+	# 		for p in points:
+	# 			if distance(p, (x,y)) <= radius:
+	# 				break
+	# 		else:
+	# 			points.append((x,y))
+	
+	points = edges_data
 
 	ws = width//50
 	hs = height//50
@@ -702,8 +734,15 @@ def poly(image, points, show, outline, name, smart):
 	n_height = height + 2*hshift
 
 	if smart:
-		cimg = cv2.imread(image, 0)
-		pts = genSmartPoints(cimg)
+		# CV2 Canny
+		# cimg = cv2.imread(image, 0)
+		# pts = genSmartPoints(cimg)
+		
+		# SKIMAGE Sobel
+		ski_img = io.imread(image, True)
+		gray_img = color.rgb2gray(ski_img)
+		pts = genSmartPoints(gray_img)
+		
 	else:	
 		pts = genPoints(points, n_width, n_height)
 
