@@ -40,7 +40,7 @@ setup(name = 'wallgen',
     keywords='image PIL wallpaper theme', 
     license = 'MIT',
     packages=find_packages(), 
-    install_requires=['pillow', 'click', 'scipy', 'numpy', 'opencv-python'],
+    install_requires=['pillow', 'click', 'scipy', 'numpy', 'opencv-python', 'skimage'],
     entry_points="""
     [console_scripts]
         wallgen=wallgen:cli

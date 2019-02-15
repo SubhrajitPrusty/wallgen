@@ -5,3 +5,4 @@ flask
 gevent
 opencv-python
 numpy
+skimage
