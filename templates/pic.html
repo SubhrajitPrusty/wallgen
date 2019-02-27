@@ -10,7 +10,7 @@
 				<input type="file" name="image" class="form-control-file text-light">
 				<small class="form-text text-light">File size cannot exceed 5MB</small>
 			</div>
-			<div class="form-group">
+			<div class="form-group" id="points">
 				<label for="Points" class="display-4 text-light">Points</label>
 				<input class="form-control form-control shadow" type="number" placeholder="Enter number of points, e.g. 100" name="np" min="10" max="100000" required>
 				<small class="form-text text-light">Use the CLI for better results and more point support</small>
@@ -24,12 +24,31 @@
 				</label>
 				<label class="display-4 text-light inline-block" for="Smart">Smart</label>
 				<label class="switch">
-					<input class="mx-2 inline-block" name="smart" type="checkbox">
+					<input class="mx-2 inline-block" name="smart" type="checkbox" id="smart" onclick="update()">
 					<span class="slider round"></span>
 				</label>
 			</div>
 			<button type="submit" class="btn btn-primary btn-lg btn-block btn-dark">Submit</button>
 		</form>
+		<script>
+			function update()
+			{
+				var sm = document.getElementById("smart");
+				var pts = document.getElementById("points");
+
+				if (sm.checked == true)	
+				{
+					pts.removeAttribute("required");
+					pts.style.display = 'none';
+				}
+				else
+				{
+					pts.style.display = 'block';
+					pts.setAttribute("required", "required");
+				}
+			}
+
+		</script>
 	</div>
 </div>
 
