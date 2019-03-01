@@ -164,11 +164,11 @@ def pic():
                                 filename = secure_filename(file.filename)
                                 ufpath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                                 file.save(ufpath)
-                                if request.form.get('np'):
-                                        np = request.form.get('np')
-                                        outline = request.form.get('outline')
-                                        smart = request.form.get('smart')
+                                np = request.form.get('np')
+                                outline = request.form.get('outline')
+                                smart = request.form.get('smart')
 
+                                if np or smart:
                                         og_img = Image.open(ufpath)
                                         width = og_img.width
                                         height = og_img.height
