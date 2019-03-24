@@ -582,19 +582,32 @@ def poly(side, points, show, colors, outline, name):
 			click.secho("Invalid color hex", fg='red', err=True)
 			sys.exit(1)
 
-
+	print("Preparing image", end="")
 	pts = genPoints(points, nside, nside)
+	
+	print("\r", end="")
+	print("Generated points", end="")
 	img = genPoly(side, side, img, pts, shift, shift, outl=outline)
 
+	print("\r", end="")
+	print("Making final tweaks", end="")
 	img = img.resize((side//2, side//2), resample=Image.BICUBIC)
 
 	if show:
 		img.show()
 
+	file_name = ""
+
 	if name:
-		img.save("{}.png".format(name))
-	else:   
-		img.save("wall-{}.png".format(int(time.time())))
+		file_name = "{}.png".format(name)
+		img.save(file_name)
+	else:
+		file_name = "wall-{}.png".format(int(time.time()))
+		img.save(file_name)
+
+	print("\r", end="")
+	print(f"Image is stored at {file_name}")
+
 
 @cli.command()
 @click.argument("side", type=click.INT)
@@ -637,6 +650,8 @@ def shape(side, shape, colors, show, outline, name, percent):
 			click.secho("Invalid color hex", fg='red', err=True)
 			sys.exit(1)
 
+	print("Preparing image", end="")
+
 	if shape == 'hex':
 		percent = percent if percent else 5
 		img = genHexagon(side, side, img, outline, per=(percent or 1))
@@ -653,16 +668,25 @@ def shape(side, shape, colors, show, outline, name, percent):
 		click.secho(error, fg='red', err=True)
 		sys.exit(1)
 
+	print("\r", end="")
+	print("Making final tweaks", end="")
+
 	img = img.resize((side//2, side//2), resample=Image.BICUBIC)
 
 	if show:
 		img.show()
 
-	if name:
-		img.save("{}.png".format(name))
-	else:   
-		img.save("wall-{}.png".format(int(time.time())))
+	file_name = ""
 
+	if name:
+		file_name = "{}.png".format(name)
+		img.save(file_name)
+	else:
+		file_name = "wall-{}.png".format(int(time.time()))
+		img.save(file_name)
+
+	print("\r", end="")
+	print(f"Image is stored at {file_name}")
 
 @cli.command()
 @click.argument("side", type=click.INT)
@@ -724,6 +748,8 @@ def poly(image, points, show, outline, name, smart):
 			click.secho("Invalid color hex", fg='red', err=True)
 			sys.exit(1)
 
+	print("Preparing image", end="")
+
 	img = Image.open(image)
 	width = img.width
 	height = img.height
@@ -746,16 +772,28 @@ def poly(image, points, show, outline, name, smart):
 	else:	
 		pts = genPoints(points, n_width, n_height)
 
+	print("\r", end="")
+	print("Generated points", end="")
+
 	final_img = genPoly(img.width, img.height, img, pts, wshift, hshift, outline, pic=True)
+
+	print("\r", end="")
+	print("Making final tweaks", end="")
 
 	if show:
 		final_img.show()
 
-	if name:
-		final_img.save("{}.png".format(name))
-	else:   
-		final_img.save("wall-{}.png".format(int(time.time())))
+	file_name = ""
 
+	if name:
+		file_name = "{}.png".format(name)
+		img.save(file_name)
+	else:
+		file_name = "wall-{}.png".format(int(time.time()))
+		img.save(file_name)
+
+	print("\r", end="")
+	print(f"Image is stored at {file_name}")
 
 @pic.command()
 @click.argument("image", type=click.Path(exists=True, dir_okay=False))
@@ -788,6 +826,8 @@ def shape(image, shape, show, outline, name, percent):
 			click.secho("Invalid color hex", fg='red', err=True)
 			sys.exit(1)
 
+	print("Preparing image", end="")
+
 	if shape == 'hex':
 		percent = percent if percent else 5
 		img = genHexagon(width, height, img, outline, pic=True, per=percent)
@@ -804,14 +844,23 @@ def shape(image, shape, show, outline, name, percent):
 		click.secho(error, fg='red', err=True)
 		sys.exit(1)
 
+	print("\r", end="")
+	print("Making final tweaks", end="")	
+
 	if show:
 		img.show()
 
-	if name:
-		img.save("{}.png".format(name))
-	else:   
-		img.save("wall-{}.png".format(int(time.time())))
+	file_name = ""
 
+	if name:
+		file_name = "{}.png".format(name)
+		img.save(file_name)
+	else:
+		file_name = "wall-{}.png".format(int(time.time()))
+		img.save(file_name)
+
+	print("\r", end="")
+	print(f"Image is stored at {file_name}")
 
 if __name__ == "__main__":
 	cli()
