@@ -481,12 +481,19 @@ def genSmartPoints(image):
 
 	edges_data = []
 
+	# get image pixel data and pass through a filter to get only prominent edges
+
 	for x in range(pimg.width):
 		for y in range(pimg.height):
 			if sum(idata[x,y])/3 > 10:
 				edges_data.append((x,y))
 
 	# print(len(edges_data))
+	
+	# sometimes edges detected wont pass ^ this required case
+	if len(edges_data) < 1:
+		click.secho("Could not detect edges correctly.", fg="red", err=True)
+		sys.exit(1)
 
 	# get a n/5 number of points rather than all of the points
 	sample = np.random.choice(len(edges_data), len(edges_data)//5 if len(edges_data)/5 < 50000 else 50000)
