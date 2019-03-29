@@ -794,10 +794,10 @@ def poly(image, points, show, outline, name, smart):
 
 	if name:
 		file_name = "{}.png".format(name)
-		img.save(file_name)
+		final_img.save(file_name)
 	else:
 		file_name = "wall-{}.png".format(int(time.time()))
-		img.save(file_name)
+		final_img.save(file_name)
 
 	print("\r", end="")
 	print(f"Image is stored at {file_name}")
