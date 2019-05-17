@@ -1,7 +1,6 @@
 import sys
 import time
 import click
-import cv2
 import math
 import warnings
 import numpy as np
@@ -455,28 +454,16 @@ def genSmartPoints(image):
 	width = image.shape[1]
 	height = image.shape[0]
 
-	# Not required
-	# if scale:
-	# 	resize_dim = (width//scale, height//scale)
-	# 	resized_image = cv2.resize(image, resize_dim)
-
-	# 	# edges = cv2.Canny(resized_image, *threshold)
-	# 	edges = sobel(resized_image)
-	# else:
-		# edges = cv2.Canny(image, *threshold)
-		# edges = sobel(image)
-
 	edges = sobel(image)
+	io.imsave("sobel_edeges.png", edges)
 
-	# convert to RGB cv2 image
-	rgb_img = color.gray2rgb(edges)
+	# convert to RGB compatible image
 	with warnings.catch_warnings():
-		warnings.simplefilter("ignore")
-		cv_img = img_as_ubyte(rgb_img[:, :, ::-1])
-	rgb_cimg = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
+		warnings.simplefilter('ignore')
+		rgb_img = img_as_ubyte(color.gray2rgb(edges))
 
 	# convert to PIL image
-	pimg = Image.fromarray(rgb_cimg)
+	pimg = Image.fromarray(rgb_img)
 	idata = pimg.load()
 
 	edges_data = []
@@ -501,28 +488,11 @@ def genSmartPoints(image):
 
 	# print(len(edges_data))
 
-	# Not required
-	# if scale:
-	# 	scaled_points = [(int(x*scale), int(y*scale)) for (x,y) in edges_data]
-	# 	edges_data = scaled_points
-
 	points = []
 	radius = int(0.1 * (width+height)/2)
 
 	# print(radius)
-	
-	# Not required
-	# 
-	# for (x,y) in edges_data:
-	# 	if len(points) == 0:
-	# 			points.append((x,y))
-	# 	else:
-	# 		for p in points:
-	# 			if distance(p, (x,y)) <= radius:
-	# 				break
-	# 		else:
-	# 			points.append((x,y))
-	
+		
 	points = edges_data
 
 	ws = width//50
@@ -767,16 +737,11 @@ def poly(image, points, show, outline, name, smart):
 	n_height = height + 2*hshift
 
 	if smart:
-		# CV2 Canny
-		# cimg = cv2.imread(image, 0)
-		# pts = genSmartPoints(cimg)
-		
-		# SKIMAGE Sobel
+		# Sobel Edge
 		ski_img = io.imread(image, True)
 		gray_img = color.rgb2gray(ski_img)
 		pts = genSmartPoints(gray_img)
-		
-	else:	
+	else:
 		pts = genPoints(points, n_width, n_height)
 
 	print("\r", end="")
