@@ -14,17 +14,18 @@
 - Make a cool polygonal [video](https://gist.github.com/SubhrajitPrusty/37cf527ca4d92ed4a19af91099984b51)
 - Dont have `Python`? Use the [website](http://wallgen.subhrajitpy.me) (Limited capabilites)
 
-## Contribution 
-
-Since this project is open on KWOC, we're prone to get lot of PRs and changes.
-So, 
-- Please make all PRs to the dev branch.
-- Please update your branches to the upstream - so that no merge conflicts are present.
-
-
 ## Installation
 
-Clone repository
+**Requires Python 3**
+
+Via pip
+
+```pip
+pip install -e git+https://github.com/SubhrajitPrusty/wallgen#egg=wallgen
+```
+
+
+Clone the repository
 
 ```
 git clone https://github.com/SubhrajitPrusty/wallgen.git
@@ -158,7 +159,7 @@ Options:
 ```
 ---
 
-## Usage Docker for website
+## Usage Docker for hosting the website
 
 Inside the folder
 
