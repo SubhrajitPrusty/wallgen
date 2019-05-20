@@ -133,10 +133,10 @@ Usage: wallgen pic poly [OPTIONS] IMAGE
 Options:
   -p, --points INTEGER  number of points to use, default = 1000
   -s, --show            open the image
-  -o, --outline         outline the triangles
+  -o, --outline TEXT    outline the triangles
   -n, --name TEXT       rename the output
+  -sm, --smart          Use smart points
   --help                Show this message and exit.
-  
 ```
 
 ### `wallgen pic shape --help`
@@ -270,6 +270,7 @@ Slants pattern
 
 Using a picture with 50000 points
 
+
 1
 
 <img src="./images/lion.jpg" width="50%">
@@ -284,6 +285,12 @@ Using a picture with 50000 points
 
 <img src="./images/clouds.jpg" width="50%">
 <img src="./images/clouds-poly.png" width="50%">
+
+
+Using a picture with Smart edges
+
+<img src="./images/anime.png" width="50%">
+<img src="./images/anime-smart.png" width="50%">
 
 
 
