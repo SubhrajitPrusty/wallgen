@@ -90,8 +90,9 @@ def populate(a, b, n, width, height, ret):
 	ret.extend(points)
 
 def genPoints(qty, width, height):
-	side = (width+height)//2
+	side = max(width, height)
 	randPoints = np.random.choice(side, size=(qty, 2))
+
 	og = side
 	
 	tri = Delaunay(randPoints) # calculate D triangulation of points
@@ -455,7 +456,6 @@ def genSmartPoints(image):
 	height = image.shape[0]
 
 	edges = sobel(image)
-	io.imsave("sobel_edeges.png", edges)
 
 	# convert to RGB compatible image
 	with warnings.catch_warnings():
