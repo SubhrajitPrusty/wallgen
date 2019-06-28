@@ -548,19 +548,25 @@ def genSmartPoints(image):
 
 	return delaunay_points
 
-@click.group()
+#########
+# CLICK #
+########
+
+CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+
+@click.group(context_settings=CONTEXT_SETTINGS)
 def cli():
 	pass
 
 @cli.command()
 @click.argument("side", type=click.INT)
-@click.option("--colors", "-c", multiple=True, type=click.STRING, help="use many colors custom gradient, e.g -c #ff0000 -c #000000 -c #0000ff")
-@click.option("--points", "-p", default=100, help="number of points to use, default = 100")
-@click.option("--show", "-s", is_flag=True, help="open the image")
-@click.option("--outline", "-o", default=None, help="outline the triangles")
-@click.option("--name", "-n", help="rename the output")
-@click.option("--only-color", "-oc", is_flag=True, help="generate just a gradient.\n Pass colors to generate colored gradient, else random colors are used.")
-@click.option("--use-nn", "-un", is_flag=True, help="use NbyNGradient function")
+@click.option("--colors", "-c", multiple=True, type=click.STRING, metavar="HEXCODE", help="Use many colors in a custom gradient")
+@click.option("--points", "-p", default=100, metavar="no-of-points", help="Number of points to use, default = 100")
+@click.option("--show", "-s", is_flag=True, help="Open the image")
+@click.option("--outline", "-o", default=None, metavar="HEXCODE", help="Outline the triangles")
+@click.option("--name", "-n", metavar="/path/to/output_file", help="Rename the output file")
+@click.option("--only-color", "-oc", is_flag=True, help="Generate just a gradient image")
+@click.option("--use-nn", "-un", is_flag=True, help="Use NbyNGradient function")
 
 def poly(side, points, show, colors, outline, name, only_color, use_nn):
 	""" Generates a HQ low poly image using a gradient """
@@ -632,13 +638,13 @@ def poly(side, points, show, colors, outline, name, only_color, use_nn):
 
 @cli.command()
 @click.argument("side", type=click.INT)
-@click.option("--type", "-t", "shape", type=click.Choice(['square', 'hex', 'diamond', 'triangle', 'isometric']), help="choose which shape to use")
-@click.option("--colors", "-c", multiple=True, type=click.STRING, help="use many colors custom gradient, e.g -c #ff0000 -c #000000 -c #0000ff")
-@click.option("--percent", "-p", type=click.INT, help="Use this percentage to determine number of polygons. [1-10]")
-@click.option("--show", "-s", is_flag=True, help="open the image")
-@click.option("--outline", "-o", default=None, help="outline the shapes")
-@click.option("--name", "-n", help="rename the output")
-@click.option("--use-nn", "-un", is_flag=True, help="use NbyNGradient function")
+@click.option("--type", "-t", "shape", metavar="SHAPE", type=click.Choice(['square', 'hex', 'diamond', 'triangle', 'isometric']), help="Choose which shape to use")
+@click.option("--colors", "-c", multiple=True, type=click.STRING, metavar="HEXCODE", help="Use many colors in a custom gradient")
+@click.option("--percent", "-p", type=click.INT, metavar="1-10", help="Use this percentage to determine number of polygons. [1-10]")
+@click.option("--show", "-s", is_flag=True, help="Open the image")
+@click.option("--outline", "-o", default=None, metavar="HEXCODE", help="Outline the shapes")
+@click.option("--name", "-n", metavar="/path/to/output_file", help="Rename the output file")
+@click.option("--use-nn", "-un", is_flag=True, help="Use NbyNGradient function")
 
 def shape(side, shape, colors, show, outline, name, percent, use_nn):
 	""" Generates a HQ image of a beautiful shapes """
@@ -715,8 +721,8 @@ def shape(side, shape, colors, show, outline, name, percent, use_nn):
 
 @cli.command()
 @click.argument("side", type=click.INT)
-@click.option("--show", "-s", is_flag=True, help="open the image")
-@click.option("--name", "-n", help="rename the output")
+@click.option("--show", "-s", is_flag=True, help="Open the image")
+@click.option("--name", "-n", help="Rename the output")
 
 def slants(side, show, name):
 	""" Generates slanting lines of various colors """
@@ -740,10 +746,10 @@ def pic():
 
 @pic.command()
 @click.argument("image", type=click.Path(exists=True, dir_okay=False))
-@click.option("--points", "-p", default=1000, help="number of points to use, default = 1000")
-@click.option("--show", "-s", is_flag=True, help="open the image")
-@click.option("--outline", "-o", default=None, help="outline the triangles")
-@click.option("--name", "-n", help="rename the output")
+@click.option("--points", "-p", default=1000, metavar="no-of-points", help="Number of points to use, default = 1000")
+@click.option("--show", "-s", is_flag=True, help="Open the image")
+@click.option("--outline", "-o", default=None, metavar="HEXCODE", help="Outline the triangles")
+@click.option("--name", "-n", metavar="/path/to/output_file", help="Rename the output file")
 @click.option("--smart","-sm", is_flag=True, help="Use smart points")
 
 def poly(image, points, show, outline, name, smart):
@@ -817,11 +823,11 @@ def poly(image, points, show, outline, name, smart):
 
 @pic.command()
 @click.argument("image", type=click.Path(exists=True, dir_okay=False))
-@click.option("--type", "-t", "shape", type=click.Choice(['square', 'hex', 'diamond', 'triangle', 'isometric']), help="choose which shape to use")
-@click.option("--percent", "-p", type=click.INT, help="Use this percentage to determine number of polygons. [1-10]")
-@click.option("--show", "-s", is_flag=True, help="open the image")
-@click.option("--outline", "-o", default=None, help="outline the shapes")
-@click.option("--name", "-n", help="rename the output")
+@click.option("--type", "-t", "shape", type=click.Choice(['square', 'hex', 'diamond', 'triangle', 'isometric']), metavar="SHAPE", help="Choose which shape to use")
+@click.option("--percent", "-p", type=click.INT, metavar="1-10", help="Use this percentage to determine number of polygons. [1-10]")
+@click.option("--show", "-s", is_flag=True, help="Open the image")
+@click.option("--outline", "-o", default=None, metavar="HEXCODE", help="Outline the shapes")
+@click.option("--name", "-n", metavar="/path/to/output_file", help="Rename the output")
 
 def shape(image, shape, show, outline, name, percent):
 	""" Generate a HQ image of a beautiful shapes """
