@@ -4,11 +4,11 @@ import click
 import math
 import warnings
 import numpy as np
-from PIL import Image, ImageDraw
 from scipy.spatial import Delaunay
 from skimage.filters import sobel
 from random import randrange, randint
 from skimage import color, img_as_ubyte, io
+from PIL import Image, ImageDraw, ImageFilter
 
 Image.MAX_IMAGE_PIXELS = 200000000
 
@@ -43,6 +43,43 @@ def nGradient(side, *colors):
 			b+=dc[2]
 		p+=div
 	
+	return img
+
+def NbyNGradient(side):
+	base_color = "#00ffff"
+	img = Image.new("RGB", (side,side), base_color)
+	draw = ImageDraw.Draw(img)
+
+	n_boxes = 5
+	boxes_size = side//n_boxes
+
+	xmin, xmax = 0, boxes_size
+	ymin, ymax = 0, boxes_size
+
+
+	for i in range(n_boxes):
+		for j in range(n_boxes):
+			r, g, b = [randint(0, 255),randint(0, 255), randint(0, 255)]
+
+			dr = (randint(0, 255) - r)/boxes_size
+			dg = (randint(0, 255) - g)/boxes_size
+			db = (randint(0, 255) - b)/boxes_size
+			
+			for k in range(xmin, xmax):
+				draw.line([k, ymin, k, ymax], fill=(int(r), int(g), int(b)))
+				r += dr
+				g += dg
+				b += db
+
+			xmin += boxes_size
+			xmax += boxes_size
+
+		xmin = 0
+		xmax = boxes_size
+		ymin += boxes_size
+		ymax += boxes_size
+
+	img = img.filter(ImageFilter.GaussianBlur(radius=boxes_size//n_boxes))
 	return img
 
 def randcolor():
@@ -522,9 +559,11 @@ def cli():
 @click.option("--show", "-s", is_flag=True, help="open the image")
 @click.option("--outline", "-o", default=None, help="outline the triangles")
 @click.option("--name", "-n", help="rename the output")
+@click.option("--only-color", "-oc", is_flag=True, help="generate just a gradient.\n Pass colors to generate colored gradient, else random colors are used.")
+@click.option("--use-nn", "-un", is_flag=True, help="use NbyNGradient function")
 
-def poly(side, points, show, colors, outline, name):
-	""" Generates a HQ low poly image """
+def poly(side, points, show, colors, outline, name, only_color, use_nn):
+	""" Generates a HQ low poly image using a gradient """
 
 	error = ""
 	if side < 50:
@@ -550,25 +589,30 @@ def poly(side, points, show, colors, outline, name):
 		cs = [tuple(bytes.fromhex(c[1:])) for c in colors]
 		img = nGradient(nside, *cs)
 	else:
-		img = random_gradient(nside)
+		if use_nn:
+			points = 1000 if points < 1000 else points
+			img = NbyNGradient(nside)
+		else:
+			img = random_gradient(nside)
 
-	if outline:
-		try:
-			outline = tuple(bytes.fromhex(outline[1:]))
-		except Exception as e:
-			click.secho("Invalid color hex", fg='red', err=True)
-			sys.exit(1)
+	if not only_color:
+		if outline:
+			try:
+				outline = tuple(bytes.fromhex(outline[1:]))
+			except Exception as e:
+				click.secho("Invalid color hex", fg='red', err=True)
+				sys.exit(1)
 
-	print("Preparing image", end="")
-	pts = genPoints(points, nside, nside)
-	
-	print("\r", end="")
-	print("Generated points", end="")
-	img = genPoly(side, side, img, pts, shift, shift, outl=outline)
+		print("Preparing image", end="")
+		pts = genPoints(points, nside, nside)
+		
+		print("\r", end="")
+		print("Generated points", end="")
+		img = genPoly(side, side, img, pts, shift, shift, outl=outline)
 
-	print("\r", end="")
-	print("Making final tweaks", end="")
-	img = img.resize((side//2, side//2), resample=Image.BICUBIC)
+		print("\r", end="")
+		print("Making final tweaks", end="")
+		img = img.resize((side//2, side//2), resample=Image.BICUBIC)
 
 	if show:
 		img.show()
@@ -594,8 +638,9 @@ def poly(side, points, show, colors, outline, name):
 @click.option("--show", "-s", is_flag=True, help="open the image")
 @click.option("--outline", "-o", default=None, help="outline the shapes")
 @click.option("--name", "-n", help="rename the output")
+@click.option("--use-nn", "-un", is_flag=True, help="use NbyNGradient function")
 
-def shape(side, shape, colors, show, outline, name, percent):
+def shape(side, shape, colors, show, outline, name, percent, use_nn):
 	""" Generates a HQ image of a beautiful shapes """
 
 	error = ""
@@ -618,7 +663,10 @@ def shape(side, shape, colors, show, outline, name, percent):
 		cs = [tuple(bytes.fromhex(c[1:])) for c in colors]
 		img = nGradient(side, *cs)
 	else:
-		img = random_gradient(side)
+		if use_nn:
+			img = NbyNGradient(side)
+		else:
+			img = random_gradient(side)
 
 	if outline:
 		try:
