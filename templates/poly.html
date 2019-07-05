@@ -6,29 +6,57 @@
 	<div class="jumbotron bg-transparent">
 		<form action="/poly" method="POST" >
 			<div class="form-group">
-				<label for="Height" class="display-4 text-light">Height</label>
+				<label for="Height" class="h1 text-light">Height</label>
 				<input class="form-control form-control shadow" type="number" placeholder="Enter height in pixels, e.g. 2000" name="side" min="100" max="100000" required>
 			</div>
 			<div class="form-group">
-				<label for="Points" class="display-4 text-light">Points</label>
+				<label for="Points" class="h1 text-light">Points</label>
 				<input class="form-control form-control shadow" type="number" placeholder="Enter number of points, e.g. 100" name="np" min="10" max="10000" required>
 			</div>
 			<div class="form-group">
 				<div class="row">
 					<div class="form-group container">
-						<label for="formControlRange" class="display-4 text-light">Number of colors</label>
-						<input type="range" class="form-control-range rounded" id="nColors" min="2" max="10" value="2" name="nColors" required>
+						<label for="choiceOfBackground" class="h1 text-light">Choose background type</label>
+						<br>
+						<div class="form-check-inline">
+							<input type="radio" class="form-check-input" value="random" name="bgtype">
+							<label for="bgtype" class="h4 text-light form-check-label">Random Gradient</label>
+						</div>
+						<div class="form-check-inline">
+							<input type="radio" class="form-check-input" value="nbyn" name="bgtype">
+							<label for="bgtype" class="h4 text-light form-check-label">Random NbyN Gradient</label>
+						</div>
+						<div class="form-check-inline">
+							<input type="radio" class="form-check-input" value="customColors" name="bgtype">
+							<label for="bgtype" class="h4 text-light form-check-label">Custom Gradient</label>
+						</div>
 					</div>
 				</div>
-				<label for="Colors" class="display-4 text-light">Input colors</label>
-				<div class="row" id="colorInput">
+				<div class="row customColors">
+					<div class="form-group container">
+						<label for="formControlRange" class="h1 text-light">Number of colors</label>
+						<input type="range" class="form-control-range rounded shadow custom-range" id="nColors" min="2" max="10" value="2" name="nColors" required>
+					</div>
 				</div>
+				<div class="row customColors">
+					<label for="Colors" class="h1 text-light">Input colors</label>
+					<div class="row" id="colorInput">
+					</div>
+				</div>
+
 			</div>
 			
 			<div class="form-group">
-				<label class="display-4 text-light inline-block" for="Outline">Outline</label>
+				<label class="h1 text-light inline-block" for="Outline">Outline</label>
 				<label class="switch">
 					<input class="mx-2 inline-block" name="outline" type="checkbox">
+					<span class="slider round"></span>
+				</label>
+			</div>
+			<div class="form-group">
+				<label class="h1 text-light inline-block" for="Outline">Swirl</label>
+				<label class="switch">
+					<input class="mx-2 inline-block" name="swirl" type="checkbox">
 					<span class="slider round"></span>
 				</label>
 			</div>
@@ -38,6 +66,32 @@
 </div>
 
 <script>
+	function bgtype()
+	{
+		var bttns=$("input[name=bgtype]");
+		var cc = document.getElementsByClassName("customColors");
+
+
+		for (var k=0; k<bttns.length; k++)
+		{
+			if (bttns[k].checked)
+			{
+				console.log("checked "+bttns[k]);
+				if (bttns[k].value == "customColors")
+				{
+					for(var i=0; i<cc.length; i++)
+						cc[i].style.display = "inherit";
+					renderInputs();
+				}
+			}
+			else
+			{
+				for(var i=0; i<cc.length; i++)
+					cc[i].style.display = "none";
+			}
+		}
+
+	}
 
 	function renderInputs() {
 		var co = $("input[name=nColors]");
@@ -61,15 +115,18 @@
 
 	$(document).ready(function ()
 	{
-		renderInputs();
-
+		bgtype();
 	});
-
 	
 	$("input[name=nColors]").on("input change", function()
 	{
 		renderInputs();
 	});
+
+	$("input[name=bgtype]").on("change", function ()
+	{
+		bgtype();
+	})
 
 </script>
 
