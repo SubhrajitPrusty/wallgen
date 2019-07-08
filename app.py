@@ -93,59 +93,65 @@ def poly():
 @app.route("/shape", methods=['GET','POST'])
 def shape():
 	if request.method == 'POST':
-		# get data
 		side = int(request.form.get('side'))
-		shape = request.form.get('shape')
-		# print(shape)
-		
 		outline = request.form.get('outline')
-
-		nColors = request.form.get('nColors')
-		# print(nColors)
-
-		colors = []
-
-		for i in range(int(nColors)):
-			colors.append(request.form.get('rgb'+str(i+1)))
-
+		bgtype = request.form.get('bgtype')
+		swirl = request.form.get('swirl')
+		shape = request.form.get('shape')
+		
 		error = None
-		
-		try:
-			colors = [tuple(bytes.fromhex(x[1:])) for x in colors]
-		except Exception as e:
-			print(e)
-			error = "ERROR: Invalid color hex"
-		
+
 		if side > 5000 or side < 100:
 			error = "WARNING: Image too large OR Image too small"
+		
+		fname = "wall-{}.png".format(int(time.time()))
+		fpath = 'static/images/'+fname
+		
+		img = random_gradient(side)
 
+		if bgtype == "nbyn":
+			img = NbyNGradient(side)
+		elif bgtype == "customColors":
+			nColors = request.form.get('nColors')
+			colors = []
+
+			for i in range(int(nColors)):
+				colors.append(request.form.get('rgb'+str(i+1)))
+		
+			try:
+				colors = [tuple(bytes.fromhex(x[1:])) for x in colors]
+			except Exception as e:
+				print(e)
+				error = "ERROR: Invalid color hex"
+
+			img = nGradient(side, *colors)
+		
 		if error != None:
 			print(error)
 			return render_template('error.html', context=error)
+
+		if outline:
+			outline = tuple(bytes.fromhex("#2c2c2c"[1:]))
 		else:
-			fname = "wall-{}.png".format(int(time.time()))
-			fpath = 'static/images/'+fname
-			img = nGradient(side, *colors)
+			outline = None
+		
+		if swirl:
+			img = swirl_image(img)
 
-			if outline:
-				outline = tuple(bytes.fromhex("#2c2c2c"[1:]))
-			else:
-				outline = None
-
-			if shape == 'hexagon':
-				img = genHexagon(side, side, img, outline)
-			elif shape == 'squares':
-				img = genSquares(side, side, img, outline)
-			elif shape == 'diamond':
-				img = genDiamond(side, side, img, outline)
-			elif shape == 'triangle':
-				img = genTriangle(side, side, img, outline)
-			elif shape == 'isometric':
-				img = genIsometric(side, side, img, outline)
-			# print(fpath)
-			img.save(fpath)
-			imgurl = url_for('static',filename='images/'+fname)
-			return render_template("download.html", context=imgurl, home="shape")
+		if shape == 'hexagon':
+			img = genHexagon(side, side, img, outline)
+		elif shape == 'squares':
+			img = genSquares(side, side, img, outline)
+		elif shape == 'diamond':
+			img = genDiamond(side, side, img, outline)
+		elif shape == 'triangle':
+			img = genTriangle(side, side, img, outline)
+		elif shape == 'isometric':
+			img = genIsometric(side, side, img, outline)
+		# print(fpath)
+		img.save(fpath)
+		imgurl = url_for('static',filename='images/'+fname)
+		return render_template("download.html", context=imgurl, home="shape")
 	else:
 		return render_template('shape.html')
 
