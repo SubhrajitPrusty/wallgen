@@ -20,8 +20,9 @@ def cli():
 @click.option("--only-color", "-oc", is_flag=True, help="Generate just a gradient image")
 @click.option("--use-nn", "-un", is_flag=True, help="Use NbyNGradient function")
 @click.option("--swirl", "-sw", is_flag=True, help="Swirl the gradient")
+@click.option("--scale", "-sc", default=2, help="""Scale image to do anti-aliasing. Default=2. scale=1 means no antialiasing. [WARNING: Very memory expensive]""")
 
-def poly(side, points, show, colors, outline, name, only_color, use_nn, swirl):
+def poly(side, points, show, colors, outline, name, only_color, use_nn, swirl, scale):
 	""" Generates a HQ low poly image using a gradient """
 
 	error = ""
@@ -31,12 +32,14 @@ def poly(side, points, show, colors, outline, name, only_color, use_nn, swirl):
 		error = "Too less points. Minimum points 3"
 	elif points > 200000:
 		error = "Too many points. Maximum points 200000"
+	elif scale<1:
+		error = "Invalid scale value"
 
 	if error:
 		click.secho(error, fg='red', err=True)
 		sys.exit(1)
 
-	side = side * 2 # increase size to anti alias
+	side = side * scale# increase size to anti alias
 
 	shift = side//10
 	nside = side + shift*2 # increase size to prevent underflow
@@ -74,7 +77,7 @@ def poly(side, points, show, colors, outline, name, only_color, use_nn, swirl):
 
 		print("\r", end="")
 		print("Making final tweaks", end="")
-		img = img.resize((side//2, side//2), resample=Image.BICUBIC)
+		img = img.resize((side//scale, side//scale), resample=Image.BICUBIC)
 
 	if show:
 		img.show()
@@ -102,8 +105,9 @@ def poly(side, points, show, colors, outline, name, only_color, use_nn, swirl):
 @click.option("--name", "-n", metavar="/path/to/output_file", help="Rename the output file")
 @click.option("--use-nn", "-un", is_flag=True, help="Use NbyNGradient function")
 @click.option("--swirl", "-sw", is_flag=True, help="Swirl the gradient")
+@click.option("--scale", "-sc", default=2, help="""Scale image to do anti-aliasing. Default=2. scale=1 means no antialiasing. [WARNING: Very memory expensive]""")
 
-def shape(side, shape, colors, show, outline, name, percent, use_nn, swirl):
+def shape(side, shape, colors, show, outline, name, percent, use_nn, swirl, scale):
 	""" Generates a HQ image of a beautiful shapes """
 
 	error = ""
@@ -117,7 +121,7 @@ def shape(side, shape, colors, show, outline, name, percent, use_nn, swirl):
 		click.secho(error, fg='red', err=True)
 		sys.exit(1)
 
-	side = side * 2 # increase size to anti alias
+	side = side * scale # increase size to anti alias
 	
 	if colors:
 		if len(colors) < 2:
@@ -162,7 +166,7 @@ def shape(side, shape, colors, show, outline, name, percent, use_nn, swirl):
 	print("\r", end="")
 	print("Making final tweaks", end="")
 
-	img = img.resize((side//2, side//2), resample=Image.BICUBIC)
+	img = img.resize((side//scale, side//scale), resample=Image.BICUBIC)
 
 	if show:
 		img.show()
