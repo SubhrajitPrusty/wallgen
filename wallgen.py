@@ -1,6 +1,7 @@
 import sys
 import time
 import click
+import numpy as np
 from tools.gradient import *
 from tools.shapes import *
 
@@ -256,7 +257,7 @@ def poly(image, points, show, outline, name, smart):
 
 	if smart:
 		# Sobel Edge
-		ski_img = io.imread(image, True)
+		ski_img = np.array(img)
 		gray_img = color.rgb2gray(ski_img)
 		pts = genSmartPoints(gray_img)
 	else:

@@ -2,7 +2,7 @@ import warnings
 import numpy as np
 from scipy.spatial import Delaunay
 from skimage.filters import sobel
-from skimage import color, img_as_ubyte, io
+from skimage import color, img_as_ubyte
 from PIL import Image, ImageDraw, ImageFilter
 
 
@@ -78,7 +78,7 @@ def genSmartPoints(image):
 	
 	# sometimes edges detected wont pass ^ this required case
 	if len(edges_data) < 1:
-		click.secho("Could not detect edges correctly.", fg="red", err=True)
+		raise Exception("EdgeDetectionError")
 		sys.exit(1)
 
 	# get a n/5 number of points rather than all of the points
