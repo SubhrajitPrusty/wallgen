@@ -193,16 +193,25 @@ def slants(side, show, name):
 	""" Generates slanting lines of various colors """
 
 	side = side * 2 # increase size to anti alias
+	print("Preparing image", end="")
 
 	img = drawSlants(side)
 
 	if show:
 		img.show()
 
+	file_name = ""
+
 	if name:
-		img.save("{}.png".format(name))
-	else:   
-		img.save("wall-{}.png".format(int(time.time())))
+		file_name = "{}.png".format(name)
+		img.save(file_name)
+	else:
+		file_name = "wall-{}.png".format(int(time.time()))
+		img.save(file_name)
+
+	print("\r", end="")
+	print(f"Image is stored at {file_name}")
+
 
 @cli.group()
 def pic():
