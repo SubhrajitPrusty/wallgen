@@ -7,6 +7,8 @@ Image.MAX_IMAGE_PIXELS = 200000000
 
 
 def drawSlants(side):
+	randcolor = lambda : (randint(0,255),randint(0,255),randint(0,255))
+
 	img = Image.new("RGB", (side,side), "#FFFFFF")
 	draw = ImageDraw.Draw(img)
 	y = 0

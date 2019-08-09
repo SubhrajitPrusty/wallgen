@@ -75,9 +75,6 @@ def NbyNGradient(side):
 	img = img.filter(ImageFilter.GaussianBlur(radius=boxes_size//n_boxes))
 	return img
 
-def randcolor():
-	return (randint(0,255),randint(0,255),randint(0,255))
-
 
 def swirl_image(image):
 	image = np.array(image)
