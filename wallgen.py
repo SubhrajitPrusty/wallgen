@@ -191,11 +191,16 @@ def shape(side, shape, colors, show, outline, name, percent, use_nn, swirl, scal
 
 def slants(side, show, name):
 	""" Generates slanting lines of various colors """
-
-	side = side * 2 # increase size to anti alias
+	
+	scale = 2
+	side = side * scale # increase size to anti alias
 	print("Preparing image", end="")
 
 	img = drawSlants(side)
+
+	print("\r", end="")
+	print("Making final tweaks", end="")
+	img = img.resize((side//scale, side//scale), resample=Image.BICUBIC)
 
 	if show:
 		img.show()
