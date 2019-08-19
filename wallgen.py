@@ -188,8 +188,8 @@ def shape(side, shape, colors, show, outline, name, percent, use_nn, swirl, scal
 @click.argument("side", type=click.INT)
 @click.option("--show", "-s", is_flag=True, help="Open the image")
 @click.option("--name", "-n", help="Rename the output")
-
-def slants(side, show, name):
+@click.option("--swirl", "-sw", is_flag=True, help="Swirl the image")
+def slants(side, show, name, swirl):
 	""" Generates slanting lines of various colors """
 	
 	scale = 2
@@ -201,6 +201,9 @@ def slants(side, show, name):
 	print("\r", end="")
 	print("Making final tweaks", end="")
 	img = img.resize((side//scale, side//scale), resample=Image.BICUBIC)
+
+	if swirl:
+		img = swirl_image(img)
 
 	if show:
 		img.show()
