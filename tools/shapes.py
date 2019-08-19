@@ -12,12 +12,14 @@ def drawSlants(side):
 	img = Image.new("RGB", (side,side), "#FFFFFF")
 	draw = ImageDraw.Draw(img)
 	y = 0
-	ad = side//10
-	while y <= side+ad:
-		w = randint(5,20)
+	min_w = int(side * 0.01)
+	max_w = int(side * 0.1)
+	adj = max_w * 2
+	while y <= side+adj:
+		w = randint(min_w, max_w)
 		c = randcolor()
-		draw.line([0-ad, y,  y, 0-ad], width=w+1, fill=c)
-		draw.line([y, side,  side, y], width=w+1, fill=c)
+		draw.line([-adj , y,  y, -adj], width=w, fill=c)
+		draw.line([y, side+adj,  side+adj, y], width=w, fill=c)
 		y+=w
 
 	return img
@@ -94,7 +96,7 @@ def genDiamond(width, height, img, outl=None, pic=False, per=1):
 
 			a,b = (x + x+2*inc)//2, y
 
-			try: # adjustment to not overflow
+			try: # adj to not overflow
 				b = height-2 if b>=height else b
 				b = 2 if b<=0 else b
 
@@ -148,7 +150,7 @@ def genSquares(width, height, img, outl=None, pic=False, per=1):
 			points = [(x,y),(x,y+inc),(x+inc,y+inc),(x+inc,y)] # squares
 
 			a,b = (x+x+inc)//2,(y+y+inc)//2 # to get pixel data
-			try: # adjustment to not overflow
+			try: # adj to not overflow
 				b = height-5 if b>=height else b
 				b = 5 if b<=0 else b
 
@@ -194,8 +196,8 @@ def genHexagon(width, height, img, outl=None, pic=False, per=1):
 	apothem = radius * math.cos(math.pi/6) # radius of inner circle
 	side = 2 * apothem * math.tan(math.pi/6) # length of each side
 	hexwidth = 2 * apothem # horizontal width of a hexagon
-	wboxes = width // int(hexwidth) # adjustment
-	hboxes = height // int((side + radius) * 0.75)  # adjustment
+	wboxes = width // int(hexwidth) # adj
+	hboxes = height // int((side + radius) * 0.75)  # adj
 	
 	xback = 0 # backup of x 
 	x,y = xback+apothem, -(side/2) # start here
@@ -209,7 +211,7 @@ def genHexagon(width, height, img, outl=None, pic=False, per=1):
 			points = [((x + radius * math.sin(k * ang)), (y + radius * math.cos(k * ang))) for k in range(6)]
 
 			a,b = x,y
-			try: # adjustment to not overflow
+			try: # adj to not overflow
 				b = b - side//2 if b>=height else b
 				b = b + side//2 if b<=0 else b
 
@@ -253,8 +255,8 @@ def genIsometric(width, height, img, outl=None, pic=False, per=1):
 	apothem = radius * math.cos(math.pi/6) # radius of inner circle
 	side = 2 * apothem * math.tan(math.pi/6) # length of each side
 	hexwidth = 2 * apothem # horizontal width of a hexagon
-	wboxes = width // int(hexwidth) # adjustment
-	hboxes = height // int((side + radius) * 0.75)  # adjustment
+	wboxes = width // int(hexwidth) # adj
+	hboxes = height // int((side + radius) * 0.75)  # adj
 
 	xback = 0 # backup of x 
 	x,y = xback+apothem, -(side/2) # start here
@@ -270,7 +272,7 @@ def genIsometric(width, height, img, outl=None, pic=False, per=1):
 			for k in range(-5, 1):
 				triangle_points.append([(x, y), points[k], points[k+1]])	#storing vertices of individual triangles
 				a,b = calcCenter([(x, y), points[k], points[k+1]])	#calculating centre of individual triangles
-				try: # adjustment to not overflow
+				try: # adj to not overflow
 					b = height-1 if b>=height else b
 					b = 1 if b<=0 else b
 	
@@ -330,7 +332,7 @@ def genTriangle(width, height, img, outl=None, pic=False, per=1):
 
 			a,b = calcCenter(points)
 			
-			try: # adjustment to not overflow
+			try: # adj to not overflow
 				b = height-5 if b>=height else b
 				b = 5 if b<=0 else b
 
