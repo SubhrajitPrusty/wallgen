@@ -1,6 +1,6 @@
 documentation:
   - ./*.md
-
+  
 main:
   - wallgen.py
   
