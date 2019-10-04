@@ -1,11 +1,25 @@
+import os
 import sys
 import time
 import click
+import ctypes
 import numpy as np
 from tools.gradient import *
 from tools.shapes import *
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+
+def set_wallpaper(file_name):
+	if sys.platform == 'win32':
+		ch = input(f"Do you want to set it as your wallpaper? (y/N): ")
+		if ch.lower().strip()=='y':
+			try:
+				ctypes.windll.user32.SystemParametersInfoW(20, 0, os.getcwd()+"\\"+file_name, 3)
+				print(f"Done !!")
+			except:
+				error = "There was some unknown error while setting up your wallpaper"
+				click.secho(error, fg='red', err=True)
+				sys.exit(1)
 
 @click.group(context_settings=CONTEXT_SETTINGS)
 def cli():
@@ -94,7 +108,7 @@ def poly(side, points, show, colors, outline, name, only_color, use_nn, swirl, s
 
 	print("\r", end="")
 	print(f"Image is stored at {file_name}")
-
+	set_wallpaper(file_name)
 
 @cli.command()
 @click.argument("side", type=click.INT)
@@ -183,6 +197,7 @@ def shape(side, shape, colors, show, outline, name, percent, use_nn, swirl, scal
 
 	print("\r", end="")
 	print(f"Image is stored at {file_name}")
+	set_wallpaper(file_name)
 
 @cli.command()
 @click.argument("side", type=click.INT)
@@ -219,6 +234,7 @@ def slants(side, show, name, swirl):
 
 	print("\r", end="")
 	print(f"Image is stored at {file_name}")
+	set_wallpaper(file_name)
 
 
 @cli.group()
@@ -302,6 +318,7 @@ def poly(image, points, show, outline, name, smart):
 
 	print("\r", end="")
 	print(f"Image is stored at {file_name}")
+	set_wallpaper(file_name)
 
 @pic.command()
 @click.argument("image", type=click.Path(exists=True, dir_okay=False))
@@ -369,6 +386,7 @@ def shape(image, shape, show, outline, name, percent):
 
 	print("\r", end="")
 	print(f"Image is stored at {file_name}")
-
+	set_wallpaper(file_name)
+	
 if __name__ == "__main__":
 	cli()
