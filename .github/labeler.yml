@@ -1,0 +1,18 @@
+documentation:
+  - *.md
+
+main:
+  - wallgen.py
+  
+server:
+  - app.py
+
+tools:
+  - tools/*.py
+
+images:
+  - images/*
+
+web:
+  - templates/*
+  - static/*
