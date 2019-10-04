@@ -87,3 +87,17 @@ def swirl_image(image):
 	pil_img = Image.fromarray(sw)
 
 	return pil_img
+
+def set_wallpaper(file_name):
+	if sys.platform == 'win32':
+		try:
+			ctypes.windll.user32.SystemParametersInfoW(20, 0, file_name, 3)
+			print(f"Done !!")
+		except:
+			error = "There was some unknown error while setting up your wallpaper"
+			click.secho(error, fg='red', err=True)
+			sys.exit(1)
+	else:
+		error = "You can only set up wallpaper in Windows System."
+		click.secho(error, fg='red', err=True)
+		sys.exit(1)
