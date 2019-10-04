@@ -1,3 +1,4 @@
+import os
 import sys
 import time
 import click
@@ -13,7 +14,7 @@ def set_wallpaper(file_name):
 		ch = input(f"Do you want to set it as your wallpaper? (y/N): ")
 		if ch.lower().strip()=='y':
 			try:
-				ctypes.windll.user32.SystemParametersInfoW(20, 0, file_name , 0)
+				ctypes.windll.user32.SystemParametersInfoW(20, 0, os.getcwd()+"\\"+file_name, 3)
 				print(f"Done !!")
 			except:
 				error = "There was some unknown error while setting up your wallpaper"
