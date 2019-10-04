@@ -1,5 +1,5 @@
 documentation:
-  - *.md
+  - ./*.md
 
 main:
   - wallgen.py
