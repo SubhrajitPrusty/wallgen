@@ -4,7 +4,7 @@ import click
 import numpy as np
 from tools.gradient import *
 from tools.shapes import *
-import os
+from tools.wallpaper import *
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
@@ -99,33 +99,8 @@ def poly(side, points, show, colors, outline, name, only_color, use_nn, swirl, s
 	print(f"Image is stored at {file_name}")
 	
 	if set_wall:
-		setwallpaper(os.path.join(os.getcwd(),file_name))
+		setwallpaper(file_name)
 
-def setwallpaper(image_path):
-	host=sys.platform
-	import os,platform,ctypes,subprocess
-	if "linux" in host:
-		"""
-Linux Walpaper Setting To be here
-		"""
-	elif "darwin" in host:
-		db_file = "Library/Application Support/Dock/desktoppicture.db"
-		db_path = os.path.join(os.getenv("HOME", os.getenv("USERPROFILE")), db_file)
-		img_dir, _ = os.path.split(image_path)
-		sql = "delete from data; "
-		sql += "insert into data values(\"%s\"); " % img_dir
-		sql += "insert into data values(\"%s\"); " % image_path
-		sql += "update preferences set data_id=2 where key=1 or key=2 or key=3; "
-		sql += "update preferences set data_id=1 where key=10 or key=20 or key=30;"
-		subprocess.call(["sqlite3",db_path, sql])
-		subprocess.call(["killall", "Dock"])
-	elif "win32" in host:
-		if "x86" in os.environ["PROGRAMFILES"]:
-			ctypes.windll.user32.SystemParametersInfoW(20, 0, image_path, 3)
-		else:
-			ctypes.windll.user32.SystemParametersInfoA(20, 0, image_path, 3)
-	else:
-		print("Sorry Currently There is No Support For ",host)
 
 	
 @cli.command()
@@ -217,7 +192,7 @@ def shape(side, shape, colors, show, outline, name, percent, use_nn, swirl, scal
 	print("\r", end="")
 	print(f"Image is stored at {file_name}")
 	if set_wall:
-		setwallpaper(os.path.join(os.getcwd(),file_name))
+		setwallpaper(file_name)
 
 @cli.command()
 @click.argument("side", type=click.INT)
@@ -257,7 +232,7 @@ def slants(side, show, name, swirl,set_wall):
 	print("\r", end="")
 	print(f"Image is stored at {file_name}")
 	if set_wall:
-		setwallpaper(os.path.join(os.getcwd(),file_name))
+		setwallpaper(file_name)
 
 
 @cli.group()
@@ -342,8 +317,9 @@ def poly(image, points, show, outline, name, smart,set_wall):
 
 	print("\r", end="")
 	print(f"Image is stored at {file_name}")
+
 	if set_wall:
-		setwallpaper(os.path.join(os.getcwd(),file_name))
+		setwallpaper(file_name)
 
 @pic.command()
 @click.argument("image", type=click.Path(exists=True, dir_okay=False))
@@ -413,7 +389,8 @@ def shape(image, shape, show, outline, name, percent,set_wall):
 	print("\r", end="")
 	print(f"Image is stored at {file_name}")
 	if set_wall:
-		setwallpaper(os.path.join(os.getcwd(),file_name))
+		setwallpaper(file_name)
+
 
 if __name__ == "__main__":
 	cli()
