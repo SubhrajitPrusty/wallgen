@@ -203,7 +203,7 @@ def shape(side, shape, colors, show, outline, name, percent, use_nn, swirl, scal
 @click.option("--name", "-n", help="Rename the output")
 @click.option("--swirl", "-sw", is_flag=True, help="Swirl the image")
 @click.option("--setwall", "-w", is_flag=True, help="Setup the generated image as your wallpaper")
-def slants(side, show, name, swirl):
+def slants(side, show, name, swirl, setwall):
 	""" Generates slanting lines of various colors """
 	
 	scale = 2
