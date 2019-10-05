@@ -4,6 +4,7 @@ import click
 import numpy as np
 from tools.gradient import *
 from tools.shapes import *
+from tools.wallpaper import *
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
@@ -22,8 +23,10 @@ def cli():
 @click.option("--use-nn", "-un", is_flag=True, help="Use NbyNGradient function")
 @click.option("--swirl", "-sw", is_flag=True, help="Swirl the gradient")
 @click.option("--scale", "-sc", default=2, help="""Scale image to do anti-aliasing. Default=2. scale=1 means no antialiasing. [WARNING: Very memory expensive]""")
+@click.option("--set-wall", "-w", is_flag=True, help="Set the generated image as your Desktop wallpaper")
 
-def poly(side, points, show, colors, outline, name, only_color, use_nn, swirl, scale):
+
+def poly(side, points, show, colors, outline, name, only_color, use_nn, swirl, scale,set_wall):
 	""" Generates a HQ low poly image using a gradient """
 
 	error = ""
@@ -94,8 +97,12 @@ def poly(side, points, show, colors, outline, name, only_color, use_nn, swirl, s
 
 	print("\r", end="")
 	print(f"Image is stored at {file_name}")
+	
+	if set_wall:
+		setwallpaper(file_name)
 
 
+	
 @cli.command()
 @click.argument("side", type=click.INT)
 @click.option("--type", "-t", "shape", metavar="SHAPE", type=click.Choice(['square', 'hex', 'diamond', 'triangle', 'isometric']), help="Choose which shape to use")
@@ -107,8 +114,9 @@ def poly(side, points, show, colors, outline, name, only_color, use_nn, swirl, s
 @click.option("--use-nn", "-un", is_flag=True, help="Use NbyNGradient function")
 @click.option("--swirl", "-sw", is_flag=True, help="Swirl the gradient")
 @click.option("--scale", "-sc", default=2, help="""Scale image to do anti-aliasing. Default=2. scale=1 means no antialiasing. [WARNING: Very memory expensive]""")
+@click.option("--set-wall", "-w", is_flag=True, help="Set the generated image as your Desktop wallpaper")
 
-def shape(side, shape, colors, show, outline, name, percent, use_nn, swirl, scale):
+def shape(side, shape, colors, show, outline, name, percent, use_nn, swirl, scale,set_wall):
 	""" Generates a HQ image of a beautiful shapes """
 
 	error = ""
@@ -183,13 +191,17 @@ def shape(side, shape, colors, show, outline, name, percent, use_nn, swirl, scal
 
 	print("\r", end="")
 	print(f"Image is stored at {file_name}")
+	if set_wall:
+		setwallpaper(file_name)
 
 @cli.command()
 @click.argument("side", type=click.INT)
 @click.option("--show", "-s", is_flag=True, help="Open the image")
 @click.option("--name", "-n", help="Rename the output")
 @click.option("--swirl", "-sw", is_flag=True, help="Swirl the image")
-def slants(side, show, name, swirl):
+@click.option("--set-wall", "-w", is_flag=True, help="Set the generated image as your Desktop wallpaper")
+
+def slants(side, show, name, swirl,set_wall):
 	""" Generates slanting lines of various colors """
 	
 	scale = 2
@@ -219,6 +231,8 @@ def slants(side, show, name, swirl):
 
 	print("\r", end="")
 	print(f"Image is stored at {file_name}")
+	if set_wall:
+		setwallpaper(file_name)
 
 
 @cli.group()
@@ -233,8 +247,9 @@ def pic():
 @click.option("--outline", "-o", default=None, metavar="HEXCODE", help="Outline the triangles")
 @click.option("--name", "-n", metavar="/path/to/output_file", help="Rename the output file")
 @click.option("--smart","-sm", is_flag=True, help="Use smart points")
+@click.option("--set-wall", "-w", is_flag=True, help="Set the generated image as your Desktop wallpaper")
 
-def poly(image, points, show, outline, name, smart):
+def poly(image, points, show, outline, name, smart,set_wall):
 	""" Generates a HQ low poly image """
 
 	if points < 3:
@@ -303,6 +318,9 @@ def poly(image, points, show, outline, name, smart):
 	print("\r", end="")
 	print(f"Image is stored at {file_name}")
 
+	if set_wall:
+		setwallpaper(file_name)
+
 @pic.command()
 @click.argument("image", type=click.Path(exists=True, dir_okay=False))
 @click.option("--type", "-t", "shape", type=click.Choice(['square', 'hex', 'diamond', 'triangle', 'isometric']), metavar="SHAPE", help="Choose which shape to use")
@@ -310,8 +328,9 @@ def poly(image, points, show, outline, name, smart):
 @click.option("--show", "-s", is_flag=True, help="Open the image")
 @click.option("--outline", "-o", default=None, metavar="HEXCODE", help="Outline the shapes")
 @click.option("--name", "-n", metavar="/path/to/output_file", help="Rename the output")
+@click.option("--set-wall", "-w", is_flag=True, help="Set the generated image as your Desktop wallpaper")
 
-def shape(image, shape, show, outline, name, percent):
+def shape(image, shape, show, outline, name, percent,set_wall):
 	""" Generate a HQ image of a beautiful shapes """
 	error = None
 	if percent:
@@ -369,6 +388,9 @@ def shape(image, shape, show, outline, name, percent):
 
 	print("\r", end="")
 	print(f"Image is stored at {file_name}")
+	if set_wall:
+		setwallpaper(file_name)
+
 
 if __name__ == "__main__":
 	cli()
