@@ -8,5 +8,4 @@ COPY templates /wallgen/templates
 COPY tools /wallgen/tools
 WORKDIR /wallgen
 RUN pip install --no-cache-dir -r requirements.txt
-ENTRYPOINT ["python", "-u"]
-CMD ["app.py"]
+CMD ["python", "-u", "app.py"]
