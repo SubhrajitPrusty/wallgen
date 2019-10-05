@@ -4,6 +4,7 @@ import click
 import struct
 import ctypes
 import warnings
+import subprocess
 import numpy as np
 from skimage import img_as_ubyte
 from skimage.transform import swirl
@@ -106,16 +107,28 @@ def set_wallpaper(file_name, flag=False):
 	if sys.platform == 'win32':
 		try:
 			sys_parameters_info = get_sys_parameters_info()
-			if flag:
+			if flag or ":\\" not in file_name[:4]:
 				r = sys_parameters_info(20, 0, os.getcwd()+"\\"+file_name, 3)
 			else:
-				r = sys_parameters_info(20, 0, file_name, 3)
+				r = sys_parameters_info(20, 0, os.getcwd()+"\\"+file_name, 3)
 			print(f"Wallpaper has been set successfully !!")
 		except:
 			error = "There was some unknown error while setting up your wallpaper"
 			click.secho(error, fg='red', err=True)
 			sys.exit(1)
-	else:
-		error = "You can only set up wallpaper in Windows System."
+	elif sys.platform == 'linux' and 'gnome' in os.environ['DESKTOP_SESSION']:
+		try:
+			if flag or not file_name.startswith("/"):
+				r = subprocess.Popen("gsettings set org.gnome.desktop.background picture-uri file://"+os.getcwd()+"/"+file_name, stdout=subprocess.PIPE, shell=True)
+			else:
+				r = subprocess.Popen("gsettings set org.gnome.desktop.background picture-uri file://"+file_name, stdout=subprocess.PIPE, shell=True)
+			assert not r.communicate()[1]
+			print(f"Wallpaper has been set successfully !!")
+		except:
+			error = "There was some unknown error while setting up your wallpaper"
+			click.secho(error, fg='red', err=True)
+			sys.exit(1)
+	else:	
+		error = "You can only set up wallpaper in Windows System and GNOME based Linux System"
 		click.secho(error, fg='red', err=True)
 		sys.exit(1)
