@@ -1,11 +1,10 @@
 import os
-import platform
-import ctypes
-import subprocess
-import sys
 import re
+import sys
+import ctypes
+import struct
+import subprocess
 import urllib.parse
-
 
 def get_env():
 	#Get Current Desktop Environment
@@ -25,10 +24,16 @@ def get_env():
 			else:
 				return out
 	return None
+
+def is_64bit_windows():
+    """Check if 64 bit Windows OS"""
+    return struct.calcsize('P') * 8 == 64
+
 def setwallpaper(image_path,relative_path=True):
-	host=sys.platform
+	host = sys.platform
+	desktop = get_env()
 	if relative_path:
-		image_path=os.path.join(os.getcwd(),image_path)
+		image_path = os.path.join(os.getcwd(),image_path)
 	if "linux" in host:
 		desktop = str(desktop).lower()
 		disown= lambda cmd:     subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -54,13 +59,12 @@ def setwallpaper(image_path,relative_path=True):
 		elif "sway" in desktop:
 			disown(["swaymsg", "output", "*", "bg", image_path, "fill"])
 		elif "awesome" in desktop:
-			util.disown(["awesome-client", "require('gears').wallpaper.maximized('"+image_path+"')"])
+			disown(["awesome-client", "require('gears').wallpaper.maximized('"+image_path+"')"])
 		else:
 			if desktop:
-				print(f"Sorry, {desktop} is Currently Not Supported !!!")
-				return
+				return f"Sorry, {desktop} is currently not supported.", False
 			else:
-				print(f"Sorry, Desktop Environment Could Not Be Detected !!!")
+				return f"Sorry, Desktop Environment could not be detected", False
 	elif "darwin" in host:
 		db_file = "Library/Application Support/Dock/desktoppicture.db"
 		db_path = os.path.join(os.getenv("HOME", os.getenv("USERPROFILE")), db_file)
@@ -72,12 +76,13 @@ def setwallpaper(image_path,relative_path=True):
 		sql += "update preferences set data_id=1 where key=10 or key=20 or key=30;"
 		subprocess.call(["sqlite3",db_path, sql])
 		subprocess.call(["killall", "Dock"])
+
 	elif "win32" in host:
-		if "x86" in os.environ["PROGRAMFILES"]:
+		if is_64bit_windows():
 			ctypes.windll.user32.SystemParametersInfoW(20, 0, image_path, 3)
 		else:
 			ctypes.windll.user32.SystemParametersInfoA(20, 0, image_path, 3)
 	else:
-		print("Sorry Currently There is No Support For ",host)
-		return
-	print("Changed Wallpaper Successfully !!!")
+		return f"Sorry, currently there is no support for {host}", False
+		
+	return "Changed wallpaper successfully", True
