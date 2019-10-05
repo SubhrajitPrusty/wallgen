@@ -192,7 +192,10 @@ def shape(side, shape, colors, show, outline, name, percent, use_nn, swirl, scal
 	print(f"Image is stored at {file_name}")
 	
 	if setwall:
-		set_wallpaper(file_name)
+		if not name:
+			set_wallpaper(file_name, True)
+		else:
+			set_wallpaper(file_name)
 
 @cli.command()
 @click.argument("side", type=click.INT)
@@ -232,7 +235,10 @@ def slants(side, show, name, swirl):
 	print(f"Image is stored at {file_name}")
 	
 	if setwall:
-		set_wallpaper(file_name)
+		if not name:
+			set_wallpaper(file_name, True)
+		else:
+			set_wallpaper(file_name)
 
 @cli.group()
 def pic():
@@ -318,7 +324,10 @@ def poly(image, points, show, outline, name, smart, setwall):
 	print(f"Image is stored at {file_name}")
 	
 	if setwall:
-		set_wallpaper(file_name)
+		if not name:
+			set_wallpaper(file_name, True)
+		else:
+			set_wallpaper(file_name)
 
 @pic.command()
 @click.argument("image", type=click.Path(exists=True, dir_okay=False))
@@ -389,7 +398,10 @@ def shape(image, shape, show, outline, name, percent, setwall):
 	print(f"Image is stored at {file_name}")
 	
 	if setwall:
-		set_wallpaper(file_name)
+		if not name:
+			set_wallpaper(file_name, True)
+		else:
+			set_wallpaper(file_name)
 
 if __name__ == "__main__":
 	cli()
