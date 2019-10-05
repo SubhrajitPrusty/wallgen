@@ -1,6 +1,7 @@
 import os
 import sys
 import click
+import struct
 import ctypes
 import warnings
 import numpy as np
@@ -92,13 +93,23 @@ def swirl_image(image):
 
 	return pil_img
 
+def is_64_windows():
+	"""Find out how many bits is OS. """
+    return struct.calcsize('P') * 8 == 64
+
+def get_sys_parameters_info():
+	"""Based on if this is 32bit or 64bit returns correct version of SystemParametersInfo function. """
+    return ctypes.windll.user32.SystemParametersInfoW if is_64_windows() \
+    	else ctypes.windll.user32.SystemParametersInfoA
+
 def set_wallpaper(file_name, flag=False):
 	if sys.platform == 'win32':
 		try:
+			sys_parameters_info = get_sys_parameters_info()
 			if flag:
-				ctypes.windll.user32.SystemParametersInfoW(20, 0, os.getcwd()+"\\"+file_name, 3)
+				r = sys_parameters_info(20, 0, os.getcwd()+"\\"+file_name, 3)
 			else:
-				ctypes.windll.user32.SystemParametersInfoW(20, 0, file_name, 3)
+				r = sys_parameters_info(20, 0, file_name, 3)
 			print(f"Wallpaper has been set successfully !!")
 		except:
 			error = "There was some unknown error while setting up your wallpaper"
