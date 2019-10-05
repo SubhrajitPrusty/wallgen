@@ -1,3 +1,7 @@
+import os
+import sys
+import click
+import ctypes
 import warnings
 import numpy as np
 from skimage import img_as_ubyte
@@ -88,11 +92,14 @@ def swirl_image(image):
 
 	return pil_img
 
-def set_wallpaper(file_name):
+def set_wallpaper(file_name, flag=False):
 	if sys.platform == 'win32':
 		try:
-			ctypes.windll.user32.SystemParametersInfoW(20, 0, file_name, 3)
-			print(f"Done !!")
+			if flag:
+				ctypes.windll.user32.SystemParametersInfoW(20, 0, os.getcwd()+"\\"+file_name, 3)
+			else:
+				ctypes.windll.user32.SystemParametersInfoW(20, 0, file_name, 3)
+			print(f"Wallpaper has been set successfully !!")
 		except:
 			error = "There was some unknown error while setting up your wallpaper"
 			click.secho(error, fg='red', err=True)

@@ -24,7 +24,7 @@ def cli():
 @click.option("--scale", "-sc", default=2, help="""Scale image to do anti-aliasing. Default=2. scale=1 means no antialiasing. [WARNING: Very memory expensive]""")
 @click.option("--setwall", "-w", is_flag=True, help="Set the generated image as your wallpaper")
 
-def poly(side, points, show, colors, outline, name, only_color, use_nn, swirl, scale):
+def poly(side, points, show, colors, outline, name, only_color, use_nn, swirl, scale, setwall):
 	""" Generates a HQ low poly image using a gradient """
 
 	error = ""
@@ -97,8 +97,10 @@ def poly(side, points, show, colors, outline, name, only_color, use_nn, swirl, s
 	print(f"Image is stored at {file_name}")
 	
 	if setwall:
-		set_wallpaper(file_name)
-
+		if not name:
+			set_wallpaper(file_name, True)
+		else:
+			set_wallpaper(file_name)
 
 @cli.command()
 @click.argument("side", type=click.INT)
@@ -113,7 +115,7 @@ def poly(side, points, show, colors, outline, name, only_color, use_nn, swirl, s
 @click.option("--scale", "-sc", default=2, help="""Scale image to do anti-aliasing. Default=2. scale=1 means no antialiasing. [WARNING: Very memory expensive]""")
 @click.option("--setwall", "-w", is_flag=True, help="Setup the generated image as your wallpaper")
 
-def shape(side, shape, colors, show, outline, name, percent, use_nn, swirl, scale):
+def shape(side, shape, colors, show, outline, name, percent, use_nn, swirl, scale, setwall):
 	""" Generates a HQ image of a beautiful shapes """
 
 	error = ""
@@ -246,7 +248,7 @@ def pic():
 @click.option("--smart","-sm", is_flag=True, help="Use smart points")
 @click.option("--setwall", "-w", is_flag=True, help="Setup the generated image as your wallpaper")
 
-def poly(image, points, show, outline, name, smart):
+def poly(image, points, show, outline, name, smart, setwall):
 	""" Generates a HQ low poly image """
 
 	if points < 3:
@@ -327,7 +329,7 @@ def poly(image, points, show, outline, name, smart):
 @click.option("--name", "-n", metavar="/path/to/output_file", help="Rename the output")
 @click.option("--setwall", "-w", is_flag=True, help="Setup the generated image as your wallpaper")
 
-def shape(image, shape, show, outline, name, percent):
+def shape(image, shape, show, outline, name, percent, setwall):
 	""" Generate a HQ image of a beautiful shapes """
 	error = None
 	if percent:
