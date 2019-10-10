@@ -1,3 +1,5 @@
+<img src="./images/logo.png" width="20%" alt="logo">
+
 # WallGen
 ![](https://img.shields.io/badge/Python-3-blue.svg?style=for-the-badge&logo=python)
 ----
