@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css" type="stylesheet">
+    <script src="http://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <title>Wallgen</title>
+</head>
+<body>
+    <iframe src="http://wallgen.herokuapp.com/" width="100%" id="frame" frameborder="0">
+    </iframe>
+</body>
+<script type="text/javascript" language="javascript">
+    $('#frame').css('height', $(window).height() + 'px');
+</script>
+</html>
