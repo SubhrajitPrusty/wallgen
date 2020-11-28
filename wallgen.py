@@ -2,9 +2,25 @@ import sys
 import time
 import click
 import numpy as np
-from tools.gradient import *
-from tools.shapes import *
-from tools.wallpaper import *
+from skimage import color
+from tools.wallpaper import setwallpaper
+from tools.points import (
+    genPoints,
+    genSmartPoints)
+from tools.gradient import (
+    Image,
+    NbyNGradient,
+    nGradient,
+    random_gradient,
+    swirl_image)
+from tools.shapes import (
+    drawSlants,
+    genDiamond,
+    genHexagon,
+    genIsometric,
+    genPoly,
+    genSquares,
+    genTriangle)
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
@@ -31,7 +47,8 @@ def cli():
               help="Use NbyNGradient function")
 @click.option("--swirl", "-sw", is_flag=True, help="Swirl the gradient")
 @click.option("--scale", "-sc", default=2,
-              help="""Scale image to do anti-aliasing. Default=2. scale=1 means no antialiasing. [WARNING: Very memory expensive]""")
+              help="""Scale image to do anti-aliasing. Default=2. scale=1 means
+               no antialiasing. [WARNING: Very memory expensive]""")
 @click.option("--set-wall", "-w", is_flag=True,
               help="Set the generated image as your Desktop wallpaper")
 def poly(
@@ -87,7 +104,7 @@ def poly(
         if outline:
             try:
                 outline = tuple(bytes.fromhex(outline[1:]))
-            except Exception as e:
+            except Exception:
                 click.secho("Invalid color hex", fg='red', err=True)
                 sys.exit(1)
 
@@ -132,16 +149,19 @@ def poly(
               "-t",
               "shape",
               metavar="SHAPE",
-              type=click.Choice(['square',
+              type=click.Choice(['sq',
                                  'hex',
-                                 'diamond',
-                                 'triangle',
-                                 'isometric']),
-              help="Choose which shape to use")
+                                 'dia',
+                                 'tri',
+                                 'iso']),
+              help="""
+              Choose which shape to use. Choose from sq, hex, dia, tri, iso
+              """)
 @click.option("--colors", "-c", multiple=True, type=click.STRING,
               metavar="HEXCODE", help="Use many colors in a custom gradient")
 @click.option("--percent", "-p", type=click.INT, metavar="1-10", default=1,
-              help="Use this percentage to determine number of polygons. [1-10]")
+              help="Use this percentage to determine number of polygons. [1-10]\
+              ")
 @click.option("--show", "-s", is_flag=True, help="Open the image")
 @click.option("--outline", "-o", default=None,
               metavar="HEXCODE", help="Outline the shapes")
@@ -151,7 +171,8 @@ def poly(
               help="Use NbyNGradient function")
 @click.option("--swirl", "-sw", is_flag=True, help="Swirl the gradient")
 @click.option("--scale", "-sc", default=2,
-              help="""Scale image to do anti-aliasing. Default=2. scale=1 means no antialiasing. [WARNING: Very memory expensive]""")
+              help="""Scale image to do anti-aliasing. Default=2. scale=1 means
+               no antialiasing. [WARNING: Very memory expensive]""")
 @click.option("--set-wall", "-w", is_flag=True,
               help="Set the generated image as your Desktop wallpaper")
 def shape(
@@ -199,7 +220,7 @@ def shape(
     if outline:
         try:
             outline = tuple(bytes.fromhex(outline[1:]))
-        except Exception as e:
+        except Exception:
             click.secho("Invalid color hex", fg='red', err=True)
             sys.exit(1)
 
@@ -208,16 +229,18 @@ def shape(
     if shape == 'hex':
         percent = percent if percent else 5
         img = genHexagon(side, side, img, outline, per=(percent or 1))
-    elif shape == 'square':
+    elif shape == 'sq':
         img = genSquares(side, side, img, outline, per=(percent or 1))
-    elif shape == 'diamond':
+    elif shape == 'dia':
         img = genDiamond(side, side, img, outline, per=(percent or 1))
-    elif shape == 'triangle':
+    elif shape == 'tri':
         img = genTriangle(side, side, img, outline, per=(percent or 1))
-    elif shape == 'isometric':
+    elif shape == 'iso':
         img = genIsometric(side, side, img, outline, per=(percent or 1))
     else:
-        error = "No shape given. To see list of shapes \"wallgen shape --help\""
+        error = """
+        No shape given. To see list of shapes \"wallgen shape --help\"
+        """
         click.secho(error, fg='red', err=True)
         sys.exit(1)
 
@@ -310,7 +333,7 @@ def pic():
 @click.option("--smart", "-sm", is_flag=True, help="Use smart points")
 @click.option("--set-wall", "-w", is_flag=True,
               help="Set the generated image as your Desktop wallpaper")
-def poly(image, points, show, outline, name, smart, set_wall):
+def poly(image, points, show, outline, name, smart, set_wall):  # noqa: F811
     """ Generates a HQ low poly image """
 
     if points < 3:
@@ -332,7 +355,7 @@ def poly(image, points, show, outline, name, smart, set_wall):
     if outline:
         try:
             outline = tuple(bytes.fromhex(outline[1:]))
-        except Exception as e:
+        except Exception:
             click.secho("Invalid color hex", fg='red', err=True)
             sys.exit(1)
 
@@ -400,7 +423,9 @@ def poly(image, points, show, outline, name, smart, set_wall):
               metavar="SHAPE",
               help="Choose which shape to use")
 @click.option("--percent", "-p", type=click.INT, metavar="1-10",
-              help="Use this percentage to determine number of polygons. [1-10]")
+              help="""
+              Use this percentage to determine number of polygons. [1-10]
+              """)
 @click.option("--show", "-s", is_flag=True, help="Open the image")
 @click.option("--outline", "-o", default=None,
               metavar="HEXCODE", help="Outline the shapes")
@@ -410,7 +435,7 @@ def poly(image, points, show, outline, name, smart, set_wall):
               help="Rename the output")
 @click.option("--set-wall", "-w", is_flag=True,
               help="Set the generated image as your Desktop wallpaper")
-def shape(image, shape, show, outline, name, percent, set_wall):
+def shape(image, shape, show, outline, name, percent, set_wall):  # noqa: F811
     """ Generate a HQ image of a beautiful shapes """
     error = None
     if percent:
@@ -429,7 +454,7 @@ def shape(image, shape, show, outline, name, percent, set_wall):
     if outline:
         try:
             outline = tuple(bytes.fromhex(outline[1:]))
-        except Exception as e:
+        except Exception:
             click.secho("Invalid color hex", fg='red', err=True)
             sys.exit(1)
 
@@ -447,7 +472,9 @@ def shape(image, shape, show, outline, name, percent, set_wall):
     elif shape == 'isometric':
         img = genIsometric(width, height, img, outline, pic=True, per=percent)
     else:
-        error = "No shape given. To see list of shapes \"wallgen pic shape --help\""
+        error = """
+        No shape given. To see list of shapes \"wallgen pic shape --help\"
+        """
         click.secho(error, fg='red', err=True)
         sys.exit(1)
 
