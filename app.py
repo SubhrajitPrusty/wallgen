@@ -1,12 +1,14 @@
 import os
 import time
-from wallgen import *
 from PIL import Image
-from skimage.filters import sobel
+# from skimage.filters import sobel
 from gevent.pywsgi import WSGIServer
 from werkzeug.utils import secure_filename
-from skimage import color, img_as_ubyte, io
-from flask import Flask, request, send_file, render_template, redirect, url_for
+from skimage import color, io
+from flask import Flask, request, render_template, url_for
+from wallgen import (NbyNGradient, genDiamond, genHexagon, genIsometric,
+                     genPoints, genPoly, genSmartPoints, genSquares,
+                     genTriangle, nGradient, random_gradient, swirl_image)
 
 UPLOAD_FOLDER = os.path.join("static", "upload")
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
@@ -192,7 +194,8 @@ def pic():
                     else:
                         scale = 1
                     img = og_img.resize(
-                        (width // scale, height // scale), resample=Image.BICUBIC)
+                        (width // scale, height // scale),
+                        resample=Image.BICUBIC)
                     width = img.width
                     height = img.height
                     wshift = width // 100
@@ -237,4 +240,5 @@ def pic():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     http_server = WSGIServer(('', port), app)
+    print("Starting server:")
     http_server.serve_forever()
