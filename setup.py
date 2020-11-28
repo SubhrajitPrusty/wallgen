@@ -4,6 +4,7 @@ from os import path
 
 here = path.abspath(path.dirname(__file__))
 
+
 def readme():
     try:
         with open('README.md') as f:
@@ -11,38 +12,40 @@ def readme():
     except:
         pass
 
-setup(name = 'wallgen',
-    version = '1.0',
-    description = 'Generate low poly wallpapers',
-    long_description=readme(),  
-    long_description_content_type='text/markdown', 
 
-    author='Subhrajit Prusty',  
-    author_email='subhrajit1997@gmail.com',
-    url = 'http://github.com/SubhrajitPrusty/wallgen',
+setup(name='wallgen',
+      version='1.0',
+      description='Generate low poly wallpapers',
+      long_description=readme(),
+      long_description_content_type='text/markdown',
 
-    setup_requires=['setuptools>=40.0.0'],
-    
-    classifiers=[  
-        'Development Status :: 4 - Beta',
+      author='Subhrajit Prusty',
+      author_email='subhrajit1997@gmail.com',
+      url='http://github.com/SubhrajitPrusty/wallgen',
 
-        'Intended Audience :: Developers',
-        'Topic :: Software Development :: Build Tools',
+      setup_requires=['setuptools>=40.0.0'],
 
-        'License :: OSI Approved :: MIT License',
+      classifiers=[
+          'Development Status :: 4 - Beta',
 
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-    ],
+          'Intended Audience :: Developers',
+          'Topic :: Software Development :: Build Tools',
 
-    keywords='image PIL wallpaper theme', 
-    license = 'MIT',
-    packages=find_packages(), 
-    install_requires=['pillow', 'click', 'scipy', 'numpy', 'Cython', 'scikit-image'],
-    entry_points="""
+          'License :: OSI Approved :: MIT License',
+
+          'Programming Language :: Python :: 3',
+          'Programming Language :: Python :: 3.4',
+          'Programming Language :: Python :: 3.5',
+          'Programming Language :: Python :: 3.6',
+      ],
+
+      keywords='image PIL wallpaper theme',
+      license='MIT',
+      packages=find_packages(),
+      install_requires=['pillow', 'click', 'scipy',
+                        'numpy', 'Cython', 'scikit-image'],
+      entry_points="""
     [console_scripts]
         wallgen=wallgen:cli
         """,
-)
+      )
