@@ -20,6 +20,8 @@ jobs:
       
       - name: Setup environment
         run: |
+          pip install numpy
+          pip install Cython
           pip install -e .
           
       - name: flake
