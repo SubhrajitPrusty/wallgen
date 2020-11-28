@@ -143,15 +143,15 @@ def shape():
             img = swirl_image(img)
 
         if shape == 'hexagon':
-            img = genHexagon(side, side, img, outline)
+            img = genHexagon(side, side, img, outline, per=5)
         elif shape == 'squares':
-            img = genSquares(side, side, img, outline)
+            img = genSquares(side, side, img, outline, per=5)
         elif shape == 'diamond':
-            img = genDiamond(side, side, img, outline)
+            img = genDiamond(side, side, img, outline, per=5)
         elif shape == 'triangle':
-            img = genTriangle(side, side, img, outline)
+            img = genTriangle(side, side, img, outline, per=5)
         elif shape == 'isometric':
-            img = genIsometric(side, side, img, outline)
+            img = genIsometric(side, side, img, outline, per=5)
         # print(fpath)
         img.save(fpath)
         imgurl = url_for('static', filename='images/' + fname)
