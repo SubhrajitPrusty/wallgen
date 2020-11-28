@@ -1,6 +1,6 @@
 import math
-from .points import calcCenter
 from random import randint
+from .points import calcCenter
 from PIL import Image, ImageDraw
 
 Image.MAX_IMAGE_PIXELS = 200000000
@@ -56,9 +56,9 @@ def genPoly(width, height, img, points, wshift, hshift, outl=None, pic=False):
             a = wshift + 5 if a <= wshift else a
 
             c = idata[a, b]
-        except Exception as e:
+        except Exception:
             # print(a,b)
-            c = "#00ff00"
+            c = "#00ff00"  # i dont remember why i did this lmao
 
         if outl:
             draw.polygon(tp, fill=c, outline=outl)
@@ -108,7 +108,7 @@ def genDiamond(width, height, img, outl=None, pic=False, per=1):
 
                 c = idata[a, b]
 
-            except Exception as e:
+            except Exception:
                 # print(a,b)
                 c = "#00ff00"  # backup
 
@@ -163,7 +163,7 @@ def genSquares(width, height, img, outl=None, pic=False, per=1):
 
                 c = idata[a, b]
 
-            except Exception as e:
+            except Exception:
                 # print(a,b)
                 c = "#00ff00"  # backup
 
@@ -224,7 +224,7 @@ def genHexagon(width, height, img, outl=None, pic=False, per=1):
 
                 c = idata[a, b]
 
-            except Exception as e:
+            except Exception:
                 # print(a,b)
                 c = "#00ff00"  # backup
 
@@ -239,7 +239,7 @@ def genHexagon(width, height, img, outl=None, pic=False, per=1):
         if i % 2 == 0:
             x = xback + apothem  # restore horizontal starting point
         else:
-            x = xback  # restore horizontal starting point, but for honeycombing
+            x = xback  # restore horizontal starting point, for honeycombing
 
     return img  # return final image
 
@@ -278,7 +278,7 @@ def genIsometric(width, height, img, outl=None, pic=False, per=1):
             # to store the vertices of the individual equilateral triangles
             # that make up a hexagon
             triangle_points = []
-            c = []  # to store the colors of centres of each individual equilateral triangle
+            c = []  # store center colors of each equilateral triangle
             for k in range(-5, 1):
                 # storing vertices of individual triangles
                 triangle_points.append([(x, y), points[k], points[k + 1]])
@@ -293,7 +293,7 @@ def genIsometric(width, height, img, outl=None, pic=False, per=1):
 
                     c.append(idata[a, b])  # setting the color of the triangle
 
-                except Exception as e:
+                except Exception:
                     # print(a,b)
                     c.append("#00ff00")  # backup
 
@@ -311,7 +311,7 @@ def genIsometric(width, height, img, outl=None, pic=False, per=1):
         if i % 2 == 0:
             x = xback + apothem  # restore horizontal starting point
         else:
-            x = xback  # restore horizontal starting point, but for honeycombing
+            x = xback  # restore horizontal starting point, for honeycombing
 
     return img  # return final image
 
@@ -358,7 +358,7 @@ def genTriangle(width, height, img, outl=None, pic=False, per=1):
 
                 c = idata[a, b]
 
-            except Exception as e:
+            except Exception:
                 # print(a,b)
                 c = "#00ff00"  # backup
 
