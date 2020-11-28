@@ -1,9 +1,10 @@
 import warnings
 import numpy as np
-from scipy.spatial import Delaunay
+from PIL import Image
+from random import randint
 from skimage.filters import sobel
+from scipy.spatial import Delaunay
 from skimage import color, img_as_ubyte
-from PIL import Image, ImageDraw, ImageFilter
 
 
 def distance(p1, p2):
@@ -37,9 +38,6 @@ def populate(a, b, n, width, height, ret):
 def genPoints(qty, width, height):
     side = max(width, height)
     randPoints = np.random.choice(side, size=(qty, 2))
-
-    og = side
-
     tri = Delaunay(randPoints)  # calculate D triangulation of points
     points = tri.points[tri.simplices]  # find all groups of points
 
@@ -83,7 +81,6 @@ def genSmartPoints(image):
     # sometimes edges detected wont pass ^ this required case
     if len(edges_data) < 1:
         raise Exception("EdgeDetectionError")
-        sys.exit(1)
 
     # get a n/5 number of points rather than all of the points
     sample = np.random.choice(len(edges_data), len(
@@ -93,7 +90,7 @@ def genSmartPoints(image):
     # print(len(edges_data))
 
     points = []
-    radius = int(0.1 * (width + height) / 2)
+    radius = int(0.1 * (width + height) / 2)  # noqa: F841
 
     # print(radius)
 

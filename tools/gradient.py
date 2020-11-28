@@ -1,8 +1,8 @@
 import warnings
 import numpy as np
+from random import randint
 from skimage import img_as_ubyte
 from skimage.transform import swirl
-from random import randint
 from PIL import Image, ImageDraw, ImageFilter
 
 
