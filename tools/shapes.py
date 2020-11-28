@@ -1,7 +1,7 @@
 import math
-from .points import *
+from .points import calcCenter
 from random import randint
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image, ImageDraw
 
 Image.MAX_IMAGE_PIXELS = 200000000
 
