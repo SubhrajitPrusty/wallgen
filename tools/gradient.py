@@ -2,7 +2,7 @@ import warnings
 import numpy as np
 from skimage import img_as_ubyte
 from skimage.transform import swirl
-from random import randrange, randint
+from random import randint
 from PIL import Image, ImageDraw, ImageFilter
 
 def random_gradient(side):

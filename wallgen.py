@@ -251,7 +251,6 @@ def slants(side, show, name, swirl,set_wall):
 @cli.group()
 def pic():
 	""" Use a picture instead of a gradient """ 
-	pass
 
 @pic.command()
 @click.argument("image", type=click.Path(exists=True, dir_okay=False))
