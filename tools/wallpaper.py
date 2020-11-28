@@ -76,12 +76,15 @@ def setwallpaper(image_path, relative_path=True):
             disown(["swaymsg", "output", "*", "bg", image_path, "fill"])
         elif "awesome" in desktop:
             disown(["awesome-client",
-                    "require('gears').wallpaper.maximized('" + image_path + "')"])
+                    "require('gears').wallpaper.maximized('"
+                    + image_path + "')"])
         else:
             if desktop:
-                return f"Sorry, {desktop} is currently not supported.", False
+                return f"Sorry, {desktop} is currently not supported.",
+                False
             else:
-                return f"Sorry, Desktop Environment could not be detected", False
+                return "Sorry, Desktop Environment could not be detected",
+                False
     elif "darwin" in host:
         db_file = "Library/Application Support/Dock/desktoppicture.db"
         db_path = os.path.join(
@@ -90,8 +93,8 @@ def setwallpaper(image_path, relative_path=True):
         sql = "delete from data; "
         sql += "insert into data values(\"%s\"); " % img_dir
         sql += "insert into data values(\"%s\"); " % image_path
-        sql += "update preferences set data_id=2 where key=1 or key=2 or key=3; "
-        sql += "update preferences set data_id=1 where key=10 or key=20 or key=30;"
+        sql += "update preferences set data_id=2 where key=1 or key=2 or key=3; "  # noqa: E501
+        sql += "update preferences set data_id=1 where key=10 or key=20 or key=30;"  # noqa: E501
         subprocess.call(["sqlite3", db_path, sql])
         subprocess.call(["killall", "Dock"])
 
