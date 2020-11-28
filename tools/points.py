@@ -10,17 +10,17 @@ def distance(p1, p2):
     (x1, y1) = p1
     (x2, y2) = p2
 
-    d = int((y2-y1)**2 + (x2-x1)**2)**0.5
+    d = int((y2 - y1)**2 + (x2 - x1)**2)**0.5
     return d
 
 
 def populate(a, b, n, width, height, ret):
-    side = (width+height)//2
+    side = (width + height) // 2
     radius = side // 100
     points = []
     while len(points) < n:
-        x = randint(a, a+width)
-        y = randint(b, b+height)
+        x = randint(a, a + width)
+        y = randint(b, b + height)
 
         if len(points) == 0:
             points.append((x, y))
@@ -48,8 +48,8 @@ def genPoints(qty, width, height):
 
 def calcCenter(ps):
     """ calculate incenter of a triangle given all vertices"""
-    mid1 = ((ps[0][0]+ps[1][0])/2, (ps[0][1]+ps[1][1])/2)
-    mid = ((mid1[0]+ps[2][0])/2, (mid1[1]+ps[2][1])/2)
+    mid1 = ((ps[0][0] + ps[1][0]) / 2, (ps[0][1] + ps[1][1]) / 2)
+    mid = ((mid1[0] + ps[2][0]) / 2, (mid1[1] + ps[2][1]) / 2)
     return mid
 
 
@@ -70,11 +70,12 @@ def genSmartPoints(image):
 
     edges_data = []
 
-    # get image pixel data and pass through a filter to get only prominent edges
+    # get image pixel data and pass through a filter to get only prominent
+    # edges
 
     for x in range(pimg.width):
         for y in range(pimg.height):
-            if sum(idata[x, y])/3 > 10:
+            if sum(idata[x, y]) / 3 > 10:
                 edges_data.append((x, y))
 
     # print(len(edges_data))
@@ -86,26 +87,26 @@ def genSmartPoints(image):
 
     # get a n/5 number of points rather than all of the points
     sample = np.random.choice(len(edges_data), len(
-        edges_data)//5 if len(edges_data)/5 < 50000 else 50000)
+        edges_data) // 5 if len(edges_data) / 5 < 50000 else 50000)
     edges_data = [edges_data[x] for x in sample]
 
     # print(len(edges_data))
 
     points = []
-    radius = int(0.1 * (width+height)/2)
+    radius = int(0.1 * (width + height) / 2)
 
     # print(radius)
 
     points = edges_data
 
-    ws = width//50
-    hs = height//50
+    ws = width // 50
+    hs = height // 50
 
-    for x in range(0, width+ws, ws):
+    for x in range(0, width + ws, ws):
         points.append((x, 0))
         points.append((x, height))
 
-    for y in range(0, height+hs, hs):
+    for y in range(0, height + hs, hs):
         points.append((0, y))
         points.append((width, y))
 

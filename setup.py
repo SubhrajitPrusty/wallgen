@@ -9,7 +9,7 @@ def readme():
     try:
         with open('README.md') as f:
             return f.read()
-    except:
+    except BaseException:
         pass
 
 

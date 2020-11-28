@@ -44,10 +44,10 @@ def poly():
             error = "WARNING: Too less points OR too many points"
 
         fname = "wall-{}.png".format(int(time.time()))
-        fpath = 'static/images/'+fname
+        fpath = 'static/images/' + fname
 
-        shift = side//10
-        nside = side + shift*2  # increase size to prevent underflow
+        shift = side // 10
+        nside = side + shift * 2  # increase size to prevent underflow
 
         img = random_gradient(nside)
 
@@ -58,7 +58,7 @@ def poly():
             colors = []
 
             for i in range(int(nColors)):
-                colors.append(request.form.get('rgb'+str(i+1)))
+                colors.append(request.form.get('rgb' + str(i + 1)))
 
             try:
                 colors = [tuple(bytes.fromhex(x[1:])) for x in colors]
@@ -68,7 +68,7 @@ def poly():
 
             img = nGradient(nside, *colors)
 
-        if error != None:
+        if error is not None:
             print(error)
             return render_template('error.html', context=error)
 
@@ -86,7 +86,7 @@ def poly():
         # print(fpath)
         img.save(fpath)
 
-        imgurl = url_for('static', filename='images/'+fname)
+        imgurl = url_for('static', filename='images/' + fname)
         return render_template("download.html", context=imgurl, home="poly")
     else:
         return render_template('poly.html')
@@ -107,7 +107,7 @@ def shape():
             error = "WARNING: Image too large OR Image too small"
 
         fname = "wall-{}.png".format(int(time.time()))
-        fpath = 'static/images/'+fname
+        fpath = 'static/images/' + fname
 
         img = random_gradient(side)
 
@@ -118,7 +118,7 @@ def shape():
             colors = []
 
             for i in range(int(nColors)):
-                colors.append(request.form.get('rgb'+str(i+1)))
+                colors.append(request.form.get('rgb' + str(i + 1)))
 
             try:
                 colors = [tuple(bytes.fromhex(x[1:])) for x in colors]
@@ -128,7 +128,7 @@ def shape():
 
             img = nGradient(side, *colors)
 
-        if error != None:
+        if error is not None:
             print(error)
             return render_template('error.html', context=error)
 
@@ -152,7 +152,7 @@ def shape():
             img = genIsometric(side, side, img, outline)
         # print(fpath)
         img.save(fpath)
-        imgurl = url_for('static', filename='images/'+fname)
+        imgurl = url_for('static', filename='images/' + fname)
         return render_template("download.html", context=imgurl, home="shape")
     else:
         return render_template('shape.html')
@@ -188,18 +188,18 @@ def pic():
                     height = og_img.height
 
                     if min(height, width) > 1080:
-                        scale = min(height, width)//1080
+                        scale = min(height, width) // 1080
                     else:
                         scale = 1
                     img = og_img.resize(
-                        (width//scale, height//scale), resample=Image.BICUBIC)
+                        (width // scale, height // scale), resample=Image.BICUBIC)
                     width = img.width
                     height = img.height
-                    wshift = width//100
-                    hshift = height//100
+                    wshift = width // 100
+                    hshift = height // 100
 
-                    n_width = width + 2*wshift
-                    n_height = height + 2*height
+                    n_width = width + 2 * wshift
+                    n_height = height + 2 * height
 
                     if outline:
                         outline = tuple(bytes.fromhex("#2c2c2c"[1:]))
@@ -217,12 +217,13 @@ def pic():
                                   wshift, hshift, outline, pic=True)
 
                     fname = "wall-{}.png".format(int(time.time()))
-                    fpath = 'static/images/'+fname
+                    fpath = 'static/images/' + fname
 
                     # print(fpath)
                     img.save(fpath)
-                    imgurl = url_for('static', filename='images/'+fname)
-                    return render_template("download.html", context=imgurl, home="pic")
+                    imgurl = url_for('static', filename='images/' + fname)
+                    return render_template(
+                        "download.html", context=imgurl, home="pic")
                 else:
                     error = "Invalid input, try again"
                     return render_template("error.html", context=error)

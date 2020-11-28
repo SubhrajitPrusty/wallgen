@@ -11,8 +11,13 @@ def get_env():
     # Get Current Desktop Environment
     def get(name): return os.environ.get(
         name) if os.environ.get(name) else None
-    support = ["XDG_CURRENT_DESKTOP", "DESKTOP_SESSION", "GNOME_DESKTOP_SESSION_ID",
-               "MATE_DESKTOP_SESSION_ID", "SWAYSOCK", "DESKTOP_STARTUP_ID"]
+    support = [
+        "XDG_CURRENT_DESKTOP",
+        "DESKTOP_SESSION",
+        "GNOME_DESKTOP_SESSION_ID",
+        "MATE_DESKTOP_SESSION_ID",
+        "SWAYSOCK",
+        "DESKTOP_STARTUP_ID"]
     for env in support:
         out = get(env)
         if out:
@@ -70,8 +75,8 @@ def setwallpaper(image_path, relative_path=True):
         elif "sway" in desktop:
             disown(["swaymsg", "output", "*", "bg", image_path, "fill"])
         elif "awesome" in desktop:
-            disown(
-                ["awesome-client", "require('gears').wallpaper.maximized('"+image_path+"')"])
+            disown(["awesome-client",
+                    "require('gears').wallpaper.maximized('" + image_path + "')"])
         else:
             if desktop:
                 return f"Sorry, {desktop} is currently not supported.", False

@@ -11,11 +11,11 @@ def random_gradient(side):
     draw = ImageDraw.Draw(img)
 
     r, g, b = randint(0, 255), randint(0, 255), randint(0, 255)
-    dr = (randint(0, 255) - r)/side
-    dg = (randint(0, 255) - g)/side
-    db = (randint(0, 255) - b)/side
+    dr = (randint(0, 255) - r) / side
+    dg = (randint(0, 255) - g) / side
+    db = (randint(0, 255) - b) / side
     for i in range(side):
-        r, g, b = r+dr, g+dg, b+db
+        r, g, b = r + dr, g + dg, b + db
         draw.line((i, 0, i, side), fill=(int(r), int(g), int(b)))
 
     return img
@@ -26,12 +26,12 @@ def nGradient(side, *colors):
     draw = ImageDraw.Draw(img)
 
     nc = len(colors)
-    div = side//(nc-1)
+    div = side // (nc - 1)
     [r, g, b] = colors[0]
     p = 0
     for i in range(1, nc):
-        dc = [(y-x)/div for x, y in zip(colors[i-1], colors[i])]
-        for x in range(p, p+div):
+        dc = [(y - x) / div for x, y in zip(colors[i - 1], colors[i])]
+        for x in range(p, p + div):
             draw.line([x, 0, x, side], fill=tuple(map(int, [r, g, b])))
             r += dc[0]
             g += dc[1]
@@ -47,7 +47,7 @@ def NbyNGradient(side):
     draw = ImageDraw.Draw(img)
 
     n_boxes = 5
-    boxes_size = side//n_boxes
+    boxes_size = side // n_boxes
 
     xmin, xmax = 0, boxes_size
     ymin, ymax = 0, boxes_size
@@ -56,9 +56,9 @@ def NbyNGradient(side):
         for j in range(n_boxes):
             r, g, b = [randint(0, 255), randint(0, 255), randint(0, 255)]
 
-            dr = (randint(0, 255) - r)/boxes_size
-            dg = (randint(0, 255) - g)/boxes_size
-            db = (randint(0, 255) - b)/boxes_size
+            dr = (randint(0, 255) - r) / boxes_size
+            dg = (randint(0, 255) - g) / boxes_size
+            db = (randint(0, 255) - b) / boxes_size
 
             for k in range(xmin, xmax):
                 draw.line([k, ymin, k, ymax], fill=(int(r), int(g), int(b)))
@@ -74,7 +74,7 @@ def NbyNGradient(side):
         ymin += boxes_size
         ymax += boxes_size
 
-    img = img.filter(ImageFilter.GaussianBlur(radius=boxes_size//n_boxes))
+    img = img.filter(ImageFilter.GaussianBlur(radius=boxes_size // n_boxes))
     return img
 
 

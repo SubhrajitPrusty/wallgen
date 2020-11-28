@@ -16,17 +16,36 @@ def cli():
 
 @cli.command()
 @click.argument("side", type=click.INT)
-@click.option("--colors", "-c", multiple=True, type=click.STRING, metavar="HEXCODE", help="Use many colors in a custom gradient")
-@click.option("--points", "-p", default=100, metavar="no-of-points", help="Number of points to use, default = 100")
+@click.option("--colors", "-c", multiple=True, type=click.STRING,
+              metavar="HEXCODE", help="Use many colors in a custom gradient")
+@click.option("--points", "-p", default=100, metavar="no-of-points",
+              help="Number of points to use, default = 100")
 @click.option("--show", "-s", is_flag=True, help="Open the image")
-@click.option("--outline", "-o", default=None, metavar="HEXCODE", help="Outline the triangles")
-@click.option("--name", "-n", metavar="/path/to/output_file", help="Rename the output file")
-@click.option("--only-color", "-oc", is_flag=True, help="Generate just a gradient image")
-@click.option("--use-nn", "-un", is_flag=True, help="Use NbyNGradient function")
+@click.option("--outline", "-o", default=None,
+              metavar="HEXCODE", help="Outline the triangles")
+@click.option("--name", "-n", metavar="/path/to/output_file",
+              help="Rename the output file")
+@click.option("--only-color", "-oc", is_flag=True,
+              help="Generate just a gradient image")
+@click.option("--use-nn", "-un", is_flag=True,
+              help="Use NbyNGradient function")
 @click.option("--swirl", "-sw", is_flag=True, help="Swirl the gradient")
-@click.option("--scale", "-sc", default=2, help="""Scale image to do anti-aliasing. Default=2. scale=1 means no antialiasing. [WARNING: Very memory expensive]""")
-@click.option("--set-wall", "-w", is_flag=True, help="Set the generated image as your Desktop wallpaper")
-def poly(side, points, show, colors, outline, name, only_color, use_nn, swirl, scale, set_wall):
+@click.option("--scale", "-sc", default=2,
+              help="""Scale image to do anti-aliasing. Default=2. scale=1 means no antialiasing. [WARNING: Very memory expensive]""")
+@click.option("--set-wall", "-w", is_flag=True,
+              help="Set the generated image as your Desktop wallpaper")
+def poly(
+        side,
+        points,
+        show,
+        colors,
+        outline,
+        name,
+        only_color,
+        use_nn,
+        swirl,
+        scale,
+        set_wall):
     """ Generates a HQ low poly image using a gradient """
 
     error = ""
@@ -45,8 +64,8 @@ def poly(side, points, show, colors, outline, name, only_color, use_nn, swirl, s
 
     side = side * scale  # increase size to anti alias
 
-    shift = side//10
-    nside = side + shift*2  # increase size to prevent underflow
+    shift = side // 10
+    nside = side + shift * 2  # increase size to prevent underflow
 
     if colors:
         if len(colors) < 2:
@@ -81,7 +100,8 @@ def poly(side, points, show, colors, outline, name, only_color, use_nn, swirl, s
 
         print("\r", end="")
         print("Making final tweaks", end="")
-        img = img.resize((side//scale, side//scale), resample=Image.BICUBIC)
+        img = img.resize((side // scale, side // scale),
+                         resample=Image.BICUBIC)
 
     if show:
         img.show()
@@ -108,23 +128,50 @@ def poly(side, points, show, colors, outline, name, only_color, use_nn, swirl, s
 
 @cli.command()
 @click.argument("side", type=click.INT)
-@click.option("--type", "-t", "shape", metavar="SHAPE", type=click.Choice(['square', 'hex', 'diamond', 'triangle', 'isometric']), help="Choose which shape to use")
-@click.option("--colors", "-c", multiple=True, type=click.STRING, metavar="HEXCODE", help="Use many colors in a custom gradient")
-@click.option("--percent", "-p", type=click.INT, metavar="1-10", default=1, help="Use this percentage to determine number of polygons. [1-10]")
+@click.option("--type",
+              "-t",
+              "shape",
+              metavar="SHAPE",
+              type=click.Choice(['square',
+                                 'hex',
+                                 'diamond',
+                                 'triangle',
+                                 'isometric']),
+              help="Choose which shape to use")
+@click.option("--colors", "-c", multiple=True, type=click.STRING,
+              metavar="HEXCODE", help="Use many colors in a custom gradient")
+@click.option("--percent", "-p", type=click.INT, metavar="1-10", default=1,
+              help="Use this percentage to determine number of polygons. [1-10]")
 @click.option("--show", "-s", is_flag=True, help="Open the image")
-@click.option("--outline", "-o", default=None, metavar="HEXCODE", help="Outline the shapes")
-@click.option("--name", "-n", metavar="/path/to/output_file", help="Rename the output file")
-@click.option("--use-nn", "-un", is_flag=True, help="Use NbyNGradient function")
+@click.option("--outline", "-o", default=None,
+              metavar="HEXCODE", help="Outline the shapes")
+@click.option("--name", "-n", metavar="/path/to/output_file",
+              help="Rename the output file")
+@click.option("--use-nn", "-un", is_flag=True,
+              help="Use NbyNGradient function")
 @click.option("--swirl", "-sw", is_flag=True, help="Swirl the gradient")
-@click.option("--scale", "-sc", default=2, help="""Scale image to do anti-aliasing. Default=2. scale=1 means no antialiasing. [WARNING: Very memory expensive]""")
-@click.option("--set-wall", "-w", is_flag=True, help="Set the generated image as your Desktop wallpaper")
-def shape(side, shape, colors, show, outline, name, percent, use_nn, swirl, scale, set_wall):
+@click.option("--scale", "-sc", default=2,
+              help="""Scale image to do anti-aliasing. Default=2. scale=1 means no antialiasing. [WARNING: Very memory expensive]""")
+@click.option("--set-wall", "-w", is_flag=True,
+              help="Set the generated image as your Desktop wallpaper")
+def shape(
+        side,
+        shape,
+        colors,
+        show,
+        outline,
+        name,
+        percent,
+        use_nn,
+        swirl,
+        scale,
+        set_wall):
     """ Generates a HQ image of a beautiful shapes """
 
     error = ""
     if side < 50:
         error = "Image too small. Minimum size 50"
-    if percent != None:
+    if percent is not None:
         if percent < 1 or percent > 10:
             error = "Error {} : Percent range 1-10".format(percent)
 
@@ -177,7 +224,7 @@ def shape(side, shape, colors, show, outline, name, percent, use_nn, swirl, scal
     print("\r", end="")
     print("Making final tweaks", end="")
 
-    img = img.resize((side//scale, side//scale), resample=Image.BICUBIC)
+    img = img.resize((side // scale, side // scale), resample=Image.BICUBIC)
 
     if show:
         img.show()
@@ -206,7 +253,8 @@ def shape(side, shape, colors, show, outline, name, percent, use_nn, swirl, scal
 @click.option("--show", "-s", is_flag=True, help="Open the image")
 @click.option("--name", "-n", help="Rename the output")
 @click.option("--swirl", "-sw", is_flag=True, help="Swirl the image")
-@click.option("--set-wall", "-w", is_flag=True, help="Set the generated image as your Desktop wallpaper")
+@click.option("--set-wall", "-w", is_flag=True,
+              help="Set the generated image as your Desktop wallpaper")
 def slants(side, show, name, swirl, set_wall):
     """ Generates slanting lines of various colors """
 
@@ -218,7 +266,7 @@ def slants(side, show, name, swirl, set_wall):
 
     print("\r", end="")
     print("Making final tweaks", end="")
-    img = img.resize((side//scale, side//scale), resample=Image.BICUBIC)
+    img = img.resize((side // scale, side // scale), resample=Image.BICUBIC)
 
     if swirl:
         img = swirl_image(img)
@@ -252,12 +300,16 @@ def pic():
 
 @pic.command()
 @click.argument("image", type=click.Path(exists=True, dir_okay=False))
-@click.option("--points", "-p", default=1000, metavar="no-of-points", help="Number of points to use, default = 1000")
+@click.option("--points", "-p", default=1000, metavar="no-of-points",
+              help="Number of points to use, default = 1000")
 @click.option("--show", "-s", is_flag=True, help="Open the image")
-@click.option("--outline", "-o", default=None, metavar="HEXCODE", help="Outline the triangles")
-@click.option("--name", "-n", metavar="/path/to/output_file", help="Rename the output file")
+@click.option("--outline", "-o", default=None,
+              metavar="HEXCODE", help="Outline the triangles")
+@click.option("--name", "-n", metavar="/path/to/output_file",
+              help="Rename the output file")
 @click.option("--smart", "-sm", is_flag=True, help="Use smart points")
-@click.option("--set-wall", "-w", is_flag=True, help="Set the generated image as your Desktop wallpaper")
+@click.option("--set-wall", "-w", is_flag=True,
+              help="Set the generated image as your Desktop wallpaper")
 def poly(image, points, show, outline, name, smart, set_wall):
     """ Generates a HQ low poly image """
 
@@ -289,11 +341,11 @@ def poly(image, points, show, outline, name, smart, set_wall):
     img = Image.open(image)
     width = img.width
     height = img.height
-    wshift = width//100
-    hshift = height//100
+    wshift = width // 100
+    hshift = height // 100
 
-    n_width = width + 2*wshift
-    n_height = height + 2*hshift
+    n_width = width + 2 * wshift
+    n_height = height + 2 * hshift
 
     if smart:
         # Sobel Edge
@@ -337,12 +389,27 @@ def poly(image, points, show, outline, name, smart, set_wall):
 
 @pic.command()
 @click.argument("image", type=click.Path(exists=True, dir_okay=False))
-@click.option("--type", "-t", "shape", type=click.Choice(['square', 'hex', 'diamond', 'triangle', 'isometric']), metavar="SHAPE", help="Choose which shape to use")
-@click.option("--percent", "-p", type=click.INT, metavar="1-10", help="Use this percentage to determine number of polygons. [1-10]")
+@click.option("--type",
+              "-t",
+              "shape",
+              type=click.Choice(['square',
+                                 'hex',
+                                 'diamond',
+                                 'triangle',
+                                 'isometric']),
+              metavar="SHAPE",
+              help="Choose which shape to use")
+@click.option("--percent", "-p", type=click.INT, metavar="1-10",
+              help="Use this percentage to determine number of polygons. [1-10]")
 @click.option("--show", "-s", is_flag=True, help="Open the image")
-@click.option("--outline", "-o", default=None, metavar="HEXCODE", help="Outline the shapes")
-@click.option("--name", "-n", metavar="/path/to/output_file", help="Rename the output")
-@click.option("--set-wall", "-w", is_flag=True, help="Set the generated image as your Desktop wallpaper")
+@click.option("--outline", "-o", default=None,
+              metavar="HEXCODE", help="Outline the shapes")
+@click.option("--name",
+              "-n",
+              metavar="/path/to/output_file",
+              help="Rename the output")
+@click.option("--set-wall", "-w", is_flag=True,
+              help="Set the generated image as your Desktop wallpaper")
 def shape(image, shape, show, outline, name, percent, set_wall):
     """ Generate a HQ image of a beautiful shapes """
     error = None
