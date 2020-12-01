@@ -26,7 +26,7 @@ jobs:
         run: |
           pip install flake8
           flake8
-          
+
   commandline_test:
     runs-on: ubuntu-latest
 
@@ -51,3 +51,17 @@ jobs:
           wallgen shape --help
           wallgen slants --help
           wallgen pic --help
+      - name: test commandline poly
+        run: |
+          wallgen poly 1000
+          wallgen poly 1000 -c "#000000" -c "#ffffff"
+          wallgen poly 1000 -p 1000
+          wallgen poly 1000 -o "#2c2c2c"
+          wallgen poly 1000 -n test
+          wallgen poly 1000 -oc
+          wallgen poly 1000 -un
+          wallgen poly 1000 -sw
+          wallgen poly 1000 -sc 4
+      - name: test commandline poly together
+        run: |
+        wallgen poly 1000 -c "#ff0000" -c "#00ddff" -p 500 -o "#2c2c2c" -sw -sc 4 -n test
