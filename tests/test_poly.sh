@@ -1,3 +1,6 @@
+# exit when any command fails
+set -e
+
 echo wallgen poly 1000
 wallgen poly 1000
 echo wallgen poly 1000 -c "#000000" -c "#ffffff"

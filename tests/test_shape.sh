@@ -1,3 +1,6 @@
+# exit when any command fails
+set -e
+
 echo wallgen shape 1000 -t sq
 wallgen shape 1000 -t sq
 echo wallgen shape 1000 -t hex
