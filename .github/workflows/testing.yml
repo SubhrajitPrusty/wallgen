@@ -52,14 +52,14 @@ jobs:
           bash tests/test_poly.sh
       - name: test commandline poly together
         run: |
-          wallgen poly 1000 -c "#ff0000" -c "#00ddff" -p 500 -o "#2c2c2c" -sw -sc 4 -n test
+          wallgen poly 1000 -c "#ff0000" -c "#00ddff" -p 500 -o "#2c2c2c" -sw 5 -sc 4 -n test
       - name: test commandline shape
         run: |
           bash tests/test_shape.sh
       - name: test commandline shape together
         run: |
-          wallgen shape 1000 -t sq -c "#ff0000" -c "#00ddff" -p 5 -o "#2c2c2c" -sw -sc 4
-          wallgen shape 1000 -t hex -c "#ff0000" -c "#00ddff" -p 5 -o "#2c2c2c" -sw -sc 4
-          wallgen shape 1000 -t dia -c "#ff0000" -c "#00ddff" -p 5 -o "#2c2c2c" -sw -sc 4
-          wallgen shape 1000 -t tri -c "#ff0000" -c "#00ddff" -p 5 -o "#2c2c2c" -sw -sc 4
-          wallgen shape 1000 -t iso -c "#ff0000" -c "#00ddff" -p 5 -o "#2c2c2c" -sw -sc 4
+          wallgen shape 1000 -t sq -c "#ff0000" -c "#00ddff" -p 5 -o "#2c2c2c" -sw 5 -sc 4
+          wallgen shape 1000 -t hex -c "#ff0000" -c "#00ddff" -p 5 -o "#2c2c2c" -sw 5 -sc 4
+          wallgen shape 1000 -t dia -c "#ff0000" -c "#00ddff" -p 5 -o "#2c2c2c" -sw 5 -sc 4
+          wallgen shape 1000 -t tri -c "#ff0000" -c "#00ddff" -p 5 -o "#2c2c2c" -sw 5 -sc 4
+          wallgen shape 1000 -t iso -c "#ff0000" -c "#00ddff" -p 5 -o "#2c2c2c" -sw 5 -sc 4
