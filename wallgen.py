@@ -31,7 +31,7 @@ def cli():
 
 
 @cli.command()
-@click.argument("side", type=click.INT)
+@click.argument("side", type=click.INT, metavar="PIXELS")
 @click.option("--colors", "-c", multiple=True, type=click.STRING,
               metavar="#HEXCODE", help="Use many colors in a custom gradient")
 @click.option("--points", "-p", default=100, metavar="no-of-points",
@@ -144,7 +144,7 @@ def poly(
 
 
 @cli.command()
-@click.argument("side", type=click.INT)
+@click.argument("side", type=click.INT, metavar="PIXELS")
 @click.option("--type",
               "-t",
               "shape",
@@ -273,7 +273,7 @@ def shape(
 
 
 @cli.command()
-@click.argument("side", type=click.INT)
+@click.argument("side", type=click.INT, metavar="PIXELS")
 @click.option("--show", "-s", is_flag=True, help="Open the image")
 @click.option("--name", "-n", help="Rename the output")
 @click.option("--swirl", "-sw", is_flag=True, help="Swirl the image")
