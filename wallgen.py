@@ -33,12 +33,12 @@ def cli():
 @cli.command()
 @click.argument("side", type=click.INT)
 @click.option("--colors", "-c", multiple=True, type=click.STRING,
-              metavar="HEXCODE", help="Use many colors in a custom gradient")
+              metavar="#HEXCODE", help="Use many colors in a custom gradient")
 @click.option("--points", "-p", default=100, metavar="no-of-points",
               help="Number of points to use, default = 100")
 @click.option("--show", "-s", is_flag=True, help="Open the image")
 @click.option("--outline", "-o", default=None,
-              metavar="HEXCODE", help="Outline the triangles")
+              metavar="#HEXCODE", help="Outline the triangles")
 @click.option("--name", "-n", metavar="/path/to/output_file",
               help="Rename the output file")
 @click.option("--only-color", "-oc", is_flag=True,
@@ -148,23 +148,24 @@ def poly(
 @click.option("--type",
               "-t",
               "shape",
-              metavar="SHAPE",
+              metavar="[sq/hex/dia/tri/iso]",
               type=click.Choice(['sq',
                                  'hex',
                                  'dia',
                                  'tri',
                                  'iso']),
               help="""
-              Choose which shape to use. Choose from sq, hex, dia, tri, iso
+              Choose which shape to use.
+              [Square/Hexagons/Diamonds/Triangles/Isometric]
               """)
 @click.option("--colors", "-c", multiple=True, type=click.STRING,
-              metavar="HEXCODE", help="Use many colors in a custom gradient")
+              metavar="#HEXCODE", help="Use many colors in a custom gradient")
 @click.option("--percent", "-p", type=click.INT, metavar="1-10", default=1,
               help="Use this percentage to determine number of polygons. [1-10]\
               ")
 @click.option("--show", "-s", is_flag=True, help="Open the image")
 @click.option("--outline", "-o", default=None,
-              metavar="HEXCODE", help="Outline the shapes")
+              metavar="#HEXCODE", help="Outline the shapes")
 @click.option("--name", "-n", metavar="/path/to/output_file",
               help="Rename the output file")
 @click.option("--use-nn", "-un", is_flag=True,
@@ -327,7 +328,7 @@ def pic():
               help="Number of points to use, default = 1000")
 @click.option("--show", "-s", is_flag=True, help="Open the image")
 @click.option("--outline", "-o", default=None,
-              metavar="HEXCODE", help="Outline the triangles")
+              metavar="#HEXCODE", help="Outline the triangles")
 @click.option("--name", "-n", metavar="/path/to/output_file",
               help="Rename the output file")
 @click.option("--smart", "-sm", is_flag=True, help="Use smart points")
@@ -415,20 +416,23 @@ def poly(image, points, show, outline, name, smart, set_wall):  # noqa: F811
 @click.option("--type",
               "-t",
               "shape",
-              type=click.Choice(['square',
+              type=click.Choice(['sq',
                                  'hex',
-                                 'diamond',
-                                 'triangle',
-                                 'isometric']),
-              metavar="SHAPE",
-              help="Choose which shape to use")
+                                 'dia',
+                                 'tri',
+                                 'iso']),
+              metavar="[sq/hex/dia/tri/iso]",
+              help="""
+              Choose which shape to use.
+              [Square/Hexagons/Diamonds/Triangles/Isometric]
+              """)
 @click.option("--percent", "-p", type=click.INT, metavar="1-10",
               help="""
               Use this percentage to determine number of polygons. [1-10]
               """)
 @click.option("--show", "-s", is_flag=True, help="Open the image")
 @click.option("--outline", "-o", default=None,
-              metavar="HEXCODE", help="Outline the shapes")
+              metavar="#HEXCODE", help="Outline the shapes")
 @click.option("--name",
               "-n",
               metavar="/path/to/output_file",
