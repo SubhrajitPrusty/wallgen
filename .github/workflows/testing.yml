@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  [ push, pull_request]
+
+jobs:
+  lint_test:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Setup Python
+        uses:  actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      
+      - name: Setup environment
+        run: |
+          pip install setuptools wheel
+          pip install numpy
+          pip install -e .
+          
+      - name: flake
+        run: |
+          pip install flake8
+          flake8
+
+  commandline_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses:  actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      
+      - name: Setup environment
+        run: |
+          pip install setuptools wheel
+          pip install numpy
+          pip install -e .
+
+      - name: test commandline help
+        run: |
+          bash tests/test_help.sh
+      - name: test commandline poly
+        run: |
+          bash tests/test_poly.sh
+      - name: test commandline poly together
+        run: |
+          wallgen poly 1000 -c "#ff0000" -c "#00ddff" -p 500 -o "#2c2c2c" -sw 5 -sc 4 -n test
+      - name: test commandline shape
+        run: |
+          bash tests/test_shape.sh
+      - name: test commandline shape together
+        run: |
+          wallgen shape 1000 -t sq -c "#ff0000" -c "#00ddff" -p 5 -o "#2c2c2c" -sw 5 -sc 4
+          wallgen shape 1000 -t hex -c "#ff0000" -c "#00ddff" -p 5 -o "#2c2c2c" -sw 5 -sc 4
+          wallgen shape 1000 -t dia -c "#ff0000" -c "#00ddff" -p 5 -o "#2c2c2c" -sw 5 -sc 4
+          wallgen shape 1000 -t tri -c "#ff0000" -c "#00ddff" -p 5 -o "#2c2c2c" -sw 5 -sc 4
+          wallgen shape 1000 -t iso -c "#ff0000" -c "#00ddff" -p 5 -o "#2c2c2c" -sw 5 -sc 4
