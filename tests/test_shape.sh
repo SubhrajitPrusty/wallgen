@@ -28,11 +28,11 @@ wallgen shape 1000 -t hex -un
 wallgen shape 1000 -t dia -un
 wallgen shape 1000 -t tri -un
 wallgen shape 1000 -t iso -un
-wallgen shape 1000 -t sq -sw
-wallgen shape 1000 -t hex -sw
-wallgen shape 1000 -t dia -sw
-wallgen shape 1000 -t tri -sw
-wallgen shape 1000 -t iso -sw
+wallgen shape 1000 -t sq -sw 5
+wallgen shape 1000 -t hex -sw 5
+wallgen shape 1000 -t dia -sw 5
+wallgen shape 1000 -t tri -sw 5
+wallgen shape 1000 -t iso -sw 5
 wallgen shape 1000 -t sq -sc 4
 wallgen shape 1000 -t hex -sc 4
 wallgen shape 1000 -t dia -sc 4

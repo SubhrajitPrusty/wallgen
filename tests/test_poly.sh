@@ -5,5 +5,5 @@ wallgen poly 1000 -o "#2c2c2c"
 wallgen poly 1000 -n test
 wallgen poly 1000 -oc
 wallgen poly 1000 -un
-wallgen poly 1000 -sw
+wallgen poly 1000 -sw 5
 wallgen poly 1000 -sc 4
