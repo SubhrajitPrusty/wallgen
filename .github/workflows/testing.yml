@@ -64,4 +64,4 @@ jobs:
           wallgen poly 1000 -sc 4
       - name: test commandline poly together
         run: |
-        wallgen poly 1000 -c "#ff0000" -c "#00ddff" -p 500 -o "#2c2c2c" -sw -sc 4 -n test
+          wallgen poly 1000 -c "#ff0000" -c "#00ddff" -p 500 -o "#2c2c2c" -sw -sc 4 -n test
