@@ -78,10 +78,10 @@ def NbyNGradient(side):
     return img
 
 
-def swirl_image(image):
+def swirl_image(image, strength=10):
     image = np.array(image)
     w, h = image.shape[:2]
-    sw = swirl(image, rotation=0, strength=10, radius=max(w, h))
+    sw = swirl(image, rotation=0, strength=strength, radius=max(w, h))
     with warnings.catch_warnings():
         warnings.simplefilter('ignore')
         sw = img_as_ubyte(sw)

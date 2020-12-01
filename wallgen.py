@@ -45,7 +45,8 @@ def cli():
               help="Generate just a gradient image")
 @click.option("--use-nn", "-un", is_flag=True,
               help="Use NbyNGradient function")
-@click.option("--swirl", "-sw", is_flag=True, help="Swirl the gradient")
+@click.option("--swirl", "-sw", type=click.INT, metavar="STRENGTH",
+              help="Swirl the gradient. [1-10]")
 @click.option("--scale", "-sc", default=2,
               help="""Scale image to do anti-aliasing. Default=2. scale=1 means
                no antialiasing. [WARNING: Very memory expensive]""")
@@ -98,7 +99,10 @@ def poly(
             img = random_gradient(nside)
 
     if swirl:
-        img = swirl_image(img)
+        if only_color:
+            img = img.resize((side // scale, side // scale),
+                             resample=Image.BICUBIC)
+        img = swirl_image(img, swirl)
 
     if not only_color:
         if outline:
@@ -170,7 +174,8 @@ def poly(
               help="Rename the output file")
 @click.option("--use-nn", "-un", is_flag=True,
               help="Use NbyNGradient function")
-@click.option("--swirl", "-sw", is_flag=True, help="Swirl the gradient")
+@click.option("--swirl", "-sw", type=click.INT, metavar="STRENGTH",
+              help="Swirl the gradient. [1-10]")
 @click.option("--scale", "-sc", default=2,
               help="""Scale image to do anti-aliasing. Default=2. scale=1 means
                no antialiasing. [WARNING: Very memory expensive]""")
@@ -216,7 +221,7 @@ def shape(
             img = random_gradient(side)
 
     if swirl:
-        img = swirl_image(img)
+        img = swirl_image(img, swirl)
 
     if outline:
         try:
@@ -276,7 +281,8 @@ def shape(
 @click.argument("side", type=click.INT, metavar="PIXELS")
 @click.option("--show", "-s", is_flag=True, help="Open the image")
 @click.option("--name", "-n", help="Rename the output")
-@click.option("--swirl", "-sw", is_flag=True, help="Swirl the image")
+@click.option("--swirl", "-sw", type=click.INT, metavar="STRENGTH",
+              help="Swirl the gradient. [1-10]")
 @click.option("--set-wall", "-w", is_flag=True,
               help="Set the generated image as your Desktop wallpaper")
 def slants(side, show, name, swirl, set_wall):
@@ -293,7 +299,7 @@ def slants(side, show, name, swirl, set_wall):
     img = img.resize((side // scale, side // scale), resample=Image.BICUBIC)
 
     if swirl:
-        img = swirl_image(img)
+        img = swirl_image(img, swirl)
 
     if show:
         img.show()
