@@ -1,12 +1,12 @@
 # exit when any command fails
 set -e
 echo wallgen --help
-wallgen --help || exit
+wallgen --help
 echo wallgen poly --help
-wallgen poly --help || exit
+wallgen poly --help
 echo wallgen shape --help
-wallgen shape --help || exit
+wallgen shape --help
 echo wallgen slants --help
-wallgen slants --help || exit
+wallgen slants --help
 echo wallgen pic --help
-wallgen pic --help || exi
+wallgen pic --help
