@@ -93,3 +93,4 @@ static/images/wall*.png
 test*.png
 static/upload/*
 !static/upload/.keep
+tests/*.png
