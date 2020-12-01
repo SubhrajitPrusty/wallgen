@@ -191,7 +191,7 @@ def genHexagon(width, height, img, outl=None, pic=False, per=1):
     per = 11 - per
     x = y = 0
 
-    radius = int(per / 100.0 * min(height, width))
+    radius = int(per / 100.0 * min(height, width)) // 2
 
     idata = img.load()  # load pixel data
     draw = ImageDraw.Draw(img)
