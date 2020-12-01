@@ -463,13 +463,13 @@ def shape(image, shape, show, outline, name, percent, set_wall):  # noqa: F811
     if shape == 'hex':
         percent = percent if percent else 5
         img = genHexagon(width, height, img, outline, pic=True, per=percent)
-    elif shape == 'square':
+    elif shape == 'sq':
         img = genSquares(width, height, img, outline, pic=True, per=percent)
-    elif shape == 'diamond':
+    elif shape == 'dia':
         img = genDiamond(width, height, img, outline, pic=True, per=percent)
-    elif shape == 'triangle':
+    elif shape == 'tri':
         img = genTriangle(width, height, img, outline, pic=True, per=percent)
-    elif shape == 'isometric':
+    elif shape == 'iso':
         img = genIsometric(width, height, img, outline, pic=True, per=percent)
     else:
         error = """

@@ -1,14 +1,23 @@
 import os
 import time
 from PIL import Image
-# from skimage.filters import sobel
+from skimage import color, io
 from gevent.pywsgi import WSGIServer
 from werkzeug.utils import secure_filename
-from skimage import color, io
 from flask import Flask, request, render_template, url_for
-from wallgen import (NbyNGradient, genDiamond, genHexagon, genIsometric,
-                     genPoints, genPoly, genSmartPoints, genSquares,
-                     genTriangle, nGradient, random_gradient, swirl_image)
+from wallgen import (
+    NbyNGradient,
+    genDiamond,
+    genHexagon,
+    genIsometric,
+    genPoints,
+    genPoly,
+    genSmartPoints,
+    genSquares,
+    genTriangle,
+    nGradient,
+    random_gradient,
+    swirl_image)
 
 UPLOAD_FOLDER = os.path.join("static", "upload")
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
