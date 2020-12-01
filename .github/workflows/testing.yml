@@ -46,67 +46,16 @@ jobs:
 
       - name: test commandline help
         run: |
-          wallgen --help
-          wallgen poly --help
-          wallgen shape --help
-          wallgen slants --help
-          wallgen pic --help
+          bash tests/test_help.sh
       - name: test commandline poly
         run: |
-          wallgen poly 1000
-          wallgen poly 1000 -c "#000000" -c "#ffffff"
-          wallgen poly 1000 -p 1000
-          wallgen poly 1000 -o "#2c2c2c"
-          wallgen poly 1000 -n test
-          wallgen poly 1000 -oc
-          wallgen poly 1000 -un
-          wallgen poly 1000 -sw
-          wallgen poly 1000 -sc 4
+          bash tests/test_poly.sh
       - name: test commandline poly together
         run: |
           wallgen poly 1000 -c "#ff0000" -c "#00ddff" -p 500 -o "#2c2c2c" -sw -sc 4 -n test
       - name: test commandline shape
         run: |
-          wallgen shape 1000 -t sq
-          wallgen shape 1000 -t hex
-          wallgen shape 1000 -t dia
-          wallgen shape 1000 -t tri
-          wallgen shape 1000 -t iso
-          wallgen shape 1000 -t sq -p 10
-          wallgen shape 1000 -t hex -p 10
-          wallgen shape 1000 -t dia -p 10
-          wallgen shape 1000 -t tri -p 10
-          wallgen shape 1000 -t iso -p 10
-          wallgen shape 1000 -t sq -c "#000000" -c "#ffffff"
-          wallgen shape 1000 -t hex -c "#000000" -c "#ffffff"
-          wallgen shape 1000 -t dia -c "#000000" -c "#ffffff"
-          wallgen shape 1000 -t tri -c "#000000" -c "#ffffff"
-          wallgen shape 1000 -t iso -c "#000000" -c "#ffffff"
-          wallgen shape 1000 -t sq -o "#2c2c2c"
-          wallgen shape 1000 -t hex -o "#2c2c2c"
-          wallgen shape 1000 -t dia -o "#2c2c2c"
-          wallgen shape 1000 -t tri -o "#2c2c2c"
-          wallgen shape 1000 -t iso -o "#2c2c2c"
-          wallgen shape 1000 -t sq -n test
-          wallgen shape 1000 -t hex -n test
-          wallgen shape 1000 -t dia -n test
-          wallgen shape 1000 -t tri -n test
-          wallgen shape 1000 -t iso -n test
-          wallgen shape 1000 -t sq -un
-          wallgen shape 1000 -t hex -un
-          wallgen shape 1000 -t dia -un
-          wallgen shape 1000 -t tri -un
-          wallgen shape 1000 -t iso -un
-          wallgen shape 1000 -t sq -sw
-          wallgen shape 1000 -t hex -sw
-          wallgen shape 1000 -t dia -sw
-          wallgen shape 1000 -t tri -sw
-          wallgen shape 1000 -t iso -sw
-          wallgen shape 1000 -t sq -sc 4
-          wallgen shape 1000 -t hex -sc 4
-          wallgen shape 1000 -t dia -sc 4
-          wallgen shape 1000 -t tri -sc 4
-          wallgen shape 1000 -t iso -sc 4
+          bash tests/test_shape.sh
       - name: test commandline shape together
         run: |
           wallgen shape 1000 -t sq -c "#ff0000" -c "#00ddff" -p 5 -o "#2c2c2c" -sw -sc 4
