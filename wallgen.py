@@ -285,14 +285,18 @@ def shape(
               help="Swirl the gradient. [1-10]")
 @click.option("--set-wall", "-w", is_flag=True,
               help="Set the generated image as your Desktop wallpaper")
-def slants(side, show, name, swirl, set_wall):
+@click.option("--gradient", "-g", is_flag=True,
+              help="Make a gradient")
+@click.option("--invert", "-i", is_flag=True,
+              help="Invert the bottom part")
+def slants(side, show, name, swirl, set_wall, gradient, invert):
     """ Generates slanting lines of various colors """
 
     scale = 2
     side = side * scale  # increase size to anti alias
     print("Preparing image", end="")
 
-    img = drawSlants(side)
+    img = drawSlants(side, gradient, invert)
 
     print("\r", end="")
     print("Making final tweaks", end="")

@@ -2,25 +2,31 @@ import math
 from random import randint
 from .points import calcCenter
 from PIL import Image, ImageDraw
+from .gradient import randcolor, shiftcolor, negative
 
 Image.MAX_IMAGE_PIXELS = 200000000
 
 
-def drawSlants(side):
-    def randcolor(): return (randint(0, 255), randint(0, 255), randint(0, 255))
-
+def drawSlants(side, gradient=False, invert=False):
     img = Image.new("RGB", (side, side), "#FFFFFF")
     draw = ImageDraw.Draw(img)
     y = 0
     min_w = int(side * 0.01)
-    max_w = int(side * 0.1)
-    adj = max_w * 2
+    max_w = int(side * 0.05)
+    adj = max_w
+    c = randcolor()
+    w = randint(min_w, max_w)
     while y <= side + adj:
-        w = randint(min_w, max_w)
-        c = randcolor()
-        draw.line([-adj, y, y, -adj], width=w, fill=c)
-        draw.line([y, side + adj, side + adj, y], width=w, fill=c)
+        if gradient:
+            c = shiftcolor(c, +2)
+        else:
+            c = randcolor()
+        draw.line([-adj, y, y, -adj], width=w, fill=c, joint="curve")
+        draw.line([side-y, side + adj, side + adj, side-y], width=w,
+                  fill=negative(c) if invert else c, joint="curve")
         y += w
+
+    print("\n", y, side+adj, abs(y-(side+adj)), w)
 
     return img
 
