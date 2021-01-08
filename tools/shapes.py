@@ -21,12 +21,10 @@ def drawSlants(side, gradient=False, invert=False):
             c = shiftcolor(c, +2)
         else:
             c = randcolor()
-        draw.line([-adj, y, y, -adj], width=w, fill=c, joint="curve")
+        draw.line([-adj, y, y, -adj], width=w, fill=c)
         draw.line([side-y, side + adj, side + adj, side-y], width=w,
-                  fill=negative(c) if invert else c, joint="curve")
+                  fill=negative(c) if invert else c)
         y += w
-
-    print("\n", y, side+adj, abs(y-(side+adj)), w)
 
     return img
 
