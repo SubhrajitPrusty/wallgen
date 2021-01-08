@@ -6,6 +6,33 @@ from skimage.transform import swirl
 from PIL import Image, ImageDraw, ImageFilter
 
 
+def randcolor():
+    return (randint(0, 255), randint(0, 255), randint(0, 255))
+
+
+def shiftcolor(color, shift=+1):
+    nc = list(color)
+    MAX = 255
+
+    for i, c in enumerate(color):
+        if shift > 0:
+            if nc[i] + shift < MAX:
+                nc[i] = nc[i] + shift
+            else:
+                nc[i] = nc[i]
+        else:
+            if nc[i] + shift > 0:
+                nc[i] = nc[i] + shift
+            else:
+                nc[i] = nc[i]
+
+    return tuple(x for x in nc)
+
+
+def negative(color):
+    return tuple(255-x for x in color)
+
+
 def random_gradient(side):
     img = Image.new("RGB", (side, side), "#FFFFFF")
     draw = ImageDraw.Draw(img)
