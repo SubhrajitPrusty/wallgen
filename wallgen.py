@@ -1,6 +1,8 @@
+import os
 import sys
 import time
 import click
+import tempfile
 import numpy as np
 from loguru import logger
 from skimage import color
@@ -26,6 +28,15 @@ from tools.shapes import (
     genTriangle)
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+tmp_dir = os.path.join(tempfile.gettempdir(), 'wallgen')
+os.makedirs(tmp_dir, exist_ok=True)
+logger.remove()
+logger.add(os.path.join(tmp_dir, "wallgen.log"),
+           rotation='5 MB',
+           backtrace=True,
+           diagnose=True,
+           enqueue=True,
+           catch=True)
 
 
 @click.group(context_settings=CONTEXT_SETTINGS)
@@ -80,6 +91,7 @@ def poly(
         error = "Invalid scale value"
 
     if error:
+        logger.error(error)
         click.secho(error, fg='red', err=True)
         sys.exit(1)
 
@@ -90,9 +102,16 @@ def poly(
 
     if colors:
         if len(colors) < 2:
-            click.secho("One color gradient not possible.", fg="red", err=True)
+            error = "One color gradient not possible."
+            logger.error(error)
+            click.secho(error, fg="red", err=True)
             sys.exit(1)
-        cs = [tuple(bytes.fromhex(c[1:])) for c in colors]
+        try:
+            cs = [tuple(bytes.fromhex(c[1:])) for c in colors]
+        except Exception as e:
+            logger.error(e)
+            click.secho("Invalid color hex", fg='red', err=True)
+            sys.exit(1)
         img = nGradient(nside, *cs)
     else:
         if use_nn:
@@ -151,6 +170,7 @@ def poly(
         if ret:
             click.secho(msg, fg="green")
         else:
+            logger.error(msg)
             click.secho(msg, fg="red")
 
 
@@ -210,6 +230,7 @@ def shape(
             error = "Error {} : Percent range 1-10".format(percent)
 
     if error:
+        logger.error(error)
         click.secho(error, fg='red', err=True)
         sys.exit(1)
 
@@ -217,9 +238,16 @@ def shape(
 
     if colors:
         if len(colors) < 2:
-            click.secho("One color gradient not possible.", fg="red", err=True)
+            error = "One color gradient not possible."
+            logger.error(error)
+            click.secho(error, fg="red", err=True)
             sys.exit(1)
-        cs = [tuple(bytes.fromhex(c[1:])) for c in colors]
+        try:
+            cs = [tuple(bytes.fromhex(c[1:])) for c in colors]
+        except Exception as e:
+            logger.error(e)
+            click.secho("Invalid color hex", fg='red', err=True)
+            sys.exit(1)
         img = nGradient(side, *cs)
     else:
         if use_nn:
@@ -237,7 +265,6 @@ def shape(
             try:
                 outline = tuple(bytes.fromhex(outline[1:]))
             except Exception as e:
-                logger.error(type(e).__name__)
                 logger.error(e)
                 click.secho("Invalid color hex", fg='red', err=True)
                 sys.exit(1)
@@ -259,6 +286,7 @@ def shape(
         error = """
         No shape given. To see list of shapes \"wallgen shape --help\"
         """
+        logger.error(error)
         click.secho(error, fg='red', err=True)
         sys.exit(1)
 
@@ -286,6 +314,7 @@ def shape(
         if ret:
             click.secho(msg, fg="green")
         else:
+            logger.error(msg)
             click.secho(msg, fg="red")
 
 
@@ -303,6 +332,15 @@ def shape(
               help="Invert the bottom part")
 def slants(side, show, name, swirl, set_wall, gradient, invert):
     """ Generates slanting lines of various colors """
+
+    error = ""
+    if side < 50:
+        error = "Image too small. Minimum size 50"
+
+    if error:
+        logger.error(error)
+        click.secho(error, fg='red', err=True)
+        sys.exit(1)
 
     scale = 2
     side = side * scale  # increase size to anti alias
@@ -336,6 +374,7 @@ def slants(side, show, name, swirl, set_wall, gradient, invert):
         if ret:
             click.secho(msg, fg="green")
         else:
+            logger.error(msg)
             click.secho(msg, fg="red")
 
 
@@ -367,6 +406,7 @@ def pic_poly(image, points, show, outline, name, smart, set_wall):
         error = None
 
     if error:
+        logger.error(error)
         click.secho(error, fg='red', err=True)
         sys.exit(1)
 
@@ -382,7 +422,6 @@ def pic_poly(image, points, show, outline, name, smart, set_wall):
             try:
                 outline = tuple(bytes.fromhex(outline[1:]))
             except Exception as e:
-                logger.error(type(e).__name__)
                 logger.error(e)
                 click.secho("Invalid color hex", fg='red', err=True)
                 sys.exit(1)
@@ -435,6 +474,7 @@ def pic_poly(image, points, show, outline, name, smart, set_wall):
         if ret:
             click.secho(msg, fg="green")
         else:
+            logger.error(msg)
             click.secho(msg, fg="red")
 
 
@@ -474,6 +514,7 @@ def pic_shape(image, shape, show, outline, name, percent, set_wall):
             error = "Percent range 1-10"
 
     if error:
+        logger.error(error)
         click.secho(error, fg='red', err=True)
         sys.exit(1)
 
@@ -508,10 +549,10 @@ def pic_shape(image, shape, show, outline, name, percent, set_wall):
     elif shape == 'iso':
         img = genIsometric(width, height, img, outline, pic=True, per=percent)
     else:
-        logger.debug(shape)
         error = """
         No shape given. To see list of shapes \"wallgen pic shape --help\"
         """
+        logger.error(error)
         click.secho(error, fg='red', err=True)
         sys.exit(1)
 
@@ -537,6 +578,7 @@ def pic_shape(image, shape, show, outline, name, percent, set_wall):
         if ret:
             click.secho(msg, fg="green")
         else:
+            logger.error(msg)
             click.secho(msg, fg="red")
 
 
@@ -545,7 +587,6 @@ def pic_shape(image, shape, show, outline, name, percent, set_wall):
 @click.option("--name", "-n", metavar="/path/to/output_file",
               help="Rename the output file")
 @click.pass_context
-@logger.catch
 def randomize(ctx, side, name):
     choice_of_pattern = ['poly', 'shape', 'slants']
     pattern = choice(choice_of_pattern)
