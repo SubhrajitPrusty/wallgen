@@ -3,8 +3,7 @@
 # WallGen
 ![](https://img.shields.io/badge/Python-3-blue.svg?style=for-the-badge&logo=python)
 ----
-[![](https://img.shields.io/badge/Website-blue.svg?style=for-the-badge)](http://wallgen.subhrajitpy.me/)
-[![Gitter](https://img.shields.io/gitter/room/:user/:repo.svg?style=for-the-badge&colorB=00ddff)](https://gitter.im/wallgen/Lobby)
+[![](https://img.shields.io/badge/Website-blue.svg?style=for-the-badge)](https://subhrajitprusty.github.io/wallgen/)
 
 Generates HQ poly wallpapers
 
@@ -14,7 +13,7 @@ Generates HQ poly wallpapers
 - Make a [video](https://gist.github.com/SubhrajitPrusty/5f303202c615e42e12b1a640322f9fec) with polygonized style
 - Make a gradient creation [video](https://gist.github.com/SubhrajitPrusty/e994ce8f3b643382328c1c779893a721)
 - Make a cool polygonal [video](https://gist.github.com/SubhrajitPrusty/37cf527ca4d92ed4a19af91099984b51)
-- Dont have `Python`? Use the [website](http://wallgen.subhrajitpy.me) (Limited capabilites)
+- Dont have `Python`? Use the [website](https://subhrajitprusty.github.io/wallgen/) (Limited capabilites)
 
 ## Installation
 
