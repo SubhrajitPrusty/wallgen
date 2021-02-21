@@ -1,8 +1,12 @@
+import os
 import sys
 import time
 import click
+import tempfile
 import numpy as np
+from loguru import logger
 from skimage import color
+from random import choice, randint
 from tools.wallpaper import setwallpaper
 from tools.points import (
     genPoints,
@@ -12,7 +16,8 @@ from tools.gradient import (
     NbyNGradient,
     nGradient,
     random_gradient,
-    swirl_image)
+    swirl_image,
+    randcolor)
 from tools.shapes import (
     drawSlants,
     genDiamond,
@@ -23,6 +28,15 @@ from tools.shapes import (
     genTriangle)
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+tmp_dir = os.path.join(tempfile.gettempdir(), 'wallgen')
+os.makedirs(tmp_dir, exist_ok=True)
+logger.remove()
+logger.add(os.path.join(tmp_dir, "wallgen.log"),
+           rotation='5 MB',
+           backtrace=True,
+           diagnose=True,
+           enqueue=True,
+           catch=True)
 
 
 @click.group(context_settings=CONTEXT_SETTINGS)
@@ -77,6 +91,7 @@ def poly(
         error = "Invalid scale value"
 
     if error:
+        logger.error(error)
         click.secho(error, fg='red', err=True)
         sys.exit(1)
 
@@ -87,9 +102,16 @@ def poly(
 
     if colors:
         if len(colors) < 2:
-            click.secho("One color gradient not possible.", fg="red", err=True)
+            error = "One color gradient not possible."
+            logger.error(error)
+            click.secho(error, fg="red", err=True)
             sys.exit(1)
-        cs = [tuple(bytes.fromhex(c[1:])) for c in colors]
+        try:
+            cs = [tuple(bytes.fromhex(c[1:])) for c in colors]
+        except Exception as e:
+            logger.error(e)
+            click.secho("Invalid color hex", fg='red', err=True)
+            sys.exit(1)
         img = nGradient(nside, *cs)
     else:
         if use_nn:
@@ -106,11 +128,15 @@ def poly(
 
     if not only_color:
         if outline:
-            try:
-                outline = tuple(bytes.fromhex(outline[1:]))
-            except Exception:
-                click.secho("Invalid color hex", fg='red', err=True)
-                sys.exit(1)
+            if type(outline) == tuple:
+                pass
+            else:
+                try:
+                    outline = tuple(bytes.fromhex(outline[1:]))
+                except Exception as e:
+                    logger.error(e)
+                    click.secho("Invalid color hex", fg='red', err=True)
+                    sys.exit(1)
 
         print("Preparing image", end="")
         pts = genPoints(points, nside, nside)
@@ -144,6 +170,7 @@ def poly(
         if ret:
             click.secho(msg, fg="green")
         else:
+            logger.error(msg)
             click.secho(msg, fg="red")
 
 
@@ -151,7 +178,7 @@ def poly(
 @click.argument("side", type=click.INT, metavar="PIXELS")
 @click.option("--type",
               "-t",
-              "shape",
+              "choice_of_shape",
               metavar="[sq/hex/dia/tri/iso]",
               type=click.Choice(['sq',
                                  'hex',
@@ -183,7 +210,7 @@ def poly(
               help="Set the generated image as your Desktop wallpaper")
 def shape(
         side,
-        shape,
+        choice_of_shape,
         colors,
         show,
         outline,
@@ -203,6 +230,7 @@ def shape(
             error = "Error {} : Percent range 1-10".format(percent)
 
     if error:
+        logger.error(error)
         click.secho(error, fg='red', err=True)
         sys.exit(1)
 
@@ -210,9 +238,16 @@ def shape(
 
     if colors:
         if len(colors) < 2:
-            click.secho("One color gradient not possible.", fg="red", err=True)
+            error = "One color gradient not possible."
+            logger.error(error)
+            click.secho(error, fg="red", err=True)
             sys.exit(1)
-        cs = [tuple(bytes.fromhex(c[1:])) for c in colors]
+        try:
+            cs = [tuple(bytes.fromhex(c[1:])) for c in colors]
+        except Exception as e:
+            logger.error(e)
+            click.secho("Invalid color hex", fg='red', err=True)
+            sys.exit(1)
         img = nGradient(side, *cs)
     else:
         if use_nn:
@@ -224,29 +259,34 @@ def shape(
         img = swirl_image(img, swirl)
 
     if outline:
-        try:
-            outline = tuple(bytes.fromhex(outline[1:]))
-        except Exception:
-            click.secho("Invalid color hex", fg='red', err=True)
-            sys.exit(1)
+        if type(outline) == tuple:
+            pass
+        else:
+            try:
+                outline = tuple(bytes.fromhex(outline[1:]))
+            except Exception as e:
+                logger.error(e)
+                click.secho("Invalid color hex", fg='red', err=True)
+                sys.exit(1)
 
     print("Preparing image", end="")
 
-    if shape == 'hex':
+    if choice_of_shape == 'hex':
         percent = percent if percent else 5
         img = genHexagon(side, side, img, outline, per=(percent or 1))
-    elif shape == 'sq':
+    elif choice_of_shape == 'sq':
         img = genSquares(side, side, img, outline, per=(percent or 1))
-    elif shape == 'dia':
+    elif choice_of_shape == 'dia':
         img = genDiamond(side, side, img, outline, per=(percent or 1))
-    elif shape == 'tri':
+    elif choice_of_shape == 'tri':
         img = genTriangle(side, side, img, outline, per=(percent or 1))
-    elif shape == 'iso':
+    elif choice_of_shape == 'iso':
         img = genIsometric(side, side, img, outline, per=(percent or 1))
     else:
         error = """
         No shape given. To see list of shapes \"wallgen shape --help\"
         """
+        logger.error(error)
         click.secho(error, fg='red', err=True)
         sys.exit(1)
 
@@ -274,6 +314,7 @@ def shape(
         if ret:
             click.secho(msg, fg="green")
         else:
+            logger.error(msg)
             click.secho(msg, fg="red")
 
 
@@ -291,6 +332,15 @@ def shape(
               help="Invert the bottom part")
 def slants(side, show, name, swirl, set_wall, gradient, invert):
     """ Generates slanting lines of various colors """
+
+    error = ""
+    if side < 50:
+        error = "Image too small. Minimum size 50"
+
+    if error:
+        logger.error(error)
+        click.secho(error, fg='red', err=True)
+        sys.exit(1)
 
     scale = 2
     side = side * scale  # increase size to anti alias
@@ -324,6 +374,7 @@ def slants(side, show, name, swirl, set_wall, gradient, invert):
         if ret:
             click.secho(msg, fg="green")
         else:
+            logger.error(msg)
             click.secho(msg, fg="red")
 
 
@@ -332,7 +383,7 @@ def pic():
     """ Use a picture instead of a gradient """
 
 
-@pic.command()
+@pic.command(name='poly')
 @click.argument("image", type=click.Path(exists=True, dir_okay=False))
 @click.option("--points", "-p", default=1000, metavar="no-of-points",
               help="Number of points to use, default = 1000")
@@ -344,7 +395,7 @@ def pic():
 @click.option("--smart", "-sm", is_flag=True, help="Use smart points")
 @click.option("--set-wall", "-w", is_flag=True,
               help="Set the generated image as your Desktop wallpaper")
-def poly(image, points, show, outline, name, smart, set_wall):  # noqa: F811
+def pic_poly(image, points, show, outline, name, smart, set_wall):
     """ Generates a HQ low poly image """
 
     if points < 3:
@@ -355,6 +406,7 @@ def poly(image, points, show, outline, name, smart, set_wall):  # noqa: F811
         error = None
 
     if error:
+        logger.error(error)
         click.secho(error, fg='red', err=True)
         sys.exit(1)
 
@@ -364,11 +416,15 @@ def poly(image, points, show, outline, name, smart, set_wall):  # noqa: F811
     # height += hshift*2
 
     if outline:
-        try:
-            outline = tuple(bytes.fromhex(outline[1:]))
-        except Exception:
-            click.secho("Invalid color hex", fg='red', err=True)
-            sys.exit(1)
+        if type(outline) == tuple:
+            pass
+        else:
+            try:
+                outline = tuple(bytes.fromhex(outline[1:]))
+            except Exception as e:
+                logger.error(e)
+                click.secho("Invalid color hex", fg='red', err=True)
+                sys.exit(1)
 
     print("Preparing image", end="")
 
@@ -418,10 +474,11 @@ def poly(image, points, show, outline, name, smart, set_wall):  # noqa: F811
         if ret:
             click.secho(msg, fg="green")
         else:
+            logger.error(msg)
             click.secho(msg, fg="red")
 
 
-@pic.command()
+@pic.command(name="shape")
 @click.argument("image", type=click.Path(exists=True, dir_okay=False))
 @click.option("--type",
               "-t",
@@ -449,7 +506,7 @@ def poly(image, points, show, outline, name, smart, set_wall):  # noqa: F811
               help="Rename the output")
 @click.option("--set-wall", "-w", is_flag=True,
               help="Set the generated image as your Desktop wallpaper")
-def shape(image, shape, show, outline, name, percent, set_wall):  # noqa: F811
+def pic_shape(image, shape, show, outline, name, percent, set_wall):
     """ Generate a HQ image of a beautiful shapes """
     error = None
     if percent:
@@ -457,6 +514,7 @@ def shape(image, shape, show, outline, name, percent, set_wall):  # noqa: F811
             error = "Percent range 1-10"
 
     if error:
+        logger.error(error)
         click.secho(error, fg='red', err=True)
         sys.exit(1)
 
@@ -466,11 +524,16 @@ def shape(image, shape, show, outline, name, percent, set_wall):  # noqa: F811
     height = img.height
 
     if outline:
-        try:
-            outline = tuple(bytes.fromhex(outline[1:]))
-        except Exception:
-            click.secho("Invalid color hex", fg='red', err=True)
-            sys.exit(1)
+        if type(outline) == tuple:
+            pass
+        else:
+            try:
+                outline = tuple(bytes.fromhex(outline[1:]))
+            except Exception as e:
+                logger.error(type(e).__name__)
+                logger.error(e)
+                click.secho("Invalid color hex", fg='red', err=True)
+                sys.exit(1)
 
     print("Preparing image", end="")
 
@@ -489,6 +552,7 @@ def shape(image, shape, show, outline, name, percent, set_wall):  # noqa: F811
         error = """
         No shape given. To see list of shapes \"wallgen pic shape --help\"
         """
+        logger.error(error)
         click.secho(error, fg='red', err=True)
         sys.exit(1)
 
@@ -514,7 +578,79 @@ def shape(image, shape, show, outline, name, percent, set_wall):  # noqa: F811
         if ret:
             click.secho(msg, fg="green")
         else:
+            logger.error(msg)
             click.secho(msg, fg="red")
+
+
+@cli.command(name='random')
+@click.argument("side", type=click.INT, metavar="PIXELS")
+@click.option("--name", "-n", metavar="/path/to/output_file",
+              help="Rename the output file")
+@click.pass_context
+def randomize(ctx, side, name):
+    choice_of_pattern = ['poly', 'shape', 'slants']
+    pattern = choice(choice_of_pattern)
+    click.secho(f"Random choice of pattern: {pattern}")
+
+    points = randint(3, 5000)
+    outline = randcolor()
+    outline_hex = "#" + "".join((hex(x)[2:] for x in randcolor()))
+    use_nn = choice([True, False])
+    swirl = choice(list(range(0, 11)))
+
+    if pattern == 'poly':
+        click.secho(f"Random config: \
+            \npoints = {points}\
+            \noutline = {outline} | {outline_hex}\
+            \nuse_nn = {use_nn}\
+            \nswirl = {swirl}")
+
+        ctx.invoke(poly,
+                   side=side,
+                   points=points,
+                   outline=outline,
+                   use_nn=use_nn,
+                   swirl=swirl,
+                   name=name,
+                   colors=False)
+
+    elif pattern == 'shape':
+        choice_of_shape = choice(['sq', 'hex', 'dia', 'tri', 'iso'])
+        percent = choice(list(range(1, 11)))
+        click.secho(f"Random config: \
+            \nchoice_of_shape = {choice_of_shape}\
+            \npercent = {percent}\
+            \npoints = {points}\
+            \noutline = {outline} | {outline_hex}\
+            \nuse_nn = {use_nn}\
+            \nswirl = {swirl}")
+
+        ctx.invoke(shape,
+                   side=side,
+                   percent=percent,
+                   outline=outline,
+                   use_nn=use_nn,
+                   swirl=swirl,
+                   name=name,
+                   choice_of_shape=choice_of_shape,
+                   colors=False)
+
+    elif pattern == 'slants':
+        gradient = choice([True, False])
+        invert = choice([True, False])
+        click.secho(f"Random config: \
+            \ngradient = {gradient}\
+            \ninvert = {invert}\
+            \nswirl = {swirl}")
+
+        ctx.invoke(slants,
+                   side=side,
+                   swirl=swirl,
+                   gradient=gradient,
+                   invert=invert,
+                   name=name)
+
+    print()
 
 
 if __name__ == "__main__":

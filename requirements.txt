@@ -5,3 +5,4 @@ flask
 gevent
 numpy
 scikit-image
+loguru

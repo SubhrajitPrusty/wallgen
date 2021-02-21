@@ -43,7 +43,8 @@ setup(name='wallgen',
       license='MIT',
       packages=find_packages(),
       install_requires=['pillow', 'click', 'scipy',
-                        'numpy', 'Cython', 'scikit-image'],
+                        'numpy', 'Cython', 'scikit-image',
+                        'loguru'],
       entry_points="""
     [console_scripts]
         wallgen=wallgen:cli
