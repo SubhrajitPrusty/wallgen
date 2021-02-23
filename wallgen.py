@@ -128,7 +128,7 @@ def poly(
 
     if not only_color:
         if outline:
-            if type(outline) == tuple:
+            if type(outline) is tuple:
                 pass
             else:
                 try:
@@ -259,7 +259,7 @@ def shape(
         img = swirl_image(img, swirl)
 
     if outline:
-        if type(outline) == tuple:
+        if type(outline) is tuple:
             pass
         else:
             try:
@@ -416,7 +416,7 @@ def pic_poly(image, points, show, outline, name, smart, set_wall):
     # height += hshift*2
 
     if outline:
-        if type(outline) == tuple:
+        if type(outline) is tuple:
             pass
         else:
             try:
@@ -524,7 +524,7 @@ def pic_shape(image, shape, show, outline, name, percent, set_wall):
     height = img.height
 
     if outline:
-        if type(outline) == tuple:
+        if type(outline) is tuple:
             pass
         else:
             try:

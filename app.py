@@ -177,71 +177,69 @@ def pic():
         if 'image' not in request.files:
             error = "No file part"
             return render_template("error.html", context=error)
-        else:
-            file = request.files['image']
-            # print(file.filename)
-            # print(len(file.filename))
-            if len(file.filename) < 1:
-                error = "No file selected"
-                return render_template("error.html", context=error)
+        file = request.files['image']
+        # print(file.filename)
+        # print(len(file.filename))
+        if len(file.filename) < 1:
+            error = "No file selected"
+            return render_template("error.html", context=error)
 
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                ufpath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                file.save(ufpath)
-                np = request.form.get('np')
-                outline = request.form.get('outline')
-                smart = request.form.get('smart')
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            ufpath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(ufpath)
+            np = request.form.get('np')
+            outline = request.form.get('outline')
+            smart = request.form.get('smart')
 
-                if np or smart:
-                    og_img = Image.open(ufpath)
-                    width = og_img.width
-                    height = og_img.height
+            if np or smart:
+                og_img = Image.open(ufpath)
+                width = og_img.width
+                height = og_img.height
 
-                    if min(height, width) > 1080:
-                        scale = min(height, width) // 1080
-                    else:
-                        scale = 1
-                    img = og_img.resize(
-                        (width // scale, height // scale),
-                        resample=Image.BICUBIC)
-                    width = img.width
-                    height = img.height
-                    wshift = width // 100
-                    hshift = height // 100
-
-                    n_width = width + 2 * wshift
-                    n_height = height + 2 * height
-
-                    if outline:
-                        outline = tuple(bytes.fromhex("#2c2c2c"[1:]))
-                    else:
-                        outline = None
-
-                    if smart:
-                        ski_img = io.imread(ufpath, True)
-                        gray_img = color.rgb2gray(ski_img)
-                        pts = genSmartPoints(gray_img)
-                    else:
-                        pts = genPoints(int(np), n_width, n_height)
-
-                    img = genPoly(img.width, img.height, img, pts,
-                                  wshift, hshift, outline, pic=True)
-
-                    fname = "wall-{}.png".format(int(time.time()))
-                    fpath = 'static/images/' + fname
-
-                    # print(fpath)
-                    img.save(fpath)
-                    imgurl = url_for('static', filename='images/' + fname)
-                    return render_template(
-                        "download.html", context=imgurl, home="pic")
+                if min(height, width) > 1080:
+                    scale = min(height, width) // 1080
                 else:
-                    error = "Invalid input, try again"
-                    return render_template("error.html", context=error)
-            else:
-                error = "filetype not allowed"
-                return render_template("error.html", context=error)
+                    scale = 1
+                img = og_img.resize(
+                    (width // scale, height // scale),
+                    resample=Image.BICUBIC)
+                width = img.width
+                height = img.height
+                wshift = width // 100
+                hshift = height // 100
+
+                n_width = width + 2 * wshift
+                n_height = height + 2 * height
+
+                if outline:
+                    outline = tuple(bytes.fromhex("#2c2c2c"[1:]))
+                else:
+                    outline = None
+
+                if smart:
+                    ski_img = io.imread(ufpath, True)
+                    gray_img = color.rgb2gray(ski_img)
+                    pts = genSmartPoints(gray_img)
+                else:
+                    pts = genPoints(int(np), n_width, n_height)
+
+                img = genPoly(img.width, img.height, img, pts,
+                              wshift, hshift, outline, pic=True)
+
+                fname = "wall-{}.png".format(int(time.time()))
+                fpath = 'static/images/' + fname
+
+                # print(fpath)
+                img.save(fpath)
+                imgurl = url_for('static', filename='images/' + fname)
+                return render_template(
+                    "download.html", context=imgurl, home="pic")
+            error = "Invalid input, try again"
+            return render_template("error.html", context=error)
+        else:
+            error = "filetype not allowed"
+            return render_template("error.html", context=error)
     else:
         return render_template("pic.html")
 

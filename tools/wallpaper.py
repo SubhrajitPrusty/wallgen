@@ -23,14 +23,13 @@ def get_env():
         if out:
             if "GNOME" in env:
                 return "GNOME"
-            elif "MATE" in env:
+            if "MATE" in env:
                 return "MATE"
-            elif "SWAY" in env:
+            if "SWAY" in env:
                 return "SWAY"
-            elif "awesome" in out:
+            if "awesome" in out:
                 return "AWESOME"
-            else:
-                return out
+            return out
     return None
 
 
