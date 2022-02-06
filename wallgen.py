@@ -511,9 +511,9 @@ def pic_poly(image, points, show, outline, name, smart, set_wall):
     """Generates a HQ low poly image"""
 
     if points < MIN_POINTS:
-        error = "Too less points. Minimum points 3"
+        error = f"Too less points. Minimum points {MIN_POINTS}"
     elif points > MAX_POINTS:
-        error = "Too many points. Maximum points {MAX_POINTS}"
+        error = f"Too many points. Maximum points {MAX_POINTS}"
     else:
         error = None
 
