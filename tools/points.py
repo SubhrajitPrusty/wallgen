@@ -1,7 +1,8 @@
 import warnings
+from random import randint
+
 import numpy as np
 from PIL import Image
-from random import randint
 from skimage.filters import sobel
 from scipy.spatial import Delaunay
 from skimage import color, img_as_ubyte

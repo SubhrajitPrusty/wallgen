@@ -1,6 +1,7 @@
 import warnings
-import numpy as np
 from random import randint
+
+import numpy as np
 from skimage import img_as_ubyte
 from skimage.transform import swirl
 from PIL import Image, ImageDraw, ImageFilter
@@ -30,7 +31,7 @@ def shiftcolor(color, shift=+1):
 
 
 def negative(color):
-    return tuple(255-x for x in color)
+    return tuple(255 - x for x in color)
 
 
 def random_gradient(side):

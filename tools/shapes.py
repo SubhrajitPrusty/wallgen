@@ -1,8 +1,11 @@
 import math
 from random import randint
-from .points import calcCenter
+
 from PIL import Image, ImageDraw
-from .gradient import randcolor, shiftcolor, negative
+
+from tools.points import calcCenter
+from tools.gradient import randcolor, shiftcolor, negative
+
 
 Image.MAX_IMAGE_PIXELS = 200000000
 
@@ -22,7 +25,7 @@ def drawSlants(side, gradient=False, invert=False):
         else:
             c = randcolor()
         draw.line([-adj, y, y, -adj], width=w, fill=c)
-        draw.line([side-y, side + adj, side + adj, side-y], width=w,
+        draw.line([side - y, side + adj, side + adj, side - y], width=w,
                   fill=negative(c) if invert else c)
         y += w
 
