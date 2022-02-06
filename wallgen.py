@@ -135,9 +135,9 @@ def poly(
     if side < 50:
         error = "Image too small. Minimum size 50"
     elif points < MIN_POINTS:
-        error = "Too less points. Minimum points 3"
-    elif points < MAX_POINTS:
-        error = "Too many points. Maximum points 200000"
+        error = f"Too less points. Minimum points {MIN_POINTS}"
+    elif points > MAX_POINTS:
+        error = f"Too many points. Maximum points {MAX_POINTS}"
     elif scale < 1:
         error = "Invalid scale value"
 
