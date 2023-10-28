@@ -41,7 +41,9 @@ def drawSlants(side, gradient=False, invert=False):
 
 
 def genPoly(width, height, img, points, wshift, hshift, outl=None, pic=False):
-    baseImg = Image.new("RGB", (width + (wshift * 2), height + (hshift * 2)), "#000000")
+    baseImg = Image.new(
+        "RGB", (width + (wshift * 2), height + (hshift * 2)), "#000000"
+    )
 
     baseImg.paste(img, box=(wshift, hshift))
     bw = baseImg.width
@@ -163,7 +165,12 @@ def genSquares(width, height, img, outl=None, pic=False, per=1):
 
     for i in range(hboxes):
         for j in range(wboxes):
-            points = [(x, y), (x, y + inc), (x + inc, y + inc), (x + inc, y)]  # squares
+            points = [
+                (x, y),
+                (x, y + inc),
+                (x + inc, y + inc),
+                (x + inc, y),
+            ]  # squares
 
             a, b = (x + x + inc) // 2, (y + y + inc) // 2  # to get pixel data
             try:  # adj to not overflow
@@ -224,7 +231,10 @@ def genHexagon(width, height, img, outl=None, pic=False, per=1):
     for i in range(-1, hboxes + 1):
         for j in range(-1, wboxes + 2):
             points = [
-                ((x + radius * math.sin(k * ang)), (y + radius * math.cos(k * ang)))
+                (
+                    (x + radius * math.sin(k * ang)),
+                    (y + radius * math.cos(k * ang)),
+                )
                 for k in range(6)
             ]
 
@@ -288,7 +298,10 @@ def genIsometric(width, height, img, outl=None, pic=False, per=1):
     for i in range(-1, hboxes + 1):
         for j in range(wboxes + 2):
             points = [
-                ((x + radius * math.sin(k * ang)), (y + radius * math.cos(k * ang)))
+                (
+                    (x + radius * math.sin(k * ang)),
+                    (y + radius * math.cos(k * ang)),
+                )
                 for k in range(6)
             ]
             # to store the vertices of the individual equilateral triangles
@@ -316,7 +329,9 @@ def genIsometric(width, height, img, outl=None, pic=False, per=1):
             if outl:
                 for k in range(6):
                     # draw 6 triangles that form a hexagon
-                    draw.polygon((triangle_points[k]), fill=c[k], outline=outl)
+                    draw.polygon(
+                        (triangle_points[k]), fill=c[k], outline=outl
+                    )
             else:
                 for k in range(6):
                     # draw 6 triangles that form a hexagon

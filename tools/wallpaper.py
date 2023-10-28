@@ -113,7 +113,9 @@ def setwallpaper(image_path, relative_path=True):
             disown(
                 [
                     "awesome-client",
-                    "require('gears').wallpaper.maximized('" + image_path + "')",
+                    "require('gears').wallpaper.maximized('"
+                    + image_path
+                    + "')",
                 ]
             )
         else:
@@ -124,7 +126,9 @@ def setwallpaper(image_path, relative_path=True):
             return msg, False
     elif "darwin" in host:
         db_file = "Library/Application Support/Dock/desktoppicture.db"
-        db_path = os.path.join(os.getenv("HOME", os.getenv("USERPROFILE")), db_file)
+        db_path = os.path.join(
+            os.getenv("HOME", os.getenv("USERPROFILE")), db_file
+        )
         img_dir, _ = os.path.split(image_path)
         sql = "delete from data; "
         sql += 'insert into data values("%s"); ' % img_dir

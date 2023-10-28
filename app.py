@@ -29,7 +29,10 @@ app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
 
 
 def allowed_file(filename):
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+    return (
+        "." in filename
+        and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+    )
 
 
 @app.route("/", methods=["GET"])
@@ -203,7 +206,8 @@ def pic():
                     else:
                         scale = 1
                     img = og_img.resize(
-                        (width // scale, height // scale), resample=Image.BICUBIC
+                        (width // scale, height // scale),
+                        resample=Image.BICUBIC,
                     )
                     width = img.width
                     height = img.height
@@ -242,7 +246,9 @@ def pic():
                     # print(fpath)
                     img.save(fpath)
                     imgurl = url_for("static", filename="images/" + fname)
-                    return render_template("download.html", context=imgurl, home="pic")
+                    return render_template(
+                        "download.html", context=imgurl, home="pic"
+                    )
                 else:
                     error = "Invalid input, try again"
                     return render_template("error.html", context=error)

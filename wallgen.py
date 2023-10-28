@@ -93,7 +93,9 @@ def cli():
 @click.option(
     "--only-color", "-oc", is_flag=True, help="Generate just a gradient image"
 )
-@click.option("--use-nn", "-un", is_flag=True, help="Use NbyNGradient function")
+@click.option(
+    "--use-nn", "-un", is_flag=True, help="Use NbyNGradient function"
+)
 @click.option(
     "--swirl",
     "-sw",
@@ -171,7 +173,9 @@ def poly(
 
     if swirl:
         if only_color:
-            img = img.resize((side // scale, side // scale), resample=Image.BICUBIC)
+            img = img.resize(
+                (side // scale, side // scale), resample=Image.BICUBIC
+            )
         img = swirl_image(img, swirl)
 
     if not only_color:
@@ -195,7 +199,9 @@ def poly(
 
         print("\r", end="")
         print("Making final tweaks", end="")
-        img = img.resize((side // scale, side // scale), resample=Image.BICUBIC)
+        img = img.resize(
+            (side // scale, side // scale), resample=Image.BICUBIC
+        )
 
     if show:
         img.show()
@@ -265,7 +271,9 @@ def poly(
     metavar="/path/to/output_file",
     help="Rename the output file",
 )
-@click.option("--use-nn", "-un", is_flag=True, help="Use NbyNGradient function")
+@click.option(
+    "--use-nn", "-un", is_flag=True, help="Use NbyNGradient function"
+)
 @click.option(
     "--swirl",
     "-sw",
@@ -614,7 +622,9 @@ def pic_poly(image, points, show, outline, name, smart, set_wall):
     metavar="#HEXCODE",
     help="Outline the shapes",
 )
-@click.option("--name", "-n", metavar="/path/to/output_file", help="Rename the output")
+@click.option(
+    "--name", "-n", metavar="/path/to/output_file", help="Rename the output"
+)
 @click.option(
     "--set-wall",
     "-w",
