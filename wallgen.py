@@ -609,6 +609,7 @@ def pic_poly(image, points, show, outline, name, smart, set_wall):
     "-p",
     type=click.INT,
     metavar="1-10",
+    default=1,
     help="""
               Use this percentage to determine number of polygons. [1-10]
               """,
