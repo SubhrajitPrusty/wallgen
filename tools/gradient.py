@@ -111,7 +111,7 @@ def swirl_image(image, strength=10):
     w, h = image.shape[:2]
     sw = swirl(image, rotation=0, strength=strength, radius=max(w, h))
     with warnings.catch_warnings():
-        warnings.simplefilter('ignore')
+        warnings.simplefilter("ignore")
         sw = img_as_ubyte(sw)
 
     pil_img = Image.fromarray(sw)

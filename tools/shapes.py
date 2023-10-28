@@ -25,8 +25,11 @@ def drawSlants(side, gradient=False, invert=False):
         else:
             c = randcolor()
         draw.line([-adj, y, y, -adj], width=w, fill=c)
-        draw.line([side - y, side + adj, side + adj, side - y], width=w,
-                  fill=negative(c) if invert else c)
+        draw.line(
+            [side - y, side + adj, side + adj, side - y],
+            width=w,
+            fill=negative(c) if invert else c,
+        )
         y += w
 
     return img
@@ -36,10 +39,9 @@ def drawSlants(side, gradient=False, invert=False):
 # TRIANGULATION #
 #################
 
-def genPoly(width, height, img, points, wshift, hshift, outl=None, pic=False):
 
-    baseImg = Image.new(
-        "RGB", (width + (wshift * 2), height + (hshift * 2)), "#000000")
+def genPoly(width, height, img, points, wshift, hshift, outl=None, pic=False):
+    baseImg = Image.new("RGB", (width + (wshift * 2), height + (hshift * 2)), "#000000")
 
     baseImg.paste(img, box=(wshift, hshift))
     bw = baseImg.width
@@ -72,8 +74,9 @@ def genPoly(width, height, img, points, wshift, hshift, outl=None, pic=False):
         else:
             draw.polygon(tp, fill=c)  # draw one triangle
 
-    img = baseImg.crop((wshift, hshift, baseImg.width - wshift,
-                        baseImg.height - hshift))  # crop back to normal size
+    img = baseImg.crop(
+        (wshift, hshift, baseImg.width - wshift, baseImg.height - hshift)
+    )  # crop back to normal size
 
     return img
 
@@ -82,8 +85,8 @@ def genPoly(width, height, img, points, wshift, hshift, outl=None, pic=False):
 # diamond #
 ###########
 
-def genDiamond(width, height, img, outl=None, pic=False, per=1):
 
+def genDiamond(width, height, img, outl=None, pic=False, per=1):
     x = y = 0
     per = per / 5  # more percentage is too small
 
@@ -100,9 +103,12 @@ def genDiamond(width, height, img, outl=None, pic=False, per=1):
 
     for i in range(hboxes - 1):  # one extra line
         for j in range(wboxes // 2 - 1):  # ¯\_(ツ)_/¯
-
-            points = [(x, y), (x + inc, y + inc), (x + 2 * inc, y),
-                      (x + inc, y - inc)]  # diamond
+            points = [
+                (x, y),
+                (x + inc, y + inc),
+                (x + 2 * inc, y),
+                (x + inc, y - inc),
+            ]  # diamond
 
             a, b = (x + x + 2 * inc) // 2, y
 
@@ -139,8 +145,8 @@ def genDiamond(width, height, img, outl=None, pic=False, per=1):
 # SQUARES #
 ###########
 
-def genSquares(width, height, img, outl=None, pic=False, per=1):
 
+def genSquares(width, height, img, outl=None, pic=False, per=1):
     x = y = 0
     per = per / 5  # more percentage is too small
 
@@ -157,8 +163,7 @@ def genSquares(width, height, img, outl=None, pic=False, per=1):
 
     for i in range(hboxes):
         for j in range(wboxes):
-            points = [(x, y), (x, y + inc), (x + inc, y + inc),
-                      (x + inc, y)]  # squares
+            points = [(x, y), (x, y + inc), (x + inc, y + inc), (x + inc, y)]  # squares
 
             a, b = (x + x + inc) // 2, (y + y + inc) // 2  # to get pixel data
             try:  # adj to not overflow
@@ -193,8 +198,8 @@ def genSquares(width, height, img, outl=None, pic=False, per=1):
 # HEXAGON #
 ###########
 
-def genHexagon(width, height, img, outl=None, pic=False, per=1):
 
+def genHexagon(width, height, img, outl=None, pic=False, per=1):
     per = 11 - per
     x = y = 0
 
@@ -218,8 +223,10 @@ def genHexagon(width, height, img, outl=None, pic=False, per=1):
 
     for i in range(-1, hboxes + 1):
         for j in range(-1, wboxes + 2):
-            points = [((x + radius * math.sin(k * ang)),
-                       (y + radius * math.cos(k * ang))) for k in range(6)]
+            points = [
+                ((x + radius * math.sin(k * ang)), (y + radius * math.cos(k * ang)))
+                for k in range(6)
+            ]
 
             a, b = x, y
             try:  # adj to not overflow
@@ -250,13 +257,13 @@ def genHexagon(width, height, img, outl=None, pic=False, per=1):
 
     return img  # return final image
 
+
 #############
 # ISOMETRIC #
 #############
 
 
 def genIsometric(width, height, img, outl=None, pic=False, per=1):
-
     per = 11 - per
     x = y = 0
 
@@ -280,8 +287,10 @@ def genIsometric(width, height, img, outl=None, pic=False, per=1):
 
     for i in range(-1, hboxes + 1):
         for j in range(wboxes + 2):
-            points = [((x + radius * math.sin(k * ang)),
-                       (y + radius * math.cos(k * ang))) for k in range(6)]
+            points = [
+                ((x + radius * math.sin(k * ang)), (y + radius * math.cos(k * ang)))
+                for k in range(6)
+            ]
             # to store the vertices of the individual equilateral triangles
             # that make up a hexagon
             triangle_points = []
@@ -322,13 +331,13 @@ def genIsometric(width, height, img, outl=None, pic=False, per=1):
 
     return img  # return final image
 
+
 #############
 # TRIANGLES #
 #############
 
 
 def genTriangle(width, height, img, outl=None, pic=False, per=1):
-
     x = y = 0
     per = per / 5  # more percentage is too small
 
@@ -346,7 +355,6 @@ def genTriangle(width, height, img, outl=None, pic=False, per=1):
     pair = 0
     for i in range(hboxes * 2):
         for j in range(wboxes):
-
             if i % 2 == 0:
                 # triangle pointing down
                 points = [(x, y), (x + inc * 2, y), (x + inc, y + inc)]

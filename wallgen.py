@@ -93,9 +93,7 @@ def cli():
 @click.option(
     "--only-color", "-oc", is_flag=True, help="Generate just a gradient image"
 )
-@click.option(
-    "--use-nn", "-un", is_flag=True, help="Use NbyNGradient function"
-)
+@click.option("--use-nn", "-un", is_flag=True, help="Use NbyNGradient function")
 @click.option(
     "--swirl",
     "-sw",
@@ -173,9 +171,7 @@ def poly(
 
     if swirl:
         if only_color:
-            img = img.resize(
-                (side // scale, side // scale), resample=Image.BICUBIC
-            )
+            img = img.resize((side // scale, side // scale), resample=Image.BICUBIC)
         img = swirl_image(img, swirl)
 
     if not only_color:
@@ -199,9 +195,7 @@ def poly(
 
         print("\r", end="")
         print("Making final tweaks", end="")
-        img = img.resize(
-            (side // scale, side // scale), resample=Image.BICUBIC
-        )
+        img = img.resize((side // scale, side // scale), resample=Image.BICUBIC)
 
     if show:
         img.show()
@@ -271,9 +265,7 @@ def poly(
     metavar="/path/to/output_file",
     help="Rename the output file",
 )
-@click.option(
-    "--use-nn", "-un", is_flag=True, help="Use NbyNGradient function"
-)
+@click.option("--use-nn", "-un", is_flag=True, help="Use NbyNGradient function")
 @click.option(
     "--swirl",
     "-sw",
@@ -528,7 +520,7 @@ def pic_poly(image, points, show, outline, name, smart, set_wall):
     # height += hshift*2
 
     if outline:
-        if isinstance(outline,  tuple):
+        if isinstance(outline, tuple):
             pass
         else:
             try:
@@ -622,9 +614,7 @@ def pic_poly(image, points, show, outline, name, smart, set_wall):
     metavar="#HEXCODE",
     help="Outline the shapes",
 )
-@click.option(
-    "--name", "-n", metavar="/path/to/output_file", help="Rename the output"
-)
+@click.option("--name", "-n", metavar="/path/to/output_file", help="Rename the output")
 @click.option(
     "--set-wall",
     "-w",
@@ -717,8 +707,7 @@ def pic_shape(image, shape, show, outline, name, percent, set_wall):
 )
 @click.pass_context
 def randomize(ctx, side, name):
-    """Generate a random config
-    """
+    """Generate a random config"""
     choice_of_pattern = ["poly", "shape", "slants"]
     pattern = choice(choice_of_pattern)
     click.secho(f"Random choice of pattern: {pattern}")

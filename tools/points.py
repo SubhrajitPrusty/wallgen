@@ -12,7 +12,7 @@ def distance(p1, p2):
     (x1, y1) = p1
     (x2, y2) = p2
 
-    d = int((y2 - y1)**2 + (x2 - x1)**2)**0.5
+    d = int((y2 - y1) ** 2 + (x2 - x1) ** 2) ** 0.5
     return d
 
 
@@ -46,7 +46,7 @@ def genPoints(qty, width, height):
 
 
 def calcCenter(ps):
-    """ calculate incenter of a triangle given all vertices"""
+    """calculate incenter of a triangle given all vertices"""
     mid1 = ((ps[0][0] + ps[1][0]) / 2, (ps[0][1] + ps[1][1]) / 2)
     mid = ((mid1[0] + ps[2][0]) / 2, (mid1[1] + ps[2][1]) / 2)
     return mid
@@ -60,7 +60,7 @@ def genSmartPoints(image):
 
     # convert to RGB compatible image
     with warnings.catch_warnings():
-        warnings.simplefilter('ignore')
+        warnings.simplefilter("ignore")
         rgb_img = img_as_ubyte(color.gray2rgb(edges))
 
     # convert to PIL image
@@ -84,8 +84,9 @@ def genSmartPoints(image):
         raise Exception("EdgeDetectionError")
 
     # get a n/5 number of points rather than all of the points
-    sample = np.random.choice(len(edges_data), len(
-        edges_data) // 5 if len(edges_data) / 5 < 50000 else 50000)
+    sample = np.random.choice(
+        len(edges_data), len(edges_data) // 5 if len(edges_data) / 5 < 50000 else 50000
+    )
     edges_data = [edges_data[x] for x in sample]
 
     # print(len(edges_data))

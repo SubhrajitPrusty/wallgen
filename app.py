@@ -17,35 +17,35 @@ from wallgen import (
     genTriangle,
     nGradient,
     random_gradient,
-    swirl_image)
+    swirl_image,
+)
 
 UPLOAD_FOLDER = os.path.join("static", "upload")
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+ALLOWED_EXTENSIONS = set(["png", "jpg", "jpeg"])
 
 app = Flask(__name__, static_url_path="/static")
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
 
 
 def allowed_file(filename):
-    return '.' in filename and \
-        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-@app.route("/", methods=['GET'])
+@app.route("/", methods=["GET"])
 def index():
     return render_template("home.html")
 
 
-@app.route("/poly", methods=['GET', 'POST'])
+@app.route("/poly", methods=["GET", "POST"])
 def poly():
-    if request.method == 'POST':
+    if request.method == "POST":
         # get data
-        side = int(request.form.get('side'))
-        np = int(request.form.get('np'))
-        outline = request.form.get('outline')
-        bgtype = request.form.get('bgtype')
-        swirl = request.form.get('swirl')
+        side = int(request.form.get("side"))
+        np = int(request.form.get("np"))
+        outline = request.form.get("outline")
+        bgtype = request.form.get("bgtype")
+        swirl = request.form.get("swirl")
 
         error = None
 
@@ -55,7 +55,7 @@ def poly():
             error = "WARNING: Too less points OR too many points"
 
         fname = "wall-{}.png".format(int(time.time()))
-        fpath = 'static/images/' + fname
+        fpath = "static/images/" + fname
 
         shift = side // 10
         nside = side + shift * 2  # increase size to prevent underflow
@@ -65,11 +65,11 @@ def poly():
         if bgtype == "nbyn":
             img = NbyNGradient(nside)
         elif bgtype == "customColors":
-            nColors = request.form.get('nColors')
+            nColors = request.form.get("nColors")
             colors = []
 
             for i in range(int(nColors)):
-                colors.append(request.form.get('rgb' + str(i + 1)))
+                colors.append(request.form.get("rgb" + str(i + 1)))
 
             try:
                 colors = [tuple(bytes.fromhex(x[1:])) for x in colors]
@@ -81,7 +81,7 @@ def poly():
 
         if error is not None:
             print(error)
-            return render_template('error.html', context=error)
+            return render_template("error.html", context=error)
 
         if outline:
             outline = tuple(bytes.fromhex("#2c2c2c"[1:]))
@@ -97,20 +97,20 @@ def poly():
         # print(fpath)
         img.save(fpath)
 
-        imgurl = url_for('static', filename='images/' + fname)
+        imgurl = url_for("static", filename="images/" + fname)
         return render_template("download.html", context=imgurl, home="poly")
     else:
-        return render_template('poly.html')
+        return render_template("poly.html")
 
 
-@app.route("/shape", methods=['GET', 'POST'])
+@app.route("/shape", methods=["GET", "POST"])
 def shape():
-    if request.method == 'POST':
-        side = int(request.form.get('side'))
-        outline = request.form.get('outline')
-        bgtype = request.form.get('bgtype')
-        swirl = request.form.get('swirl')
-        shape = request.form.get('shape')
+    if request.method == "POST":
+        side = int(request.form.get("side"))
+        outline = request.form.get("outline")
+        bgtype = request.form.get("bgtype")
+        swirl = request.form.get("swirl")
+        shape = request.form.get("shape")
 
         error = None
 
@@ -118,18 +118,18 @@ def shape():
             error = "WARNING: Image too large OR Image too small"
 
         fname = "wall-{}.png".format(int(time.time()))
-        fpath = 'static/images/' + fname
+        fpath = "static/images/" + fname
 
         img = random_gradient(side)
 
         if bgtype == "nbyn":
             img = NbyNGradient(side)
         elif bgtype == "customColors":
-            nColors = request.form.get('nColors')
+            nColors = request.form.get("nColors")
             colors = []
 
             for i in range(int(nColors)):
-                colors.append(request.form.get('rgb' + str(i + 1)))
+                colors.append(request.form.get("rgb" + str(i + 1)))
 
             try:
                 colors = [tuple(bytes.fromhex(x[1:])) for x in colors]
@@ -141,7 +141,7 @@ def shape():
 
         if error is not None:
             print(error)
-            return render_template('error.html', context=error)
+            return render_template("error.html", context=error)
 
         if outline:
             outline = tuple(bytes.fromhex("#2c2c2c"[1:]))
@@ -151,34 +151,34 @@ def shape():
         if swirl:
             img = swirl_image(img)
 
-        if shape == 'hexagon':
+        if shape == "hexagon":
             img = genHexagon(side, side, img, outline, per=5)
-        elif shape == 'squares':
+        elif shape == "squares":
             img = genSquares(side, side, img, outline, per=5)
-        elif shape == 'diamond':
+        elif shape == "diamond":
             img = genDiamond(side, side, img, outline, per=5)
-        elif shape == 'triangle':
+        elif shape == "triangle":
             img = genTriangle(side, side, img, outline, per=5)
-        elif shape == 'isometric':
+        elif shape == "isometric":
             img = genIsometric(side, side, img, outline, per=5)
         # print(fpath)
         img.save(fpath)
-        imgurl = url_for('static', filename='images/' + fname)
+        imgurl = url_for("static", filename="images/" + fname)
         return render_template("download.html", context=imgurl, home="shape")
     else:
-        return render_template('shape.html')
+        return render_template("shape.html")
 
 
-@app.route("/pic", methods=['GET', 'POST'])
+@app.route("/pic", methods=["GET", "POST"])
 def pic():
-    if request.method == 'POST':
+    if request.method == "POST":
         # print(request.files)
         # print(request.form)
-        if 'image' not in request.files:
+        if "image" not in request.files:
             error = "No file part"
             return render_template("error.html", context=error)
         else:
-            file = request.files['image']
+            file = request.files["image"]
             # print(file.filename)
             # print(len(file.filename))
             if len(file.filename) < 1:
@@ -187,11 +187,11 @@ def pic():
 
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
-                ufpath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                ufpath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
                 file.save(ufpath)
-                np = request.form.get('np')
-                outline = request.form.get('outline')
-                smart = request.form.get('smart')
+                np = request.form.get("np")
+                outline = request.form.get("outline")
+                smart = request.form.get("smart")
 
                 if np or smart:
                     og_img = Image.open(ufpath)
@@ -203,8 +203,8 @@ def pic():
                     else:
                         scale = 1
                     img = og_img.resize(
-                        (width // scale, height // scale),
-                        resample=Image.BICUBIC)
+                        (width // scale, height // scale), resample=Image.BICUBIC
+                    )
                     width = img.width
                     height = img.height
                     wshift = width // 100
@@ -225,17 +225,24 @@ def pic():
                     else:
                         pts = genPoints(int(np), n_width, n_height)
 
-                    img = genPoly(img.width, img.height, img, pts,
-                                  wshift, hshift, outline, pic=True)
+                    img = genPoly(
+                        img.width,
+                        img.height,
+                        img,
+                        pts,
+                        wshift,
+                        hshift,
+                        outline,
+                        pic=True,
+                    )
 
                     fname = "wall-{}.png".format(int(time.time()))
-                    fpath = 'static/images/' + fname
+                    fpath = "static/images/" + fname
 
                     # print(fpath)
                     img.save(fpath)
-                    imgurl = url_for('static', filename='images/' + fname)
-                    return render_template(
-                        "download.html", context=imgurl, home="pic")
+                    imgurl = url_for("static", filename="images/" + fname)
+                    return render_template("download.html", context=imgurl, home="pic")
                 else:
                     error = "Invalid input, try again"
                     return render_template("error.html", context=error)
@@ -246,8 +253,8 @@ def pic():
         return render_template("pic.html")
 
 
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    http_server = WSGIServer(('', port), app)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    http_server = WSGIServer(("", port), app)
     print("Starting server:")
     http_server.serve_forever()
