@@ -1,8 +1,6 @@
 pillow
 click
 scipy
-flask
-gevent
 numpy
 scikit-image
 loguru
