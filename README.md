@@ -56,16 +56,6 @@ Commands:
 
 ----
 
-## Usage Docker for hosting the website
-
-Inside the folder
-
-docker run -d -p 5000:5000 subhrajitprusty/wallgen
-
-Run `docker ps` to check if container is running.
-
-Goto [localhost:5000](http://localhost:5000) to check out the website.
-
 ## Examples
 
 [Here](./examples.md)
